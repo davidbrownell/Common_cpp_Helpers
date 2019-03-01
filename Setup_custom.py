@@ -97,7 +97,6 @@ def GetDependencies():
     d = OrderedDict()
 
     for short_name, repo_name, repo_id in [
-        ("Standard", "Common_cpp_Common", "F33C43DA6BB54336A7573B39509CDAD7"),
         ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC"),
     ]:
         for architecture in ["x64", "x86"]:
