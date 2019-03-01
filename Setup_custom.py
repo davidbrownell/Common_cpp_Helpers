@@ -94,56 +94,26 @@ def GetDependencies():
     (aka is configurable) or a single Configuration if not.
     """
 
-    return OrderedDict(
-        [
-            (
-                "Config1",
-                Configuration(
-                    "A description of Config1; this configuration uses python36",
-                    [
-                        Dependency(
-                            "0EAA1DCF22804F90AD9F5A3B85A5D706",                           # Id for Common_Environment; found in <Common_Environment>/__RepositoryId__
-                            "Common_Environment",                                         # Name used if Common_Environment cannot be found during setup
-                            "python36",                                                   # Configuration value used when activating Common_Environment (can be None or skipped for repos that only support a single configuration)
-                            "https://github.com/davidbrownell/Common_Environment_v3.git", # Uri for repo; can be string or def Func(scm_or_none) -> string
-                        ),
-                                                                                          # Other dependencies go here (if any)
-                    ],
-                                                                                          # By default, the most recent version of all tools and libraries will be activated for this repository and its dependencies.
-                                                                                          # If necessary, you can override this behavior by specifying specific versions for tools that should be used when activating
-                                                                                          # this repository with this configuration.
-                    VersionSpecs(                                                         # Tools
-                        [VersionInfo("Some Tool", "v0.0.1")],
-                                                                                          # Libraries, organized by language
-                        {"Python": [VersionInfo("Some Library", "v1.2.3")]},
+    d = OrderedDict()
+
+    for short_name, repo_name, repo_id in [
+        ("Standard", "Common_cpp_Common", "F33C43DA6BB54336A7573B39509CDAD7"),
+        ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC"),
+    ]:
+        for architecture in ["x64", "x86"]:
+            d["{}-{}".format(short_name, architecture)] = Configuration(
+                architecture,
+                [
+                    Dependency(
+                        repo_id,
+                        repo_name,
+                        architecture,
+                        "https://github.com/davidbrownell/{}.git".format(repo_name),
                     ),
-                ),
-            ),
-            (
-                "Config2",
-                Configuration(
-                    "A description of Config2; this configuration uses python27",
-                    [
-                        Dependency(
-                            "0EAA1DCF22804F90AD9F5A3B85A5D706",                           # Id for Common_Environment; found in <Common_Environment>/__RepositoryId__
-                            "Common_Environment",                                         # Name used if Common_Environment cannot be found during setup
-                            "python27",                                                   # Configuration value used when activating Common_Environment (can be None or skipped for repos that only support a single configuration)
-                            "https://github.com/davidbrownell/Common_Environment_v3.git", # Uri for repo; can be string or def Func(scm_or_none) -> string
-                        ),
-                                                                                          # Other dependencies go here (if any)
-                    ],
-                                                                                          # By default, the most recent version of all tools and libraries will be activated for this repository and its dependencies.
-                                                                                          # If necessary, you can override this behavior by specifying specific versions for tools that should be used when activating
-                                                                                          # this repository with this configuration.
-                    VersionSpecs(                                                         # Tools
-                        [VersionInfo("Some Other Tool", "v0.2.1")],
-                                                                                          # Libraries, organized by language
-                        {"C++": [VersionInfo("Some Library", "v1.2.3")]},
-                    ),
-                ),
-            ),
-        ]
-    )
+                ],
+            )
+
+    return d
 
 
 # ----------------------------------------------------------------------
