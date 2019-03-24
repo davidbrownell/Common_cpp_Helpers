@@ -11,3 +11,7 @@ Activate.sh
 
 .coverage
 coverage.xml
+
+.vscode/*
+
+Libraries/C++/CommonCppHelpers/v1.0/CommonHelpers/UnitTests/build/*
