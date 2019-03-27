@@ -14,4 +14,4 @@ coverage.xml
 
 .vscode/*
 
-Libraries/C++/CommonCppHelpers/v1.0/CommonHelpers/UnitTests/build/*
+Libraries/C++/CommonHelpers/v1.0/CommonHelpers/UnitTests/build/*
