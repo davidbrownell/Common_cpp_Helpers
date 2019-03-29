@@ -22,7 +22,6 @@
 #pragma once
 
 #include "TypeTraits.h"
-
 #include "Details/PreprocessorObjectFunctionalityImpl.h"
 
 namespace CommonHelpers {
@@ -107,7 +106,7 @@ namespace CommonHelpers {
         }
 
 #define COPY_Impl_Ctor_Bases(Bases)                     BOOST_PP_TUPLE_FOR_EACH_ENUM(COPY_Impl_Ctor_Bases_Macro, _, Bases)
-#define COPY_Impl_Ctor_Bases_Macro(r, _, Base)          Base(other)
+#define COPY_Impl_Ctor_Bases_Macro(r, _, Base)          Base(static_cast<Base const &>(other))
 
 #define COPY_Impl_Ctor_Members(Members)                 BOOST_PP_TUPLE_FOR_EACH_ENUM(COPY_Impl_Ctor_Members_Macro, _, Members)
 #define COPY_Impl_Ctor_Members_Macro(r, _, Member)      Member(other.Member)
@@ -126,7 +125,7 @@ namespace CommonHelpers {
     }
 
 #define COPY_Impl_Assignment_Bases(Bases)              BOOST_PP_TUPLE_FOR_EACH(COPY_Impl_Assignment_Bases_Macro, _, Bases)
-#define COPY_Impl_Assignment_Bases_Macro(r, _, Base)   Base::operator =(other);
+#define COPY_Impl_Assignment_Bases_Macro(r, _, Base)   Base::operator =(static_cast<Base const &>(other));
 
 #define COPY_Impl_Assignment_Members(Members)                               BOOST_PP_TUPLE_FOR_EACH(COPY_Impl_Assignment_Members_Macro, _, Members)
 #define COPY_Impl_Assignment_Members_Macro(r, _, Member)                    make_mutable(Member) = other.Member;

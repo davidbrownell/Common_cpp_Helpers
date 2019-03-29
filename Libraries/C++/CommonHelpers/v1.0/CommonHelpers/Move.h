@@ -22,7 +22,6 @@
 #pragma once
 
 #include "TypeTraits.h"
-
 #include "Details/PreprocessorObjectFunctionalityImpl.h"
 
 namespace CommonHelpers {

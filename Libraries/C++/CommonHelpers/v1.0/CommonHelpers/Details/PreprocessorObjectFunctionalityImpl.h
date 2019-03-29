@@ -252,7 +252,7 @@
 ///                 CONTEXT_TO_INITIALIZED_TUPLE(5, 0, (TWO_FLAG)(FOUR_NAME(Foo)));     | ( 0, 1, 0, Foo, 0 )
 ///
 #define CONTEXT_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, ...)            CONTEXT_TO_TUPLE_Impl(MaxNumItems, DefaultValue, __VA_ARGS__)
-#define CONTEXT_TUPLE_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Tuple)    CONTEXT_TO_INITIALIZED_TUPLE BOOST_PP_LPAREN() MaxNumItems, DefaultValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Tuple BOOST_PP_EMPTY()), BOOST_VMD_EMPTY, BOOST_PP_TUPLE_REM_CTOR)(Tuple) BOOST_PP_RPAREN()
+#define CONTEXT_TUPLE_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Tuple)    CONTEXT_TO_TUPLE_Impl2(MaxNumItems, DefaultValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Tuple BOOST_PP_EMPTY()), BOOST_PP_IDENTITY((0,())), BOOST_PP_TUPLE_TO_ARRAY)(Tuple))
 #define CONTEXT_SEQ_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Sequence)   CONTEXT_TO_TUPLE_Impl2(MaxNumItems, DefaultValue, BOOST_PP_SEQ_TO_ARRAY(Sequence))
 
 #define CONTEXT_TO_TUPLE_Impl(MaxNumItems, InitializationValue, ...)            CONTEXT_TO_TUPLE_Impl2(MaxNumItems, InitializationValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__ BOOST_PP_EMPTY()), BOOST_VMD_IDENTITY((0,)), BOOST_PP_VARIADIC_TO_ARRAY)(__VA_ARGS__))
