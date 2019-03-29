@@ -41,6 +41,16 @@ namespace CommonHelpers {
 ///                     MyClass(MyClass && other);
 ///                     MyClass & operator =(MyClass && other);
 ///
+///                 The following class methods will be called if they exist:
+///
+///                     Constructor:
+///                         void MoveFinalConstruct(void)
+///                         void FinalConstruct(void)
+///
+///                     Assignment operator:
+///                         void MoveFinalAssign(void)
+///                         void FinalAssign(void)
+///
 ///                 Example                                                     | Comment
 ///                 -------                                                     | -------
 ///                 MOVE(MyClass)                                               | No members or bases

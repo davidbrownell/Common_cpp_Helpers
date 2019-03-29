@@ -41,6 +41,16 @@ namespace CommonHelpers {
 ///                     MyClass(MyClass const &other);
 ///                     MyClass & operator =(MyClass const &other);
 ///
+///                 The following class methods will be called if they exist:
+///
+///                     Constructor:
+///                         void CopyFinalConstruct(void)
+///                         void FinalConstruct(void)
+///
+///                     Assignment operator:
+///                         void CopyFinalAssign(void)
+///                         void FinalAssign(void)
+///
 ///                 Example                                                     | Comment
 ///                 -------                                                     | -------
 ///                 COPY(MyClass)                                               | No members or bases
