@@ -96,6 +96,18 @@ def GetDependencies():
 
     d = OrderedDict()
 
+    d["Standard"] = Configuration(
+        "Standard configuration without a compiler dependency",
+        [
+            Dependency(
+                "0EAA1DCF22804F90AD9F5A3B85A5D706",
+                "Common_Environment",
+                "python36",
+                lambda scm_or_none: "https://github.com/davidbrownell/Common_Environment-v3.git" if scm_or_none is None or scm_or_none.Name != "Mercurial" else "ssh://{mercurial_ssh_config_name}/d:/Mercurial/Code/v3/Common/Common_Environment",
+            ),
+        ],
+    )
+    
     for short_name, repo_name, repo_id in [
         ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC"),
         ("Clang-7", "Common_cpp_Clang_7", "67695C1E2C944596AD8390700FAD3E06"),
