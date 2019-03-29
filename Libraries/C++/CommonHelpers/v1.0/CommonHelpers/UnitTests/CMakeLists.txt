@@ -15,6 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 foreach(_name IN ITEMS
     Compare_UnitTest
+    Constructor_UnitTest
     Copy_UnitTest
     Move_UnitTest
     TypeTraits_UnitTest
