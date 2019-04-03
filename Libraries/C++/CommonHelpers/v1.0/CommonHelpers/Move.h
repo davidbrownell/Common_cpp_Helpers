@@ -38,6 +38,8 @@ namespace CommonHelpers {
 ///  \def           MOVE
 ///  \brief         Implements the move constructor and move assignment operator.
 ///
+///                 Creates the following methods:
+///
 ///                     MyClass(MyClass && other);
 ///                     MyClass & operator =(MyClass && other);
 ///

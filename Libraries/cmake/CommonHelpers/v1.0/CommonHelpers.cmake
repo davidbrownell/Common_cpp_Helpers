@@ -6,7 +6,7 @@ add_library(CommonHelpers INTERFACE)
 target_include_directories(CommonHelpers 
     INTERFACE
         "${_common_helpers_root}"
-        "${_common_helpers_root}/CommonHelpers/Details/boost_extract"
+        "${_common_helpers_root}/CommonHelpers/Details"
 )
 
 file(GLOB _headers "${_common_helpers_root}/CommonHelpers/*.h")
