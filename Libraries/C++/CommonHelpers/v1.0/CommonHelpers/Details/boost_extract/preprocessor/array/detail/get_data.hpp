@@ -12,11 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_DETAIL_GET_DATA_HPP
 # define BOOST_PREPROCESSOR_ARRAY_DETAIL_GET_DATA_HPP
 #
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/tuple/rem.hpp>
-# include <boost/preprocessor/control/if.hpp>
-# include <boost/preprocessor/control/iif.hpp>
-# include <boost/preprocessor/facilities/is_1.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include <boost_extract/preprocessor/control/if.hpp>
+# include <boost_extract/preprocessor/control/iif.hpp>
+# include <boost_extract/preprocessor/facilities/is_1.hpp>
 #
 # /* BOOST_PP_ARRAY_DETAIL_GET_DATA */
 #

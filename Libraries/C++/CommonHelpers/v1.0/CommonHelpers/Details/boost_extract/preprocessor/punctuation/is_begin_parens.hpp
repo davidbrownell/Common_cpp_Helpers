@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_IS_BEGIN_PARENS_HPP
 # define BOOST_PREPROCESSOR_IS_BEGIN_PARENS_HPP
 
-# include <boost/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
 
 #if BOOST_PP_VARIADICS
 

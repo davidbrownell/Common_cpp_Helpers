@@ -12,13 +12,13 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_CAT_HPP
 # define BOOST_PREPROCESSOR_SEQ_CAT_HPP
 #
-# include <boost/preprocessor/arithmetic/dec.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/control/if.hpp>
-# include <boost/preprocessor/seq/fold_left.hpp>
-# include <boost/preprocessor/seq/seq.hpp>
-# include <boost/preprocessor/seq/size.hpp>
-# include <boost/preprocessor/tuple/eat.hpp>
+# include <boost_extract/preprocessor/arithmetic/dec.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/control/if.hpp>
+# include <boost_extract/preprocessor/seq/fold_left.hpp>
+# include <boost_extract/preprocessor/seq/seq.hpp>
+# include <boost_extract/preprocessor/seq/size.hpp>
+# include <boost_extract/preprocessor/tuple/eat.hpp>
 #
 # /* BOOST_PP_SEQ_CAT */
 #
