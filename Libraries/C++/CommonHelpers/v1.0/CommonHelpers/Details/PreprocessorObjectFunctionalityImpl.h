@@ -22,30 +22,30 @@
 /////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "boost_extract/boost/preprocessor/array.hpp"
-#include "boost_extract/boost/preprocessor/cat.hpp"
-#include "boost_extract/boost/preprocessor/seq.hpp"
-#include "boost_extract/boost/preprocessor/stringize.hpp"
-#include "boost_extract/boost/preprocessor/tuple.hpp"
+#include "boost_extract/preprocessor/array.hpp"
+#include "boost_extract/preprocessor/cat.hpp"
+#include "boost_extract/preprocessor/seq.hpp"
+#include "boost_extract/preprocessor/stringize.hpp"
+#include "boost_extract/preprocessor/tuple.hpp"
 
-#include "boost_extract/boost/preprocessor/arithmetic/add.hpp"
-#include "boost_extract/boost/preprocessor/comparison/equal.hpp"
-#include "boost_extract/boost/preprocessor/comparison/greater.hpp"
-#include "boost_extract/boost/preprocessor/comparison/not_equal.hpp"
-#include "boost_extract/boost/preprocessor/control/iif.hpp"
-#include "boost_extract/boost/preprocessor/facilities/expand.hpp"
-#include "boost_extract/boost/preprocessor/variadic/to_array.hpp"
-#include "boost_extract/boost/preprocessor/variadic/to_seq.hpp"
+#include "boost_extract/preprocessor/arithmetic/add.hpp"
+#include "boost_extract/preprocessor/comparison/equal.hpp"
+#include "boost_extract/preprocessor/comparison/greater.hpp"
+#include "boost_extract/preprocessor/comparison/not_equal.hpp"
+#include "boost_extract/preprocessor/control/iif.hpp"
+#include "boost_extract/preprocessor/facilities/expand.hpp"
+#include "boost_extract/preprocessor/variadic/to_array.hpp"
+#include "boost_extract/preprocessor/variadic/to_seq.hpp"
 
-#include "boost_extract/boost/vmd/empty.hpp"
-#include "boost_extract/boost/vmd/is_number.hpp"
-#include "boost_extract/boost/vmd/is_tuple.hpp"
+#include "boost_extract/vmd/empty.hpp"
+#include "boost_extract/vmd/is_number.hpp"
+#include "boost_extract/vmd/is_tuple.hpp"
 
 // These header files aren't used directly in this file, but are common across
 // all files that include this one
-#include "boost_extract/boost/preprocessor/logical/and.hpp"
-#include "boost_extract/boost/preprocessor/logical/or.hpp"
-#include "boost_extract/boost/preprocessor/punctuation/comma_if.hpp"
+#include "boost_extract/preprocessor/logical/and.hpp"
+#include "boost_extract/preprocessor/logical/or.hpp"
+#include "boost_extract/preprocessor/punctuation/comma_if.hpp"
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
