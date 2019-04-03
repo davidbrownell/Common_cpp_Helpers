@@ -96,23 +96,37 @@ namespace CommonHelpers {
 #define CONSTRUCTOR_Impl_Invoke_Check(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)        BOOST_PP_IIF(BOOST_PP_GREATER(BOOST_PP_TUPLE_SIZE(Bases), __NUM_CONSTRUCTOR_FLAGS), CONSTRUCTOR_Impl_Invoke_Check_Error, CONSTRUCTOR_Impl_Invoke2)(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)
 #define CONSTRUCTOR_Impl_Invoke_Check_Error(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)  static_assert(false, "A maximum of " BOOST_PP_STRINGIZE(__NUM_CONSTRUCTOR_Flags) " bases may be specified, but " BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_SIZE(Bases)) " were provided for '" BOOST_PP_STRINGIZE(ClassName) "'.");
 
-#define CONSTRUCTOR_Impl_Invoke2(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                                                                         \
-    BOOST_PP_IIF(BOOST_PP_OR(HasMembers, HasBases), CONSTRUCTOR_Impl_Invoke_Template, BOOST_VMD_EMPTY)(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)   \
-    ClassName(                                                                                                                                                                              \
-        CONSTRUCTOR_Impl_Invoke_Args(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                                                                     \
-    )                                                                                                                                                                                       \
-        BOOST_PP_IIF(BOOST_PP_OR(HasMembers, HasBases), BOOST_PP_IDENTITY(:), BOOST_VMD_EMPTY)()                                                                                            \
-        BOOST_PP_IIF(HasBases, CONSTRUCTOR_Impl_Invoke_Init_Bases, BOOST_VMD_EMPTY)(Bases, BasesNumArgs)                                                                                    \
-        BOOST_PP_COMMA_IF(BOOST_PP_AND(HasMembers, HasBases))                                                                                                                               \
-        BOOST_PP_IIF(HasMembers, CONSTRUCTOR_Impl_Invoke_Init_Members, BOOST_VMD_EMPTY)(Members)                                                                                            \
-    {                                                                                                                                                                                       \
-        CommonHelpers::TypeTraits::Access::FinalConstruct(*this);                                                                                                                           \
+#define CONSTRUCTOR_Impl_Invoke2(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                                                                                                                                                                                                 \
+    /* Special-case check for a class with no members but one or more bases, each that take 0 args */                                                                                                                                                                                                               \
+    CONSTRUCTOR_Impl_Invoke3(BOOST_PP_ADD(CONSTRUCTOR_Impl_Num_Members(HasMembers, Members), CONSTRUCTOR_Impl_Num_Bases(HasBases, Bases, BasesNumArgs)), ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)
+
+#define CONSTRUCTOR_Impl_Num_Members(HasMembers, Members)                   BOOST_PP_IIF(HasMembers, BOOST_PP_TUPLE_SIZE, BOOST_VMD_IDENTITY(0))(Members)
+#define CONSTRUCTOR_Impl_Num_Bases(HasBases, Bases, BasesNumArgs)           BOOST_PP_IIF(HasBases, CONSTRUCTOR_Impl_Num_Bases2, BOOST_VMD_IDENTITY(0))(Bases, BasesNumArgs)
+#define CONSTRUCTOR_Impl_Num_Bases2(Bases, BasesNumArgs)                    BOOST_PP_SEQ_FOLD_LEFT(CONSTRUCTOR_Impl_Num_Bases2_Macro, 0, BOOST_PP_SEQ_FIRST_N(BOOST_PP_TUPLE_SIZE(Bases), BOOST_PP_TUPLE_TO_SEQ(BasesNumArgs)))
+#define CONSTRUCTOR_Impl_Num_Bases2_Macro(s, State, Value)                  BOOST_PP_ADD(State, Value)
+
+#define CONSTRUCTOR_Impl_Invoke3(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)        BOOST_PP_IIF(BOOST_PP_EQUAL(NumArgs, 0), CONSTRUCTOR_Impl_Invoke_Empty, CONSTRUCTOR_Impl_Invoke_Standard)(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)
+
+#define CONSTRUCTOR_Impl_Invoke_Empty(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)   \
+    ClassName(void) { CommonHelpers::TypeTraits::Access::FinalConstruct(*this); }
+
+#define CONSTRUCTOR_Impl_Invoke_Standard(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)    \
+    CONSTRUCTOR_Impl_Invoke_Template(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)        \
+    ClassName(                                                                                                                          \
+        CONSTRUCTOR_Impl_Invoke_Args(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                 \
+    )                                                                                                                                   \
+        BOOST_PP_IIF(BOOST_PP_OR(HasMembers, HasBases), BOOST_PP_IDENTITY(:), BOOST_VMD_EMPTY)()                                        \
+        BOOST_PP_IIF(HasBases, CONSTRUCTOR_Impl_Invoke_Init_Bases, BOOST_VMD_EMPTY)(Bases, BasesNumArgs)                                \
+        BOOST_PP_COMMA_IF(BOOST_PP_AND(HasMembers, HasBases))                                                                           \
+        BOOST_PP_IIF(HasMembers, CONSTRUCTOR_Impl_Invoke_Init_Members, BOOST_VMD_EMPTY)(Members)                                        \
+    {                                                                                                                                   \
+        CommonHelpers::TypeTraits::Access::FinalConstruct(*this);                                                                       \
     }
 
-#define CONSTRUCTOR_Impl_Invoke_Template(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                                                                             \
+#define CONSTRUCTOR_Impl_Invoke_Template(NumArgs, ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)                                                                    \
     template <                                                                                                                                                                                          \
         BOOST_PP_IIF(MembersBeforeBases, CONSTRUCTOR_Impl_Invoke_Template_MembersFirst, CONSTRUCTOR_Impl_Invoke_Template_BasesFirst)(ClassName, HasMembers, Members, HasBases, Bases, BasesNumArgs)     \
-        CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck(ClassName, HasMembers, Members, HasBases, Bases)                                                                                                \
+        BOOST_PP_IIF(BOOST_PP_EQUAL(NumArgs, 1), CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck, BOOST_VMD_EMPTY)(ClassName, HasMembers, Members, HasBases, Bases)                                                                                                \
     >
 
 #define CONSTRUCTOR_Impl_Invoke_Template_MembersFirst(ClassName, HasMembers, Members, HasBases, Bases, BasesNumArgs)    \
@@ -131,15 +145,10 @@ namespace CommonHelpers {
 #define CONSTRUCTOR_Impl_Invoke_Template_Bases(Bases, BasesNumArgs)                     CONSTRUCTOR_Impl_Invoke_EnumBaseInfo(CONSTRUCTOR_Impl_Invoke_Template_Bases_Macro, Bases, BasesNumArgs)
 #define CONSTRUCTOR_Impl_Invoke_Template_Bases_Macro(BaseIndex, BaseName, ArgIndex)     typename CONSTRUCTOR_Impl_Invoke_BaseTypeName(BaseIndex, ArgIndex)
 
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck(ClassName, HasMembers, Members, HasBases, Bases)    BOOST_PP_IIF(BOOST_PP_EQUAL(BOOST_PP_ADD(CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs(HasMembers, Members), CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs(HasBases, Bases)), 1), CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg, BOOST_VMD_EMPTY)(ClassName, HasMembers, Members, HasBases, Bases)
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs(HasItems, Items)                            BOOST_PP_IIF(HasItems, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs_Count, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs_NoItems)(Items)
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs_Count(Items)                                BOOST_PP_TUPLE_SIZE(Items)
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_NumArgs_NoItems()                                   0
-
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg(ClassName, HasMembers, Members, HasBases, Bases)  CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg2(ClassName, BOOST_PP_IIF(HasMembers, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg_Members, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg_Bases)(Members, Bases))
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg2(ClassName, Typename)                             , std::enable_if_t<std::is_same_v<ClassName, std::decay_t<std::remove_reference_t<Typename>>> == false, std::add_pointer_t< Typename >> = nullptr
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg_Members(Members, _)                               BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(0, Members), T)
-#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_SingleArg_Bases(_, Bases)                                   CONSTRUCTOR_Impl_Invoke_BaseTypeName(0, 0)
+#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck(ClassName, HasMembers, Members, HasBases, Bases)  CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck2(ClassName, BOOST_PP_IIF(HasMembers, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_Members, CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_Bases)(Members, Bases))
+#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck2(ClassName, Typename)                             , std::enable_if_t<std::is_same_v<ClassName, std::decay_t<std::remove_reference_t<Typename>>> == false, std::add_pointer_t< Typename >> = nullptr
+#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_Members(Members, _)                               BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(0, Members), T)
+#define CONSTRUCTOR_Impl_Invoke_Template_SingleArgCheck_Bases(_, Bases)                                   CONSTRUCTOR_Impl_Invoke_BaseTypeName(0, 0)
 
 #define CONSTRUCTOR_Impl_Invoke_Args(ClassName, HasMembers, Members, HasBases, Bases, MembersBeforeBases, BasesNumArgs)     BOOST_PP_IIF(MembersBeforeBases, CONSTRUCTOR_Impl_Invoke_Args_MembersFirst, CONSTRUCTOR_Impl_Invoke_Args_BasesFirst)(ClassName, HasMembers, Members, HasBases, Bases, BasesNumArgs)
 
@@ -167,8 +176,8 @@ namespace CommonHelpers {
 #define CONSTRUCTOR_Impl_Invoke_Init_Bases_Macro2(r, NumArgs, Index, Base)          Base( BOOST_PP_ENUM(NumArgs, CONSTRUCTOR_Impl_Invoke_Init_Bases_Macro2_Macro, Index) )
 #define CONSTRUCTOR_Impl_Invoke_Init_Bases_Macro2_Macro(r, ArgIndex, BaseIndex)     std::forward<CONSTRUCTOR_Impl_Invoke_BaseTypeName(BaseIndex, ArgIndex)>(CONSTRUCTOR_Impl_Invoke_BaseArgName(BaseIndex, ArgIndex))
 
-#define CONSTRUCTOR_Impl_Invoke_BaseTypeName(BaseIndex, ArgIndex)           BOOST_PP_CAT(Base_, BOOST_PP_CAT(BaseIndex, BOOST_PP_CAT(_, BOOST_PP_CAT(ArgIndex, BOOST_PP_CAT(_, T)))))
-#define CONSTRUCTOR_Impl_Invoke_BaseArgName(BaseIndex, ArgIndex)            BOOST_PP_CAT(Base_, BOOST_PP_CAT(BaseIndex, BOOST_PP_CAT(_, BOOST_PP_CAT(ArgIndex, BOOST_PP_CAT(_, Param)))))
+#define CONSTRUCTOR_Impl_Invoke_BaseTypeName(BaseIndex, ArgIndex)           BOOST_PP_CAT(Base, BOOST_PP_CAT(BaseIndex, BOOST_PP_CAT(_, BOOST_PP_CAT(T, ArgIndex))))
+#define CONSTRUCTOR_Impl_Invoke_BaseArgName(BaseIndex, ArgIndex)            BOOST_PP_CAT(base, BOOST_PP_CAT(BaseIndex, BOOST_PP_CAT(_, BOOST_PP_CAT(Param, ArgIndex))))
 
 // Macro(BaseIndex, BaseName, ArgIndex)
 #define CONSTRUCTOR_Impl_Invoke_EnumBaseInfo(Macro, Bases, BasesNumArgs)                            BOOST_PP_TUPLE_FOR_EACH_ENUM_I(CONSTRUCTOR_Impl_Invoke_EnumBaseInfo_Macro, (Macro, BasesNumArgs), Bases)
