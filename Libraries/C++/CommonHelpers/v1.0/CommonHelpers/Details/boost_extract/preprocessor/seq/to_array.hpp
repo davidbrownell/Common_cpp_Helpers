@@ -12,9 +12,9 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_TO_ARRAY_HPP
 # define BOOST_PREPROCESSOR_SEQ_TO_ARRAY_HPP
 #
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/seq/enum.hpp>
-# include <boost/preprocessor/seq/size.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/seq/enum.hpp>
+# include <boost_extract/preprocessor/seq/size.hpp>
 #
 # /* BOOST_PP_SEQ_TO_ARRAY */
 #

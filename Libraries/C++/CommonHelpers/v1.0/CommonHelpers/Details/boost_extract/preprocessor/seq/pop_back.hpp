@@ -12,10 +12,10 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_POP_BACK_HPP
 # define BOOST_PREPROCESSOR_SEQ_POP_BACK_HPP
 #
-# include <boost/preprocessor/arithmetic/dec.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/seq/first_n.hpp>
-# include <boost/preprocessor/seq/size.hpp>
+# include <boost_extract/preprocessor/arithmetic/dec.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/seq/first_n.hpp>
+# include <boost_extract/preprocessor/seq/size.hpp>
 #
 # /* BOOST_PP_SEQ_POP_BACK */
 #

@@ -12,9 +12,9 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_ENUM_HPP
 # define BOOST_PREPROCESSOR_SEQ_ENUM_HPP
 #
-# include <boost/preprocessor/cat.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/seq/size.hpp>
+# include <boost_extract/preprocessor/cat.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/seq/size.hpp>
 #
 # /* BOOST_PP_SEQ_ENUM */
 #
