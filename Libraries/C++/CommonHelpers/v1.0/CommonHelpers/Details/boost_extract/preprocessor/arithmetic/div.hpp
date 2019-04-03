@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_ARITHMETIC_DIV_HPP
 # define BOOST_PREPROCESSOR_ARITHMETIC_DIV_HPP
 #
-# include <boost/preprocessor/arithmetic/detail/div_base.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/tuple/elem.hpp>
+# include <boost_extract/preprocessor/arithmetic/detail/div_base.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/tuple/elem.hpp>
 #
 # /* BOOST_PP_DIV */
 #

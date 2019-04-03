@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_DEDUCE_R_HPP
 # define BOOST_PREPROCESSOR_REPETITION_DEDUCE_R_HPP
 #
-# include <boost/preprocessor/detail/auto_rec.hpp>
-# include <boost/preprocessor/repetition/for.hpp>
+# include <boost_extract/preprocessor/detail/auto_rec.hpp>
+# include <boost_extract/preprocessor/repetition/for.hpp>
 #
 # /* BOOST_PP_DEDUCE_R */
 #

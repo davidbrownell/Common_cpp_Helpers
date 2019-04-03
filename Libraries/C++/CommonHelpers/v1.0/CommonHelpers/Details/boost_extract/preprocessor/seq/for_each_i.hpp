@@ -12,17 +12,17 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_FOR_EACH_I_HPP
 # define BOOST_PREPROCESSOR_SEQ_FOR_EACH_I_HPP
 #
-# include <boost/preprocessor/arithmetic/dec.hpp>
-# include <boost/preprocessor/arithmetic/inc.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/control/if.hpp>
-# include <boost/preprocessor/control/iif.hpp>
-# include <boost/preprocessor/repetition/for.hpp>
-# include <boost/preprocessor/seq/seq.hpp>
-# include <boost/preprocessor/seq/size.hpp>
-# include <boost/preprocessor/seq/detail/is_empty.hpp>
-# include <boost/preprocessor/tuple/elem.hpp>
-# include <boost/preprocessor/tuple/rem.hpp>
+# include <boost_extract/preprocessor/arithmetic/dec.hpp>
+# include <boost_extract/preprocessor/arithmetic/inc.hpp>
+# include <boost_extract/preprocessor/config/config.hpp>
+# include <boost_extract/preprocessor/control/if.hpp>
+# include <boost_extract/preprocessor/control/iif.hpp>
+# include <boost_extract/preprocessor/repetition/for.hpp>
+# include <boost_extract/preprocessor/seq/seq.hpp>
+# include <boost_extract/preprocessor/seq/size.hpp>
+# include <boost_extract/preprocessor/seq/detail/is_empty.hpp>
+# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include <boost_extract/preprocessor/tuple/rem.hpp>
 #
 # /* BOOST_PP_SEQ_FOR_EACH_I */
 #
