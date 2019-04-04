@@ -116,7 +116,7 @@ struct MultiMemberMultiBaseObj : public MultiMemberObj, SingleMemberObj {
 };
 
 TEST_CASE("MultiMemberMultiBaseObj") {
-    MultiMemberMultiBaseObj const           o1(1.0, 2.0, true, 'c', 10);
+    MultiMemberMultiBaseObj const           o1(1.0, 2.0f, true, 'c', 10);
 
     CHECK(o1.a == 10);
     CHECK(o1.b == true);
@@ -133,11 +133,20 @@ struct BasesBeforeMembersObj : public MultiMemberObj, SingleMemberObj {
 };
 
 TEST_CASE("BasesBeforeMembersObj") {
-    BasesBeforeMembersObj const             o1(true, 'c', 10, 1.0, 2.0);
+    BasesBeforeMembersObj const             o1(true, 'c', 10, 1.0, 2.0f);
 
     CHECK(o1.a == 10);
     CHECK(o1.b == true);
     CHECK(o1.c == 'c');
     CHECK(o1.d == 1.0);
     CHECK(o1.f == 2.0);
+}
+
+struct EmptyBaseObj : public EmptyObj {
+    CONSTRUCTOR(EmptyBaseObj, BASES(EmptyObj), FLAGS(CONSTRUCTOR_BASE_ARGS_0(0)));
+};
+
+TEST_CASE("EmptyBaseObj") {
+    EmptyBaseObj();
+    CHECK(true);
 }

@@ -42,6 +42,8 @@ namespace CommonHelpers {
 ///  \def           COMPARE
 ///  \brief         Implements a static Compare method and all comparison operators.
 ///
+///                 Creates the following methods:
+///
 ///                     static int Compare(MyClass const &a, MyClass const &b);
 ///                     bool operator ==(MyClass const &other) const;
 ///                     bool operator !=(MyClass const &other) const;

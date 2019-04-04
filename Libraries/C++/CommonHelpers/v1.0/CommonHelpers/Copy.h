@@ -38,6 +38,8 @@ namespace CommonHelpers {
 ///  \def           COPY
 ///  \brief         Implements the copy constructor and copy assignment operator.
 ///
+///                 Creates the following methods:
+///
 ///                     MyClass(MyClass const &other);
 ///                     MyClass & operator =(MyClass const &other);
 ///
