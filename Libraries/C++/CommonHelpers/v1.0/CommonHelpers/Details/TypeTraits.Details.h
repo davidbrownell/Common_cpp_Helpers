@@ -51,7 +51,7 @@ namespace Details {
 // |  CREATE_HAS_TYPE_CHECKER
 #define CREATE_HAS_TYPE_CHECKER_Impl(Typename, ...)                         CREATE_HAS_TYPE_CHECKER_Impl2(Typename, CONTEXT_TO_INITIALIZED_TUPLE(__HAS_TYPE_CHECKER_NUM_CONTEXT_VALUES, 0, __VA_ARGS__))
 
-#if (defined _MSC_VER and !defined __clang__)
+#if (defined _MSC_VER && !defined __clang__)
     // Using BOOST_PP_EXPAND here causes an ICE
 #   define CREATE_HAS_TYPE_CHECKER_Impl2(Typename, Args)                    CREATE_HAS_TYPE_CHECKER_Impl3 BOOST_PP_LPAREN() Typename BOOST_PP_COMMA() BOOST_PP_TUPLE_REM_CTOR(Args) BOOST_PP_RPAREN()
 #else
@@ -74,7 +74,7 @@ namespace Details {
 // |  CREATE_HAS_METHOD_CHECKER
 #define CREATE_HAS_METHOD_CHECKER_Impl(MethodName, Signature, ...)          CREATE_HAS_METHOD_CHECKER_Impl2(MethodName, Signature, CONTEXT_TO_INITIALIZED_TUPLE(__HAS_METHOD_CHECKER_NUM_CONTEXT_VALUES, 0, __VA_ARGS__))
 
-#if (defined _MSC_VER and !defined __clang__)
+#if (defined _MSC_VER && !defined __clang__)
     // Using BOOST_PP_EXPAND here causes an ICE
 #   define CREATE_HAS_METHOD_CHECKER_Impl2(MethodName, Signature, Args)     CREATE_HAS_METHOD_CHECKER_Impl3 BOOST_PP_LPAREN() MethodName BOOST_PP_COMMA() Signature BOOST_PP_COMMA() BOOST_PP_TUPLE_REM_CTOR(Args) BOOST_PP_RPAREN()
 #else
