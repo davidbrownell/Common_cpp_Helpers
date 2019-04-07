@@ -106,6 +106,7 @@ int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsSmartPointer<
 //
 int Compare(char const *a, char const *b);
 int Compare(wchar_t const *a, wchar_t const *b);
+int Compare(nullptr_t const, nullptr_t const);
 
 template <typename T>
 int Compare(T const *a, T const *b);
@@ -129,9 +130,12 @@ int Compare(T const *a, T const *b);
 #define COMPARE_Impl_Delay(x)               BOOST_PP_CAT(x, COMPARE_Impl_Empty())
 #define COMPARE_Impl_Empty()
 
-#define COMPARE_Impl2(ClassName, Members, Bases, Flags)                     COMPARE_Impl2_Delay(COMPARE_Impl3) BOOST_PP_LPAREN() ClassName, BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Members BOOST_PP_EMPTY())), Members, BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Bases BOOST_PP_EMPTY())), Bases, BOOST_PP_TUPLE_ENUM(Flags) BOOST_PP_RPAREN()
-#define COMPARE_Impl2_Delay(x)              BOOST_PP_CAT(x, COMPARE_Impl2_Empty())
-#define COMPARE_Impl2_Empty()
+#if (defined _MSC_VER and !defined __clang__)
+    // MSVC doesn't like BOOST_PP_EXPAND
+#   define COMPARE_Impl2(ClassName, Members, Bases, Flags)                  COMPARE_Impl3 BOOST_PP_LPAREN() ClassName BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Members BOOST_PP_EMPTY())) BOOST_PP_COMMA() Members BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Bases BOOST_PP_EMPTY())) BOOST_PP_COMMA() Bases BOOST_PP_COMMA() BOOST_PP_TUPLE_ENUM(Flags) BOOST_PP_RPAREN()
+#else
+#   define COMPARE_Impl2(ClassName, Members, Bases, Flags)                  BOOST_PP_EXPAND(COMPARE_Impl3 BOOST_PP_LPAREN() ClassName BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Members BOOST_PP_EMPTY())) BOOST_PP_COMMA() Members BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Bases BOOST_PP_EMPTY())) BOOST_PP_COMMA() Bases BOOST_PP_COMMA() BOOST_PP_TUPLE_ENUM(Flags) BOOST_PP_RPAREN())
+#endif
 
 #define COMPARE_Impl3(ClassName, HasMembers, Members, HasBases, Bases, BasesBeforeMembers, NoOperators)                             \
     static int Compare(ClassName const &a, ClassName const &b) {                                                                    \
@@ -297,6 +301,10 @@ inline int Compare(char const *a, char const *b) {
 
 inline int Compare(wchar_t const *a, wchar_t const *b) {
     return Details::ComparePtrImpl(a, b, wcscmp);
+}
+
+inline int Compare(nullptr_t const, nullptr_t const) {
+    return 0;
 }
 
 template <typename T>
