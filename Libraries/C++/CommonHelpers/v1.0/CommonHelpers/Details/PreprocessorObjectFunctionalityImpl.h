@@ -251,19 +251,24 @@
 ///                 CONTEXT_TO_INITIALIZED_TUPLE(5, 0, (ZERO_FLAG)(THREE_FLAG));        | ( 1, 0, 1, 0, 0 )
 ///                 CONTEXT_TO_INITIALIZED_TUPLE(5, 0, (TWO_FLAG)(FOUR_NAME(Foo)));     | ( 0, 1, 0, Foo, 0 )
 ///
-#define CONTEXT_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, ...)            CONTEXT_TO_TUPLE_Impl(MaxNumItems, DefaultValue, __VA_ARGS__)
-#define CONTEXT_TUPLE_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Tuple)    CONTEXT_TO_TUPLE_Impl2(MaxNumItems, DefaultValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Tuple BOOST_PP_EMPTY()), BOOST_PP_IDENTITY((0,())), BOOST_PP_TUPLE_TO_ARRAY)(Tuple))
-#define CONTEXT_SEQ_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Sequence)   CONTEXT_TO_TUPLE_Impl2(MaxNumItems, DefaultValue, BOOST_PP_SEQ_TO_ARRAY(Sequence))
+#define CONTEXT_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, ...)            CONTEXT_TO_TUPLE_Impl(MaxNumItems, DefaultValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__ BOOST_PP_EMPTY()), BOOST_VMD_IDENTITY((0,)), BOOST_PP_VARIADIC_TO_ARRAY)(__VA_ARGS__))
+#define CONTEXT_TUPLE_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Tuple)    CONTEXT_TO_TUPLE_Impl(MaxNumItems, DefaultValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Tuple BOOST_PP_EMPTY()), BOOST_PP_IDENTITY((0,())), BOOST_PP_TUPLE_TO_ARRAY)(Tuple))
+#define CONTEXT_SEQ_TO_INITIALIZED_TUPLE(MaxNumItems, DefaultValue, Sequence)   CONTEXT_TO_TUPLE_Impl(MaxNumItems, DefaultValue, BOOST_PP_SEQ_TO_ARRAY(Sequence))
 
-#define CONTEXT_TO_TUPLE_Impl(MaxNumItems, InitializationValue, ...)            CONTEXT_TO_TUPLE_Impl2(MaxNumItems, InitializationValue, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__ BOOST_PP_EMPTY()), BOOST_VMD_IDENTITY((0,)), BOOST_PP_VARIADIC_TO_ARRAY)(__VA_ARGS__))
-#define CONTEXT_TO_TUPLE_Impl2(MaxNumItems, InitializationValue, ContextArray)  CONTEXT_TO_TUPLE_Impl3(ContextArray, BOOST_PP_ENUM(MaxNumItems, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(InitializationValue BOOST_PP_EMPTY()), BOOST_VMD_EMPTY, BOOST_VMD_IDENTITY(InitializationValue)), _) )
-#define CONTEXT_TO_TUPLE_Impl3(ContextArray, ...)                               CONTEXT_TO_TUPLE_Impl4(ContextArray, BOOST_PP_VARIADIC_TO_TUPLE(__VA_ARGS__))
-#define CONTEXT_TO_TUPLE_Impl4(ContextArray, Args)                              BOOST_PP_IF(BOOST_PP_ARRAY_SIZE(ContextArray), CONTEXT_TO_TUPLE_Impl_Args, CONTEXT_TO_TUPLE_Impl_NoArgs)(ContextArray, Args)
+#define CONTEXT_TO_TUPLE_Impl(MaxNumItems, InitializationValue, ContextArray)   CONTEXT_TO_TUPLE_Impl2(ContextArray, BOOST_PP_ENUM(MaxNumItems, BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(InitializationValue BOOST_PP_EMPTY()), BOOST_VMD_EMPTY, BOOST_VMD_IDENTITY(InitializationValue)), _) )
+#define CONTEXT_TO_TUPLE_Impl2(ContextArray, ...)                               CONTEXT_TO_TUPLE_Impl3(ContextArray, BOOST_PP_VARIADIC_TO_TUPLE(__VA_ARGS__))
+#define CONTEXT_TO_TUPLE_Impl3(ContextArray, Args)                              BOOST_PP_IF(BOOST_PP_ARRAY_SIZE(ContextArray), CONTEXT_TO_TUPLE_Impl_Args, CONTEXT_TO_TUPLE_Impl_NoArgs)(ContextArray, Args)
 
 #define CONTEXT_TO_TUPLE_Impl_Args(ContextArray, Args)                      BOOST_PP_SEQ_FOLD_LEFT(CONTEXT_TO_TUPLE_Impl_Macro, Args, BOOST_PP_ARRAY_TO_SEQ(ContextArray))
 #define CONTEXT_TO_TUPLE_Impl_NoArgs(ContextArray, Args)                    Args
 
-#define CONTEXT_TO_TUPLE_Impl_Macro(r, Args, Element)                       BOOST_PP_IIF(BOOST_VMD_IS_TUPLE(Element), CONTEXT_TO_TUPLE_Impl_Macro_Tuple, CONTEXT_TO_TUPLE_Impl_Flag)(r, Args, Element)
+#if (defined __clang__)
+    // Clang seems to have trouble with BOOST_VMD_IS_TUPLE when the value is a number, so check for number-ness instead.
+#   define CONTEXT_TO_TUPLE_Impl_Macro(r, Args, Element)                       BOOST_PP_IIF(BOOST_VMD_IS_NUMBER(Element), CONTEXT_TO_TUPLE_Impl_Flag, CONTEXT_TO_TUPLE_Impl_Macro_Tuple)(r, Args, Element)
+#else
+#   define CONTEXT_TO_TUPLE_Impl_Macro(r, Args, Element)                       BOOST_PP_IIF(BOOST_VMD_IS_TUPLE(Element), CONTEXT_TO_TUPLE_Impl_Macro_Tuple, CONTEXT_TO_TUPLE_Impl_Flag)(r, Args, Element)
+#endif
+
 #define CONTEXT_TO_TUPLE_Impl_Flag(r, Args, Index)                          BOOST_PP_TUPLE_REPLACE_D(r, Args, Index, 1)
 #define CONTEXT_TO_TUPLE_Impl_Macro_Tuple(r, Args, Element)                 CONTEXT_TO_TUPLE_Impl_Macro_Tuple2(r, Args, BOOST_PP_TUPLE_ELEM(0, Element), BOOST_PP_TUPLE_ELEM(1, Element))
 #define CONTEXT_TO_TUPLE_Impl_Macro_Tuple2(r, Args, Index, Value)           BOOST_PP_TUPLE_REPLACE_D(r, Args, Index, Value)
