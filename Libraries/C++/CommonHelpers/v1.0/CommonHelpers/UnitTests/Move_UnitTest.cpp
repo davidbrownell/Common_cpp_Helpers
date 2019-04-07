@@ -50,7 +50,7 @@ struct MultiMemberObj {
 };
 
 struct MultiBaseObj : public SingleMemberObj, public MultiMemberObj {
-    MultiBaseObj(int i, bool b, char c) : MultiMemberObj(b, c), SingleMemberObj(i) {}
+    MultiBaseObj(int i, bool b, char c) : SingleMemberObj(i), MultiMemberObj(b, c) {}
     MOVE(MultiBaseObj, BASES(SingleMemberObj, MultiMemberObj));
 };
 
