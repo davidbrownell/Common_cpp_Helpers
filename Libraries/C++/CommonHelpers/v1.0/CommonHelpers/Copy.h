@@ -95,7 +95,7 @@ namespace CommonHelpers {
 #define COPY_Impl_Delay(x)                  BOOST_PP_CAT(x, COPY_Impl_Empty())
 #define COPY_Impl_Empty()
 
-#if (defined _MSC_VER and !defined __clang__)
+#if (defined _MSC_VER && !defined __clang__)
     // MSVC doesn't like BOOST_PP_EXPAND
     #   define COPY_Impl2(ClassName, Members, Bases, Flags)                 COPY_Impl3 BOOST_PP_LPAREN() ClassName BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Members BOOST_PP_EMPTY())) BOOST_PP_COMMA() Members BOOST_PP_COMMA() BOOST_PP_NOT(BOOST_VMD_IS_EMPTY(Bases BOOST_PP_EMPTY())) BOOST_PP_COMMA() Bases BOOST_PP_COMMA() BOOST_PP_TUPLE_ENUM(Flags) BOOST_PP_RPAREN()
 #else
