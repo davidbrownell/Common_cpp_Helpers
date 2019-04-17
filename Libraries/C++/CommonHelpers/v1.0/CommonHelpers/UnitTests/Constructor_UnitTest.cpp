@@ -122,7 +122,7 @@ TEST_CASE("MultiMemberMultiBaseObj") {
     CHECK(o1.b == true);
     CHECK(o1.c == 'c');
     CHECK(o1.d == 1.0);
-    CHECK(o1.f == 2.0);
+    CHECK(o1.f == 2.0f);
 }
 
 struct BasesBeforeMembersObj : public MultiMemberObj, SingleMemberObj {
@@ -139,7 +139,7 @@ TEST_CASE("BasesBeforeMembersObj") {
     CHECK(o1.b == true);
     CHECK(o1.c == 'c');
     CHECK(o1.d == 1.0);
-    CHECK(o1.f == 2.0);
+    CHECK(o1.f == 2.0f);
 }
 
 struct EmptyBaseObj : public EmptyObj {

@@ -149,10 +149,6 @@ TEST_CASE("Ctor and Assign <Empty>") {
     EmptyObj o3;
 
     o3 = std::move(o2);
-
-    (o1);
-    (o2);
-    (o3);
 }
 
 TEST_CASE("Ctor and Assign <Single Member>") {
@@ -254,7 +250,7 @@ TEST_CASE("Ctor and Assign <Multi Member/Multi Base>") {
     CHECK(o1.b == true);
     CHECK(o1.c == 'q');
     CHECK(o1.d == 1.0);
-    CHECK(o1.f == 2.0);
+    CHECK(o1.f == 2.0f);
 
     MultiMemberMultiBaseObj o2(std::move(o1));
 
@@ -262,7 +258,7 @@ TEST_CASE("Ctor and Assign <Multi Member/Multi Base>") {
     CHECK(o2.b == true);
     CHECK(o2.c == 'q');
     CHECK(o2.d == 1.0);
-    CHECK(o2.f == 2.0);
+    CHECK(o2.f == 2.0f);
 
     MultiMemberMultiBaseObj o3(0, false, 'z', 0.0, 1000.0);
 
@@ -272,7 +268,7 @@ TEST_CASE("Ctor and Assign <Multi Member/Multi Base>") {
     CHECK(o3.b == true);
     CHECK(o3.c == 'q');
     CHECK(o3.d == 1.0);
-    CHECK(o3.f == 2.0);
+    CHECK(o3.f == 2.0f);
 }
 
 TEST_CASE("No Assign Obj") {

@@ -132,7 +132,24 @@
 ///                     MACRO(a, b, 10)                                                 | MACRO_Impl((a, b), (10), , , )
 ///                     MACRO(a, b, FLAGS(f), BASES(b1, b2), MEMBERS(m1, m2, m3))       | MACRO_Impl((a, b), (m1)(m2)(m3), (b1)(b2), (f), )
 ///
-#define PPOFImpl(Macro, PrefixArgs, ...)    PPOFImpl_Stage0(Macro, PrefixArgs, __VA_ARGS__)
+#define PPOFImpl(Macro, PrefixArgs, ...)                \
+    PPOFImpl_PushWarnings()                             \
+    PPOFImpl_Stage0(Macro, PrefixArgs, __VA_ARGS__)     \
+    PPOFImpl_PopWarnings()
+
+#if (defined __clang__)
+
+#   define PPOFImpl_PushWarnings()                                          \
+        _Pragma("clang diagnostic push")                                    \
+        _Pragma("clang diagnostic ignored \"-Wunused-value\"")
+
+#   define PPOFImpl_PopWarnings()           \
+        _Pragma("clang diagnostic pop")
+
+#else
+#   define PPOFImpl_PushWarnings()
+#   define PPOFImpl_PopWarnings()
+#endif
 
 // ----------------------------------------------------------------------
 // |  Stage 0: Handle empty args

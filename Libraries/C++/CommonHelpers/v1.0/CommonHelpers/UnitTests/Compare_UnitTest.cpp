@@ -324,9 +324,18 @@ struct GlobalMethodObj {
     GlobalMethodObj(int a_param) : a(a_param) {}
 };
 
+#if (defined __clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wmissing-prototypes"
+#endif
+
 bool operator <(GlobalMethodObj const &a, GlobalMethodObj const &b) {
     return a.a < b.a;
 }
+
+#if (defined __clang__)
+#   pragma clang diagnostic pop
+#endif
 
 TEST_CASE("Different Compare Techniques") {
     CHECK(CommonHelpers::Compare(CompareMethodObj(10), CompareMethodObj(10)) == 0);
