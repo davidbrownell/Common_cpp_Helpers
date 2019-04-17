@@ -807,3 +807,29 @@ static_assert(std::is_same_v<CommonHelpers::TypeTraits::MakeTargetMutable<int co
 static_assert(std::is_same_v<CommonHelpers::TypeTraits::MakeTargetMutable<int *>, int *>, "");
 static_assert(std::is_same_v<CommonHelpers::TypeTraits::MakeTargetMutable<int const *>, int *>, "");
 static_assert(std::is_same_v<CommonHelpers::TypeTraits::MakeTargetMutable<int const *const>, int *>, "");
+
+// ----------------------------------------------------------------------
+// |
+// |  Access
+// |
+// ----------------------------------------------------------------------
+class ObjectWithFinalConstruct {
+private:
+    friend class CommonHelpers::TypeTraits::Access;
+
+    void FinalConstruct(void) {}
+};
+
+class ObjectWithoutFinalConstruct {
+private:
+    friend class CommonHelpers::TypeTraits::Access;
+};
+
+TEST_CASE("Access") {
+    ObjectWithFinalConstruct                with;
+    ObjectWithoutFinalConstruct             without;
+
+    CommonHelpers::TypeTraits::Access::FinalConstruct(with);
+    CommonHelpers::TypeTraits::Access::FinalConstruct(without);
+    CHECK(true); // Avoid warnings
+}
