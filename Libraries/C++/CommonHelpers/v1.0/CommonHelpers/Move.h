@@ -183,5 +183,4 @@ void AssignMover(T &lhs, T &rhs, std::false_type) {
 }
 
 }  // namespace Details
-
 }  // namespace CommonHelpers
