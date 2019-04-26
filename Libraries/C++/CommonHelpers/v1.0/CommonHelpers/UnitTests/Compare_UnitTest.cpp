@@ -52,7 +52,7 @@ TEST_CASE("SingleMemberObj") {
 }
 
 struct SingleBaseObj : public SingleMemberObj {
-    SingleBaseObj(int a) : SingleMemberObj(a) {}
+    SingleBaseObj(int a_param) : SingleMemberObj(a_param) {}
     COMPARE(SingleBaseObj, BASES(SingleMemberObj));
 };
 
@@ -69,7 +69,7 @@ TEST_CASE("SingleBaseObj") {
 struct SingleMemberSingleBaseObj : public SingleMemberObj {
     bool const b;
 
-    SingleMemberSingleBaseObj(int a, bool b_param) : SingleMemberObj(a), b(b_param) {}
+    SingleMemberSingleBaseObj(int a_param, bool b_param) : SingleMemberObj(a_param), b(b_param) {}
     COMPARE(SingleMemberSingleBaseObj, BASES(SingleMemberObj), MEMBERS(b));
 };
 
@@ -102,7 +102,7 @@ TEST_CASE("MultiMemberObj") {
 }
 
 struct MultiBaseObj : public SingleMemberObj, public MultiMemberObj {
-    MultiBaseObj(int a, bool b, char c) : SingleMemberObj(a), MultiMemberObj(b, c) {}
+    MultiBaseObj(int a_param, bool b_param, char c_param) : SingleMemberObj(a_param), MultiMemberObj(b_param, c_param) {}
     COMPARE(MultiBaseObj, BASES(SingleMemberObj, MultiMemberObj));
 };
 
@@ -123,7 +123,7 @@ struct MultiMemberMultiBaseObj : public SingleMemberObj, public MultiMemberObj {
     double const d;
     float const f;
 
-    MultiMemberMultiBaseObj(int a, bool b, char c, double d_param, float f_param) : SingleMemberObj(a), MultiMemberObj(b, c), d(d_param), f(f_param) {}
+    MultiMemberMultiBaseObj(int a_param, bool b_param, char c_param, double d_param, float f_param) : SingleMemberObj(a_param), MultiMemberObj(b_param, c_param), d(d_param), f(f_param) {}
     COMPARE(MultiMemberMultiBaseObj, MEMBERS(d, f), BASES(SingleMemberObj, MultiMemberObj));
 };
 
@@ -172,14 +172,14 @@ TEST_CASE("NoOperatorsObj") {
 struct StandardBasesBeforeMembersObj : public SingleMemberObj {
     bool const b;
 
-    StandardBasesBeforeMembersObj(int a, bool b_param) : SingleMemberObj(a), b(b_param) {}
+    StandardBasesBeforeMembersObj(int a_param, bool b_param) : SingleMemberObj(a_param), b(b_param) {}
     COMPARE(StandardBasesBeforeMembersObj, MEMBERS(b), BASES(SingleMemberObj));
 };
 
 struct SpecialBasesBeforeMembersObj : public SingleMemberObj {
     bool const b;
 
-    SpecialBasesBeforeMembersObj(int a, bool b_param) : SingleMemberObj(a), b(b_param) {}
+    SpecialBasesBeforeMembersObj(int a_param, bool b_param) : SingleMemberObj(a_param), b(b_param) {}
     COMPARE(SpecialBasesBeforeMembersObj, MEMBERS(b), BASES(SingleMemberObj), FLAGS(COMPARE_BASES_BEFORE_MEMBERS));
 };
 
