@@ -44,7 +44,7 @@ namespace CommonHelpers {
 ///
 ///                 Creates the following methods:
 ///
-///                     static int Compare(MyClass const &a, MyClass const &b);
+///                     static int Compare(MyClass const &lhs, MyClass const &rhs);
 ///                     bool operator ==(MyClass const &other) const;
 ///                     bool operator !=(MyClass const &other) const;
 ///                     bool operator  <(MyClass const &other) const;
@@ -77,16 +77,16 @@ namespace CommonHelpers {
 // |
 // ----------------------------------------------------------------------
 template <typename... ArgsT>
-int Compare(std::tuple<ArgsT...> const &a, std::tuple<ArgsT...> const &b);
+int Compare(std::tuple<ArgsT...> const &lhs, std::tuple<ArgsT...> const &rhs);
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsSmartPointer<T>> * =nullptr);
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPointer<T>> * =nullptr);
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsContainer<T>> * =nullptr);
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsContainer<T>> * =nullptr);
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<std::is_enum_v<T>> * =nullptr);
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<std::is_enum_v<T>> * =nullptr);
 
 // In the following methods, the code will attempt to use the following signatures to
 // implement comparison:
@@ -97,19 +97,19 @@ int Compare(T const &a, T const &b, std::enable_if_t<std::is_enum_v<T>> * =nullp
 //      - bool operator <(T const &, T const &)
 //
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsSmartPointer<T> == false && TypeTraits::IsContainer<T> == false && std::is_enum_v<T> == false && std::is_pointer_v<T> == false> * =nullptr);
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPointer<T> == false && TypeTraits::IsContainer<T> == false && std::is_enum_v<T> == false && std::is_pointer_v<T> == false> * =nullptr);
 
 // For pointers:
 //
 //      - valid pointer < nullptr
 //      - nullptr == nullptr
 //
-int Compare(char const *a, char const *b);
-int Compare(wchar_t const *a, wchar_t const *b);
+int Compare(char const *lhs, char const *rhs);
+int Compare(wchar_t const *lhs, wchar_t const *rhs);
 int Compare(nullptr_t const, nullptr_t const);
 
 template <typename T>
-int Compare(T const *a, T const *b);
+int Compare(T const *lhs, T const *rhs);
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -124,7 +124,7 @@ int Compare(T const *a, T const *b);
 // clang-format off
 
 #define COMPARE_Impl(ClassNameTuple, Members, Bases, Methods, Flags)                                                                                                \
-    static_assert(BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Methods BOOST_PP_EMPTY()), true, false), "This macro does not support methods");                                     \
+    static_assert(BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(Methods BOOST_PP_EMPTY()), true, false), "This macro does not support methods");                                  \
     COMPARE_Impl_Delay(COMPARE_Impl2) (BOOST_PP_TUPLE_ELEM(0, ClassNameTuple), Members, Bases, CONTEXT_TUPLE_TO_INITIALIZED_TUPLE(__NUM_COMPARE_FLAGS, 0, Flags))
 
 #define COMPARE_Impl_Delay(x)               BOOST_PP_CAT(x, COMPARE_Impl_Empty())
@@ -138,8 +138,8 @@ int Compare(T const *a, T const *b);
 #endif
 
 #define COMPARE_Impl3(ClassName, HasMembers, Members, HasBases, Bases, BasesBeforeMembers, NoOperators)                             \
-    static int Compare(ClassName const &a, ClassName const &b) {                                                                    \
-        if(&a == &b)                                                                                                                \
+    static int Compare(ClassName const &lhs, ClassName const &rhs) {                                                                \
+        if(&lhs == &rhs)                                                                                                            \
             return 0;                                                                                                               \
                                                                                                                                     \
         int                                 iResult(0);                                                                             \
@@ -160,10 +160,10 @@ int Compare(T const *a, T const *b);
     BOOST_PP_IIF(HasBases, COMPARE_Impl_Bases, BOOST_VMD_EMPTY)(Bases)
 
 #define COMPARE_Impl_Bases(Bases)                       BOOST_PP_TUPLE_FOR_EACH(COMPARE_Impl_Bases_Macro, _, Bases)
-#define COMPARE_Impl_Bases_Macro(r, _, Base)            iResult = CommonHelpers::Compare(static_cast<Base const &>(a), static_cast<Base const &>(b)); if(iResult != 0) return iResult;
+#define COMPARE_Impl_Bases_Macro(r, _, Base)            iResult = CommonHelpers::Compare(static_cast<Base const &>(lhs), static_cast<Base const &>(rhs)); if(iResult != 0) return iResult;
 
 #define COMPARE_Impl_Members(Members)                   BOOST_PP_TUPLE_FOR_EACH(COMPARE_Impl_Members_Macro, _, Members)
-#define COMPARE_Impl_Members_Macro(r, _, Member)        iResult = CommonHelpers::Compare(a.Member, b.Member); if(iResult != 0) return iResult;
+#define COMPARE_Impl_Members_Macro(r, _, Member)        iResult = CommonHelpers::Compare(lhs.Member, rhs.Member); if(iResult != 0) return iResult;
 
 #define COMPARE_Impl_Operators(ClassName)                                                   \
     bool operator <(ClassName const &other) const { return Compare(*this, other) < 0; }     \
@@ -182,15 +182,15 @@ CREATE_HAS_METHOD_CHECKER(Compare, (int (Q::*)(Q const &) const), HAS_METHOD_CHE
 
 template <typename T>
 struct CompareImpl_LessThanOperator {
-    static int Execute(T const &a, T const &b) {
-        return (a < b ? -1 : (b < a ? 1: 0));
+    static int Execute(T const &lhs, T const &rhs) {
+        return (lhs < rhs ? -1 : (rhs < lhs ? 1: 0));
     }
 };
 
 template <typename T, bool>
 struct CompareImpl_Compare {
-    static int Execute(T const &a, T const &b) {
-        return a.Compare(b);
+    static int Execute(T const &lhs, T const &rhs) {
+        return lhs.Compare(rhs);
     }
 };
 
@@ -200,8 +200,8 @@ struct CompareImpl_Compare<T, false> : public CompareImpl_LessThanOperator<T> {
 
 template <typename T, bool>
 struct CompareImpl_StaticCompare {
-    static int Execute(T const &a, T const &b) {
-        return T::Compare(a, b);
+    static int Execute(T const &lhs, T const &rhs) {
+        return T::Compare(lhs, rhs);
     }
 };
 
@@ -223,48 +223,48 @@ int CompareTupleImpl(std::tuple<ArgsT...> const &, std::tuple<ArgsT...>const &, 
 }
 
 template <size_t IndexV, typename... ArgsT>
-int CompareTupleImpl(std::tuple<ArgsT...> const &a, std::tuple<ArgsT...> const &b, std::enable_if_t<IndexV < sizeof...(ArgsT)> * =nullptr) {
-    int const                               iResult(Compare(std::get<IndexV>(a), std::get<IndexV>(b)));
+int CompareTupleImpl(std::tuple<ArgsT...> const &lhs, std::tuple<ArgsT...> const &rhs, std::enable_if_t<IndexV < sizeof...(ArgsT)> * =nullptr) {
+    int const                               iResult(Compare(std::get<IndexV>(lhs), std::get<IndexV>(rhs)));
 
     if(iResult != 0)
         return iResult;
 
-    return CompareTupleImpl<IndexV + 1>(a, b);
+    return CompareTupleImpl<IndexV + 1>(lhs, rhs);
 }
 
 template <typename T>
-int ComparePtrImpl(T const *a, T const *b, int (*func)(T const *, T const *)) {
-    if(a == nullptr && b == nullptr)
+int ComparePtrImpl(T const *lhs, T const *rhs, int (*func)(T const *, T const *)) {
+    if(lhs == nullptr && rhs == nullptr)
         return 0;
 
     // Valid pointers < nullptr
-    if(b == nullptr)
+    if(rhs == nullptr)
         return -1;
 
-    if(a == nullptr)
+    if(lhs == nullptr)
         return 1;
 
-    return (*func)(a, b);
+    return (*func)(lhs, rhs);
 }
 
 }  // namespace Details
 
 template <typename... ArgsT>
-int Compare(std::tuple<ArgsT...> const &a, std::tuple<ArgsT...> const &b) {
-    return Details::CompareTupleImpl<0>(a, b);
+int Compare(std::tuple<ArgsT...> const &lhs, std::tuple<ArgsT...> const &rhs) {
+    return Details::CompareTupleImpl<0>(lhs, rhs);
 }
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsSmartPointer<T>> *) {
-    return Compare(a.get(), b.get());
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPointer<T>> *) {
+    return Compare(lhs.get(), rhs.get());
 }
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsContainer<T>> *) {
-    typename T::const_iterator              iterA(a.begin());
-    typename T::const_iterator const        endA(a.end());
-    typename T::const_iterator              iterB(b.begin());
-    typename T::const_iterator const        endB(b.end());
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsContainer<T>> *) {
+    typename T::const_iterator              iterA(lhs.begin());
+    typename T::const_iterator const        endA(lhs.end());
+    typename T::const_iterator              iterB(rhs.begin());
+    typename T::const_iterator const        endB(rhs.end());
 
     while(iterA != endA && iterB != endB) {
         int const                           iResult(Compare(*iterA, *iterB));
@@ -283,24 +283,24 @@ int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsContainer<T>>
 }
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<std::is_enum_v<T>> *) {
-    return Compare(static_cast<std::underlying_type_t<T>>(a), static_cast<std::underlying_type_t<T>>(b));
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<std::is_enum_v<T>> *) {
+    return Compare(static_cast<std::underlying_type_t<T>>(lhs), static_cast<std::underlying_type_t<T>>(rhs));
 }
 
 template <typename T>
-int Compare(T const &a, T const &b, std::enable_if_t<TypeTraits::IsSmartPointer<T> == false && TypeTraits::IsContainer<T> == false && std::is_enum_v<T> == false && std::is_pointer_v<T> == false> *) {
-    if(&a == &b)
+int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPointer<T> == false && TypeTraits::IsContainer<T> == false && std::is_enum_v<T> == false && std::is_pointer_v<T> == false> *) {
+    if(&lhs == &rhs)
         return 0;
 
-    return Details::CompareImpl_IsClass<T, std::is_class_v<T>>::Execute(a, b);
+    return Details::CompareImpl_IsClass<T, std::is_class_v<T>>::Execute(lhs, rhs);
 }
 
-inline int Compare(char const *a, char const *b) {
-    return Details::ComparePtrImpl(a, b, strcmp);
+inline int Compare(char const *lhs, char const *b) {
+    return Details::ComparePtrImpl(lhs, b, strcmp);
 }
 
-inline int Compare(wchar_t const *a, wchar_t const *b) {
-    return Details::ComparePtrImpl(a, b, wcscmp);
+inline int Compare(wchar_t const *lhs, wchar_t const *b) {
+    return Details::ComparePtrImpl(lhs, b, wcscmp);
 }
 
 inline int Compare(nullptr_t const, nullptr_t const) {
@@ -308,16 +308,16 @@ inline int Compare(nullptr_t const, nullptr_t const) {
 }
 
 template <typename T>
-int Compare(T const *a, T const *b) {
+int Compare(T const *lhs, T const *b) {
     // ----------------------------------------------------------------------
     struct Internal {
-        static int Execute(T const *a, T const *b) {
-            return CommonHelpers::Compare(*a, *b);
+        static int Execute(T const *lhs, T const *b) {
+            return CommonHelpers::Compare(*lhs, *b);
         }
     };
     // ----------------------------------------------------------------------
 
-    return Details::ComparePtrImpl(a, b, Internal::Execute);
+    return Details::ComparePtrImpl(lhs, b, Internal::Execute);
 }
 
 }  // namespace CommonHelpers
