@@ -115,10 +115,12 @@ def GetDependencies():
             ("MSVC-2019", "Common_cpp_MSVC_2019", "AB7D87C49C2449F79D9F42E5195030FD"),
             ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC"),
         ]
-    
-    repo_depedencies += [
-        ("Clang-7", "Common_cpp_Clang_7", "67695C1E2C944596AD8390700FAD3E06"),
-    ]
+    elif CurrentShell.CategoryName == "Linux":
+        repo_depedencies += [
+            ("Clang-8", "Common_cpp_Clang_8", "3DE9F3430E494A6C8429B26A1503C895"),
+        ]
+    else:
+        raise Exception("'{} ({})' is not supported yet".format(CurrentShell.Name, CurrentShell.CategoryName))
 
     for short_name, repo_name, repo_id in repo_depedencies:
         for architecture in ["x64", "x86"]:
