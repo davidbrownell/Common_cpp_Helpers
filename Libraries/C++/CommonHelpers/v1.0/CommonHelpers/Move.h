@@ -172,7 +172,9 @@ T &&ConstructMover(T &value, std::false_type) {
 template <typename T>
 void AssignMover(T &, T &, std::true_type) {
     static_assert(
-        false,
+        // Use the template to ensure that the compiler doesn't eagerly evaluate the expression; the result
+        // should always be false (meaning the assertion will fail) when this method is compiled.
+        std::is_same_v<T, T> == false,
         "References are not supported in move assignments; consider applying the 'MOVE_NO_ASSIGNMENT' flag or removing the reference."
     );
 }

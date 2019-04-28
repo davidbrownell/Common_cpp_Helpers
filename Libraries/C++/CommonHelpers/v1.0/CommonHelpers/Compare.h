@@ -22,6 +22,7 @@
 /////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <cstring>
 #include <memory>
 #include <tuple>
 
@@ -106,7 +107,7 @@ int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPoin
 //
 int Compare(char const *lhs, char const *rhs);
 int Compare(wchar_t const *lhs, wchar_t const *rhs);
-int Compare(nullptr_t const, nullptr_t const);
+int Compare(std::nullptr_t const, std::nullptr_t const);
 
 template <typename T>
 int Compare(T const *lhs, T const *rhs);
@@ -296,14 +297,14 @@ int Compare(T const &lhs, T const &rhs, std::enable_if_t<TypeTraits::IsSmartPoin
 }
 
 inline int Compare(char const *lhs, char const *b) {
-    return Details::ComparePtrImpl(lhs, b, strcmp);
+    return Details::ComparePtrImpl(lhs, b, std::strcmp);
 }
 
 inline int Compare(wchar_t const *lhs, wchar_t const *b) {
-    return Details::ComparePtrImpl(lhs, b, wcscmp);
+    return Details::ComparePtrImpl(lhs, b, std::wcscmp);
 }
 
-inline int Compare(nullptr_t const, nullptr_t const) {
+inline int Compare(std::nullptr_t const, std::nullptr_t const) {
     return 0;
 }
 
