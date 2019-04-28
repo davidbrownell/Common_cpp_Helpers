@@ -104,7 +104,7 @@ namespace Details {
     // MSVC needs parens when taking the address of the method when supporting operators; Clang gets confused when it sees these parens.
 #   define CREATE_HAS_METHOD_CHECKER_Impl_Strict_AddressOfImpl(MethodName)  &(HasMethodCheckerImplInternalArgumentT::MethodName)
 #else
-#   define CREATE_HAS_METHOD_CHECKER_Impl_Strict_AddressOfImpl(MethodName)  & BOOST_PP_CAT(HasMethodCheckerImplInternalArgumentT::, MethodName)
+#   define CREATE_HAS_METHOD_CHECKER_Impl_Strict_AddressOfImpl(MethodName)  &HasMethodCheckerImplInternalArgumentT::MethodName
 #endif
 
 // This method is not, as we have to make sure that the method picked up can be found
