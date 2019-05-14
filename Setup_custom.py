@@ -112,8 +112,8 @@ def GetDependencies():
 
     if CurrentShell.CategoryName == "Windows":
         repo_depedencies += [
-            ("MSVC-2019", "Common_cpp_MSVC_2019", "AB7D87C49C2449F79D9F42E5195030FD"),
-            ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC"),
+            ("MSVC-2019", "Common_cpp_MSVC_2019", "AB7D87C49C2449F79D9F42E5195030FD", None),
+            ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC", None),
         ]
 
         architectures = ["x64", "x86"]
@@ -121,18 +121,18 @@ def GetDependencies():
         architectures = [CurrentShell.Architecture]
 
     repo_depedencies += [
-        ("Clang-8", "Common_cpp_Clang_8", "3DE9F3430E494A6C8429B26A1503C895"),
+        ("Clang-8", "Common_cpp_Clang_8", "3DE9F3430E494A6C8429B26A1503C895", "-ex"),
     ]
 
-    for short_name, repo_name, repo_id in repo_depedencies:
+    for short_name, repo_name, repo_id, config_suffix in repo_depedencies:
         for architecture in architectures:
             d["{}-{}".format(short_name, architecture)] = Configuration(
-                architecture,
+                "{} - {}".format(short_name, architecture),
                 [
                     Dependency(
                         repo_id,
                         repo_name,
-                        architecture,
+                        "{}{}".format(architecture, config_suffix or ""),
                         "https://github.com/davidbrownell/{}.git".format(repo_name),
                     ),
                 ],
