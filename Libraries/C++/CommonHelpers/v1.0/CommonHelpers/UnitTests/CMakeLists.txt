@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5.0)
 
+project(CommonHelpers_UnitTests CXX)
+
 set(CMAKE_MODULE_PATH "$ENV{DEVELOPMENT_ENVIRONMENT_CMAKE_MODULE_PATH}")
 set(_includes "$ENV{INCLUDE}")
 set(_libs "$ENV{LIB}")
