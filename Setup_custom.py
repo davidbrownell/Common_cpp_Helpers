@@ -96,7 +96,7 @@ def GetDependencies():
 
     d = OrderedDict()
 
-    d["Standard"] = Configuration(
+    d["standard"] = Configuration(
         "Standard configuration without a compiler dependency",
         [
             Dependency(
@@ -107,7 +107,7 @@ def GetDependencies():
             ),
         ],
     )
-    
+
     repo_depedencies = []
 
     if CurrentShell.CategoryName == "Windows":
@@ -146,7 +146,7 @@ def GetCustomActions(debug, verbose, explicit_configurations):
     """
     Returns an action or list of actions that should be invoked as part of the setup process.
 
-    Actions are generic command line statements defined in 
+    Actions are generic command line statements defined in
     <Common_Environment>/Libraries/Python/CommonEnvironment/v1.0/CommonEnvironment/Shell/Commands/__init__.py
     that are converted into statements appropriate for the current scripting language (in most
     cases, this is Bash on Linux systems and Batch or PowerShell on Windows systems.
