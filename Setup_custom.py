@@ -42,7 +42,7 @@ _script_dir, _script_name                   = os.path.split(_script_fullpath)
 # <Wildcard import> pylint: disable = W0401
 # <Unused argument> pylint: disable = W0613
 
-fundamental_repo                                                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
+fundamental_repo                            = os.getenv("DEVELOPMENT_ENVIRONMENT_FUNDAMENTAL")
 assert os.path.isdir(fundamental_repo), fundamental_repo
 
 sys.path.insert(0, fundamental_repo)
@@ -103,7 +103,7 @@ def GetDependencies():
                 "0EAA1DCF22804F90AD9F5A3B85A5D706",
                 "Common_Environment",
                 "python36",
-                lambda scm_or_none: "https://github.com/davidbrownell/Common_Environment-v3.git" if scm_or_none is None or scm_or_none.Name != "Mercurial" else "ssh://{mercurial_ssh_config_name}/d:/Mercurial/Code/v3/Common/Common_Environment",
+                "https://github.com/davidbrownell/Common_Environment-v3.git",
             ),
         ],
     )
@@ -112,8 +112,18 @@ def GetDependencies():
 
     if CurrentShell.CategoryName == "Windows":
         repo_depedencies += [
-            ("MSVC-2019", "Common_cpp_MSVC_2019", "AB7D87C49C2449F79D9F42E5195030FD", None),
-            ("MSVC-2017", "Common_cpp_MSVC_2017", "8FC8ACE80A594D2EA996CAC5DBFFEBBC", None),
+            (
+                "MSVC-2019",
+                "Common_cpp_MSVC_2019",
+                "AB7D87C49C2449F79D9F42E5195030FD",
+                None,
+            ),
+            (
+                "MSVC-2017",
+                "Common_cpp_MSVC_2017",
+                "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
+                None,
+            ),
         ]
 
         architectures = ["x64", "x86"]
@@ -121,7 +131,12 @@ def GetDependencies():
         architectures = [CurrentShell.Architecture]
 
     repo_depedencies += [
-        ("Clang-8", "Common_cpp_Clang_8", "3DE9F3430E494A6C8429B26A1503C895", "-ex"),
+        (
+            "Clang-8",
+            "Common_cpp_Clang_8",
+            "3DE9F3430E494A6C8429B26A1503C895",
+            "-ex",
+        ),
     ]
 
     for short_name, repo_name, repo_id, config_suffix in repo_depedencies:
