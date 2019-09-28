@@ -128,6 +128,12 @@ namespace TypeTraits {
 ///
 #define make_immutable(Value)               const_cast<std::add_lvalue_reference_t<CommonHelpers::TypeTraits::MakeTargetImmutable<decltype(Value)>>>(Value)
 
+/////////////////////////////////////////////////////////////////////////
+///  \def           UNUSED
+///  \brief         Macro to avoid unused parameter style warnings.
+///
+#define UNUSED(X)                           (void)(X)
+
 // clang-format on
 
 // ----------------------------------------------------------------------
