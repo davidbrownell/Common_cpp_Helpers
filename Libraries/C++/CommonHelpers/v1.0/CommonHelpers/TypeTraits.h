@@ -70,14 +70,14 @@ namespace TypeTraits {
 ///                 macro, each of which control how method detection and evaluation
 ///                 is controlled.
 ///
-///                 When in strict mode, an exact function signatures must be 
+///                 When in strict mode, an exact function signatures must be
 ///                 provided. Strict mode ignores class hierarchy when looking for
 ///                 methods and only considers the current class.
 ///
-///                     Comparison operators:   (bool (Q::*)(Q const &) const) 
+///                     Comparison operators:   (bool (Q::*)(Q const &) const)
 ///                     Clone:                  (std::unique_ptr<Q> (Q::*)(void) const)
 ///
-///                 When not in strict mode, simplified function signatures must be 
+///                 When not in strict mode, simplified function signatures must be
 ///                 provided. This mode will search for the method in the entire
 ///                 class hierarchy.
 ///
@@ -128,6 +128,12 @@ namespace TypeTraits {
 ///
 #define make_immutable(Value)               const_cast<std::add_lvalue_reference_t<CommonHelpers::TypeTraits::MakeTargetImmutable<decltype(Value)>>>(Value)
 
+/////////////////////////////////////////////////////////////////////////
+///  \def           UNUSED
+///  \brief         Macro to avoid unused parameter style warnings.
+///
+#define UNUSED(X)                           (void)(X)
+
 // clang-format on
 
 // ----------------------------------------------------------------------
@@ -177,12 +183,12 @@ template <typename C, typename T, typename A>
 constexpr bool const IsString<std::basic_string<C, T, A>> = true;
 
 /////////////////////////////////////////////////////////////////////////
-///  \var           IsContinuousContainer
+///  \var           IsContiguousContainer
 ///  \brief         True if the type is implemented in terms of contiguous
 ///                 memory.
 ///
 template <typename T>
-constexpr bool const IsContinuousContainer = IsVector<T> || IsString<T>;
+constexpr bool const IsContiguousContainer = IsVector<T> || IsString<T>;
 
 /////////////////////////////////////////////////////////////////////////
 ///  \var           IsContiguousByteContainer
@@ -190,7 +196,7 @@ constexpr bool const IsContinuousContainer = IsVector<T> || IsString<T>;
 ///                 bytes.
 ///
 template <typename T>
-constexpr bool const IsContiguousByteContainer = IsContinuousContainer<T> && sizeof(typename T::value_type) == 1;
+constexpr bool const IsContiguousByteContainer = IsContiguousContainer<T> && sizeof(typename T::value_type) == 1;
 
 /////////////////////////////////////////////////////////////////////////
 ///  \var           IsIterator
