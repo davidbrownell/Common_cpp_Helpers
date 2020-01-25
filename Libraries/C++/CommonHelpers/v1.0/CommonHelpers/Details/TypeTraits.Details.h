@@ -194,7 +194,7 @@ namespace Details {
 // |  Public Types
 // |
 // ----------------------------------------------------------------------
-namespace {
+namespace Details {
 
 template <typename T>
 std::true_type IsContainerImplHelper(
@@ -221,17 +221,17 @@ std::true_type IsIteratorImplHelper(
 template <typename T>
 std::false_type IsIteratorImplHelper(...);
 
-}  // namespace
+}  // namespace Details
 
 template <typename T>
 constexpr bool const IsContainerImpl = std::is_same_v<
     std::true_type,
-    decltype(IsContainerImplHelper<T>(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr))
+    decltype(Details::IsContainerImplHelper<T>(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr))
 >;
 
 template <typename T>
 constexpr bool const IsIteratorImpl
-    = std::is_same_v<std::true_type, decltype(IsIteratorImplHelper<T>(nullptr, nullptr, nullptr, nullptr))>;
+    = std::is_same_v<std::true_type, decltype(Details::IsIteratorImplHelper<T>(nullptr, nullptr, nullptr, nullptr))>;
 
 }  // namespace Details
 }  // namespace TypeTraits
