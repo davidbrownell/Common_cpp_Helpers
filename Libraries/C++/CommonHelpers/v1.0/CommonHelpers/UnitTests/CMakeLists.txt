@@ -26,6 +26,7 @@ foreach(_name IN ITEMS
     Constructor_UnitTest
     Copy_UnitTest
     Move_UnitTest
+    SharedObject_UnitTest
     TypeTraits_UnitTest
 )
     add_executable(${_name} ${_name}.cpp)
