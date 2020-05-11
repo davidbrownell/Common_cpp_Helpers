@@ -1,40 +1,34 @@
 cmake_minimum_required(VERSION 3.5.0)
 
-project(CommonHelpers_UnitTests CXX)
+project(CommonHelpers_UnitTests LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH "$ENV{DEVELOPMENT_ENVIRONMENT_CMAKE_MODULE_PATH}")
-set(_includes "$ENV{INCLUDE}")
-set(_libs "$ENV{LIB}")
 
 if(NOT WIN32)
     string(REPLACE ":" ";" CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
-    string(REPLACE ":" ";" _includes "${_includes}")
-    string(REPLACE ":" ";" _libs "${_libs}")
 endif()
 
-include(CppCommon)
-include(CommonHelpers)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+include(BuildHelpers)
 
 enable_testing()
 
-foreach(_name IN ITEMS
-    Compare_UnitTest
-    Constructor_UnitTest
-    Copy_UnitTest
-    Move_UnitTest
-    SharedObject_UnitTest
-    TypeTraits_UnitTest
-)
-    add_executable(${_name} ${_name}.cpp)
+function(Impl)
+    get_filename_component(_this_path ${CMAKE_CURRENT_LIST_FILE} DIRECTORY)
 
-    target_include_directories(${_name} PRIVATE ${_includes})
-    target_link_directories(${_name} PRIVATE ${_libs})
+    include(${_this_path}/../cmake/CommonHelpers.cmake)
 
-    target_link_libraries(${_name} CommonHelpers)
+    build_tests(
+        FILES
+            ${_this_path}/Compare_UnitTest.cpp
+            ${_this_path}/Constructor_UnitTest.cpp
+            ${_this_path}/Copy_UnitTest.cpp
+            ${_this_path}/Misc_UnitTest.cpp
+            ${_this_path}/Move_UnitTest.cpp
+            ${_this_path}/SharedObject_UnitTest.cpp
+            ${_this_path}/TypeTraits_UnitTest.cpp
+        LINK_LIBRARIES
+            CommonHelpers
+    )
+endfunction()
 
-    add_test(NAME ${_name} COMMAND ${_name} --success)
-endforeach()
+Impl()
