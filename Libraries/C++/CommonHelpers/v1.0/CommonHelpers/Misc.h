@@ -21,13 +21,15 @@
 /////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include <stdexcept>
+#include "TypeTraits.h"
 
 #include "boost_extract/preprocessor/control/iif.hpp"
 #include "boost_extract/preprocessor/empty.hpp"
 
 #include "boost_extract/vmd/empty.hpp"
 #include "boost_extract/vmd/is_empty.hpp"
+
+#include <stdexcept>
 
 namespace CommonHelpers {
 
@@ -56,7 +58,7 @@ namespace CommonHelpers {
 // ----------------------------------------------------------------------
 #define ENSURE_ARGUMENT_Impl(var, ...)                  BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__ BOOST_PP_EMPTY()), ENSURE_ARGUMENT_Impl_Empty, ENSURE_ARGUMENT_Impl_NotEmpty)(var, __VA_ARGS__)
 #define ENSURE_ARGUMENT_Impl_Empty(var, _)              ENSURE_ARGUMENT_Impl_NotEmpty(var, var)
-#define ENSURE_ARGUMENT_Impl_NotEmpty(var, stmt)        { (var); ENSURE_ARGUMENT_STR_Impl(#var, stmt) }
+#define ENSURE_ARGUMENT_Impl_NotEmpty(var, stmt)        { UNUSED(var); ENSURE_ARGUMENT_STR_Impl(#var, stmt) }
 
 #define ENSURE_ARGUMENT_STR_Impl(str, stmt)             { if(!(stmt)) throw std::invalid_argument(str); }
 
