@@ -126,16 +126,16 @@ namespace CommonHelpers {
 #define COPY_Impl_Ctor_Members_Macro(r, _, Member)      Member(other.Member)
 
 // ----------------------------------------------------------------------
-#define COPY_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)             \
-    ClassName & operator =(ClassName const &other) {                                      \
-        (other);                                                                          \
-        BOOST_PP_IIF(HasBases, COPY_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)        \
-        BOOST_PP_IIF(HasMembers, COPY_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)  \
-                                                                                          \
-        CommonHelpers::TypeTraits::Access::CopyFinalAssign(*this);                        \
-        CommonHelpers::TypeTraits::Access::FinalAssign(*this);                            \
-                                                                                          \
-        return *this;                                                                     \
+#define COPY_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)               \
+    ClassName & operator =(ClassName const &other) {                                        \
+        (other);                                                                            \
+        BOOST_PP_IIF(HasBases, COPY_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)          \
+        BOOST_PP_IIF(HasMembers, COPY_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)    \
+                                                                                            \
+        CommonHelpers::TypeTraits::Access::CopyFinalAssign(*this);                          \
+        CommonHelpers::TypeTraits::Access::FinalAssign(*this);                              \
+                                                                                            \
+        return *this;                                                                       \
     }
 
 #define COPY_Impl_Assignment_Bases(Bases)              BOOST_PP_TUPLE_FOR_EACH(COPY_Impl_Assignment_Bases_Macro, _, Bases)
