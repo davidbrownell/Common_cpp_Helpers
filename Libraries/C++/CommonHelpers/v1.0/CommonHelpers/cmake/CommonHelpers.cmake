@@ -14,8 +14,12 @@ function(Impl)
     get_filename_component(_this_path ${CMAKE_CURRENT_LIST_FILE} DIRECTORY)
 
     build_library(
-        NAME CommonHelpers
-        IS_INTERFACE ON
+        NAME
+            CommonHelpers
+
+        IS_INTERFACE
+            ON
+
         FILES
             ${_this_path}/../Compare.h
             ${_this_path}/../Constructor.h
@@ -23,7 +27,9 @@ function(Impl)
             ${_this_path}/../Misc.h
             ${_this_path}/../Move.h
             ${_this_path}/../SharedObject.h
+            ${_this_path}/../TestHelpers.h
             ${_this_path}/../TypeTraits.h
+
         PUBLIC_INCLUDE_DIRECTORIES
             ${_this_path}/../..
             ${_this_path}/../Details

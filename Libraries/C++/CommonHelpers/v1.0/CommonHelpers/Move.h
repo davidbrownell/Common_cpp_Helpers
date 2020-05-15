@@ -129,16 +129,16 @@ namespace CommonHelpers {
 #define MOVE_Impl_Ctor_Members_Macro(r, _, Member)      Member(CommonHelpers::Details::ConstructMover(make_mutable(other.Member), std::integral_constant<bool, std::is_reference_v<decltype(other.Member)>>::type()))
 
 // ----------------------------------------------------------------------
-#define MOVE_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)             \
-    ClassName & operator =(ClassName && other) {                                          \
-        (other);                                                                          \
-        BOOST_PP_IIF(HasBases, MOVE_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)        \
-        BOOST_PP_IIF(HasMembers, MOVE_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)  \
-                                                                                          \
-        CommonHelpers::TypeTraits::Access::MoveFinalAssign(*this);                        \
-        CommonHelpers::TypeTraits::Access::FinalAssign(*this);                            \
-                                                                                          \
-        return *this;                                                                     \
+#define MOVE_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)               \
+    ClassName & operator =(ClassName && other) {                                            \
+        (other);                                                                            \
+        BOOST_PP_IIF(HasBases, MOVE_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)          \
+        BOOST_PP_IIF(HasMembers, MOVE_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)    \
+                                                                                            \
+        CommonHelpers::TypeTraits::Access::MoveFinalAssign(*this);                          \
+        CommonHelpers::TypeTraits::Access::FinalAssign(*this);                              \
+                                                                                            \
+        return *this;                                                                       \
     }
 
 #define MOVE_Impl_Assignment_Bases(Bases)               BOOST_PP_TUPLE_FOR_EACH(MOVE_Impl_Assignment_Bases_Macro, _, Bases)

@@ -25,7 +25,9 @@ function(Impl)
             ${_this_path}/Misc_UnitTest.cpp
             ${_this_path}/Move_UnitTest.cpp
             ${_this_path}/SharedObject_UnitTest.cpp
+            ${_this_path}/TestHelpers_UnitTest.cpp
             ${_this_path}/TypeTraits_UnitTest.cpp
+
         LINK_LIBRARIES
             CommonHelpers
     )
