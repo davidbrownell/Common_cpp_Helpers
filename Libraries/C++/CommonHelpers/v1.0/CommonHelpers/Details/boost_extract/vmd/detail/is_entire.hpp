@@ -7,10 +7,10 @@
 #if !defined(BOOST_VMD_DETAIL_IS_ENTIRE_HPP)
 #define BOOST_VMD_DETAIL_IS_ENTIRE_HPP
 
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../is_empty.hpp"
+#include "not_empty.hpp"
 
 #define BOOST_VMD_DETAIL_IS_ENTIRE(tuple) \
     BOOST_PP_BITAND \

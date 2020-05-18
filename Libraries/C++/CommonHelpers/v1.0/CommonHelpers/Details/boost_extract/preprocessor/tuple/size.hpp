@@ -13,9 +13,9 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
 # define BOOST_PREPROCESSOR_TUPLE_SIZE_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/variadic/size.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../variadic/size.hpp"
 #
 # if BOOST_PP_VARIADICS
 #    if BOOST_PP_VARIADICS_MSVC

@@ -12,12 +12,12 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_POP_FRONT_HPP
 # define BOOST_PREPROCESSOR_ARRAY_POP_FRONT_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/array/elem.hpp>
-# include <boost_extract/preprocessor/array/size.hpp>
-# include <boost_extract/preprocessor/repetition/enum.hpp>
-# include <boost_extract/preprocessor/repetition/deduce_z.hpp>
+# include "../arithmetic/dec.hpp"
+# include "../arithmetic/inc.hpp"
+# include "elem.hpp"
+# include "size.hpp"
+# include "../repetition/enum.hpp"
+# include "../repetition/deduce_z.hpp"
 #
 # /* BOOST_PP_ARRAY_POP_FRONT */
 #

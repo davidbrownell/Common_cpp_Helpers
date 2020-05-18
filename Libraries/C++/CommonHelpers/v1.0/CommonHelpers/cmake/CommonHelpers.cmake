@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
 
-project(CommonHelpers LANGUAGES CXX)
-
 set(CMAKE_MODULE_PATH "$ENV{DEVELOPMENT_ENVIRONMENT_CMAKE_MODULE_PATH}")
 
 if(NOT WIN32)
@@ -12,6 +10,13 @@ include(BuildHelpers)
 
 function(Impl)
     get_filename_component(_this_path ${CMAKE_CURRENT_LIST_FILE} DIRECTORY)
+    get_filename_component(_details_path "${_this_path}/../Details" REALPATH)
+
+    file(
+        GLOB_RECURSE
+        _details_files
+        ${_details_path}/*.*
+    )
 
     build_library(
         NAME
@@ -21,6 +26,8 @@ function(Impl)
             ON
 
         FILES
+            ${_details_files}
+
             ${_this_path}/../Compare.h
             ${_this_path}/../Constructor.h
             ${_this_path}/../Copy.h
@@ -32,7 +39,6 @@ function(Impl)
 
         PUBLIC_INCLUDE_DIRECTORIES
             ${_this_path}/../..
-            ${_this_path}/../Details
     )
 endfunction()
 

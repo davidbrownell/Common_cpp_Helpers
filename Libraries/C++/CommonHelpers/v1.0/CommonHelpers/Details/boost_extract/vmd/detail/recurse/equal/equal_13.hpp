@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_EQUAL_13_HPP)
 #define BOOST_VMD_DETAIL_EQUAL_13_HPP
 
-#include <boost_extract/vmd/detail/recurse/equal/equal_headers.hpp>
+#include "equal_headers.hpp"
 
 #define BOOST_VMD_DETAIL_EQUAL_13_CNI_CHK(vseq1,vseq2,vtype) \
     BOOST_PP_IIF \

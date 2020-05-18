@@ -14,8 +14,8 @@
 # ifndef BOOST_PREPROCESSOR_LIST_APPEND_HPP
 # define BOOST_PREPROCESSOR_LIST_APPEND_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/fold_right.hpp>
+# include "../config/config.hpp"
+# include "fold_right.hpp"
 #
 # /* BOOST_PP_LIST_APPEND */
 #

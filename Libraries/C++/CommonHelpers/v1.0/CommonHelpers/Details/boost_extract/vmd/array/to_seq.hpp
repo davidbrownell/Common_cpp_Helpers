@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_ARRAY_TO_SEQ_HPP)
 #define BOOST_VMD_ARRAY_TO_SEQ_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/array/to_seq.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/is_empty_array.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/array/to_seq.hpp"
+#include "../empty.hpp"
+#include "../is_empty_array.hpp"
 
 /*
 
@@ -30,7 +30,7 @@
     \brief converts an array to a seq.
 
     array = array to be converted.
-    
+
     If the array is an array of 0 elements it is converted to an empty seq.
     Otherwise the array is converted to a seq with the same number of elements as the array.
 */

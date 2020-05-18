@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_SETUP_HPP)
 #define BOOST_VMD_DETAIL_SETUP_HPP
 
-#include <boost_extract/preprocessor/config/config.hpp>
+#include "../../preprocessor/config/config.hpp"
 
 #if defined(BOOST_VMD_MSVC)
 #undef BOOST_VMD_MSVC

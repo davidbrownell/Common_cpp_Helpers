@@ -7,19 +7,19 @@
 #if !defined(BOOST_VMD_DETAIL_MATCH_IDENTIFIER_HPP)
 #define BOOST_VMD_DETAIL_MATCH_IDENTIFIER_HPP
 
-#include <boost_extract/preprocessor/arithmetic/inc.hpp>
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/comparison/not_equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/replace.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/idprefix.hpp>
-#include <boost_extract/vmd/detail/match_identifier_common.hpp>
+#include "../../preprocessor/arithmetic/inc.hpp"
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/comparison/not_equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/control/while.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/replace.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../is_empty.hpp"
+#include "idprefix.hpp"
+#include "match_identifier_common.hpp"
 
 #define BOOST_VMD_DETAIL_MATCH_IDENTIFIER_STATE_ID(state) \
     BOOST_PP_TUPLE_ELEM(0,state) \

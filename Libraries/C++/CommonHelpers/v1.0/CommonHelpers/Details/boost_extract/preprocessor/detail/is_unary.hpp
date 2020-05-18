@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_DETAIL_IS_UNARY_HPP
 # define BOOST_PREPROCESSOR_DETAIL_IS_UNARY_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/detail/check.hpp>
+# include "../config/config.hpp"
+# include "check.hpp"
 #
 # /* BOOST_PP_IS_UNARY */
 #

@@ -13,7 +13,7 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_ENUM_HPP
 # define BOOST_PREPROCESSOR_TUPLE_ENUM_HPP
 #
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "rem.hpp"
 #
 # /* BOOST_PP_TUPLE_ENUM */
 #

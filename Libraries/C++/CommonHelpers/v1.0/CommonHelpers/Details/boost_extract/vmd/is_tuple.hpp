@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_IS_TUPLE_HPP)
 #define BOOST_VMD_IS_TUPLE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/detail/is_tuple.hpp>
+#include "detail/is_tuple.hpp"
 
 /*
 
@@ -29,12 +29,12 @@
     The macro checks to see if a sequence is a Boost PP tuple.
     A Boost PP tuple is preprocessor tokens enclosed by a set of parentheses
     with no preprocessing tokens before or after the parentheses.
-    
+
     sequence = a possible tuple
 
     returns = 1 if the sequence is a Boost PP tuple.
               0 if it is not.
-              
+
 */
 
 #define BOOST_VMD_IS_TUPLE(sequence) \

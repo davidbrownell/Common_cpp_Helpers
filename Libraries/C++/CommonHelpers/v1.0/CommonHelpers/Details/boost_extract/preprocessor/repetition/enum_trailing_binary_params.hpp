@@ -12,11 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_ENUM_TRAILING_BINARY_PARAMS_HPP
 # define BOOST_PREPROCESSOR_REPETITION_ENUM_TRAILING_BINARY_PARAMS_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/repetition/repeat.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "repeat.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_ENUM_TRAILING_BINARY_PARAMS */
 #

@@ -13,10 +13,10 @@
 # ifndef BOOST_PREPROCESSOR_VARIADIC_TO_ARRAY_HPP
 # define BOOST_PREPROCESSOR_VARIADIC_TO_ARRAY_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/tuple/to_array.hpp>
+# include "../config/config.hpp"
+# include "../tuple/to_array.hpp"
 # if BOOST_PP_VARIADICS_MSVC
-#    include <boost_extract/preprocessor/variadic/size.hpp>
+#    include "size.hpp"
 # endif
 #
 # /* BOOST_PP_VARIADIC_TO_ARRAY */

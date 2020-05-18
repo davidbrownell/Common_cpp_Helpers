@@ -12,14 +12,14 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_DETAIL_TO_LIST_MSVC_HPP
 # define BOOST_PREPROCESSOR_SEQ_DETAIL_TO_LIST_MSVC_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../../config/config.hpp"
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../../cat.hpp"
+# include "../../arithmetic/dec.hpp"
+# include "../../control/while.hpp"
+# include "../../tuple/elem.hpp"
 #
 # define BOOST_PP_SEQ_DETAIL_TO_LIST_MSVC_STATE_RESULT(state) \
     BOOST_PP_TUPLE_ELEM(2, 0, state) \

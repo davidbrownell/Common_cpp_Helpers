@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_NOT_EMPTY_HPP)
 #define BOOST_VMD_DETAIL_NOT_EMPTY_HPP
 
-#include <boost_extract/preprocessor/logical/compl.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/logical/compl.hpp"
+#include "../is_empty.hpp"
 
 #define BOOST_VMD_DETAIL_NOT_EMPTY(par) \
     BOOST_PP_COMPL \

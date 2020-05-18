@@ -7,12 +7,12 @@
 #if !defined(BOOST_VMD_DETAIL_IS_NUMBER_HPP)
 #define BOOST_VMD_DETAIL_IS_NUMBER_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/identifier_type.hpp>
-#include <boost_extract/vmd/detail/is_identifier.hpp>
-#include <boost_extract/vmd/detail/number_registration.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../identity.hpp"
+#include "equal_type.hpp"
+#include "identifier_type.hpp"
+#include "is_identifier.hpp"
+#include "number_registration.hpp"
 
 #define BOOST_VMD_DETAIL_IS_NUMBER_TYPE(vseq) \
     BOOST_VMD_DETAIL_EQUAL_TYPE \

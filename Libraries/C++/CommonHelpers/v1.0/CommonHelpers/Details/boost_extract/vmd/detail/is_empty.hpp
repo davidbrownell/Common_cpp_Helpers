@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_IS_EMPTY_HPP)
 #define BOOST_VMD_DETAIL_IS_EMPTY_HPP
 
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
 
 #if BOOST_VMD_MSVC
 

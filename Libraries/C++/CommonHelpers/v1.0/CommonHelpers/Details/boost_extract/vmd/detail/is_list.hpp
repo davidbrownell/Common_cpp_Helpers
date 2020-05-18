@@ -7,24 +7,24 @@
 #if !defined(BOOST_VMD_DETAIL_IS_LIST_HPP)
 #define BOOST_VMD_DETAIL_IS_LIST_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/debug/assert.hpp>
-#include <boost_extract/preprocessor/facilities/empty.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/logical/compl.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/preprocessor/variadic/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_identifier.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
-#include <boost_extract/vmd/detail/nil_registration.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/control/while.hpp"
+#include "../../preprocessor/debug/assert.hpp"
+#include "../../preprocessor/facilities/empty.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/logical/compl.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../../preprocessor/variadic/size.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_identifier.hpp"
+#include "../is_tuple.hpp"
+#include "nil_registration.hpp"
 
 #define BOOST_VMD_DETAIL_IS_LIST_PROCESS_TUPLE(d,x) \
     BOOST_PP_IIF \

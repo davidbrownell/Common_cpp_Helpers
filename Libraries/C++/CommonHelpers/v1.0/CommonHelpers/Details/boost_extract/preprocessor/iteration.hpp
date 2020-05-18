@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_ITERATION_HPP
 # define BOOST_PREPROCESSOR_ITERATION_HPP
 #
-# include <boost_extract/preprocessor/iteration/iterate.hpp>
-# include <boost_extract/preprocessor/iteration/local.hpp>
-# include <boost_extract/preprocessor/iteration/self.hpp>
+# include "iteration/iterate.hpp"
+# include "iteration/local.hpp"
+# include "iteration/self.hpp"
 #
 # endif

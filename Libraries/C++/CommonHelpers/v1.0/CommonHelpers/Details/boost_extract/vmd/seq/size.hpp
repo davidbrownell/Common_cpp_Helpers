@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_SEQ_SIZE_HPP)
 #define BOOST_VMD_SEQ_SIZE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/seq/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/seq/size.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -27,10 +27,10 @@
 
 /** \def BOOST_VMD_SEQ_SIZE(seq)
 
-    \brief  expands to the size of the seq passed to it. 
+    \brief  expands to the size of the seq passed to it.
 
-    seq = seq whose size is to be extracted. 
-    
+    seq = seq whose size is to be extracted.
+
     If the seq is an empty seq its size is 0.
     Otherwise the result is the number of elements in the seq.
 */

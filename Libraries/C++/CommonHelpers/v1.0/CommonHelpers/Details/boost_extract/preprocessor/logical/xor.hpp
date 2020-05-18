@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_LOGICAL_XOR_HPP
 # define BOOST_PREPROCESSOR_LOGICAL_XOR_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
-# include <boost_extract/preprocessor/logical/bitxor.hpp>
+# include "../config/config.hpp"
+# include "bool.hpp"
+# include "bitxor.hpp"
 #
 # /* BOOST_PP_XOR */
 #

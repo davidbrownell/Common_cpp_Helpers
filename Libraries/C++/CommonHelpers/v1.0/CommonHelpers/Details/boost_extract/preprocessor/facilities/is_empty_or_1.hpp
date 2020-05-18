@@ -12,11 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_FACILITIES_IS_EMPTY_OR_1_HPP
 # define BOOST_PREPROCESSOR_FACILITIES_IS_EMPTY_OR_1_HPP
 #
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/facilities/identity.hpp>
-# include <boost_extract/preprocessor/facilities/is_1.hpp>
-# include <boost_extract/preprocessor/facilities/is_empty.hpp>
+# include "../control/iif.hpp"
+# include "empty.hpp"
+# include "identity.hpp"
+# include "is_1.hpp"
+# include "is_empty.hpp"
 #
 # /* BOOST_PP_IS_EMPTY_OR_1 */
 #

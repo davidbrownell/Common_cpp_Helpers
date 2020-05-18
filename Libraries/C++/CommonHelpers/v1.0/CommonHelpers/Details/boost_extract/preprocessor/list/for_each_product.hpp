@@ -14,15 +14,15 @@
 # ifndef BOOST_PREPROCESSOR_LIST_FOR_EACH_PRODUCT_HPP
 # define BOOST_PREPROCESSOR_LIST_FOR_EACH_PRODUCT_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/if.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/list/to_tuple.hpp>
-# include <boost_extract/preprocessor/repetition/for.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/to_list.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
-# include <boost_extract/preprocessor/tuple/reverse.hpp>
+# include "../config/config.hpp"
+# include "../control/if.hpp"
+# include "adt.hpp"
+# include "to_tuple.hpp"
+# include "../repetition/for.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/to_list.hpp"
+# include "../tuple/rem.hpp"
+# include "../tuple/reverse.hpp"
 #
 # /* BOOST_PP_LIST_FOR_EACH_PRODUCT */
 #

@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_SIZE_HPP)
 #define BOOST_VMD_SIZE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/detail/sequence_size.hpp>
+#include "detail/sequence_size.hpp"
 
 /*
 
@@ -30,7 +30,7 @@
 
     returns   = If the sequence is empty returns 0, else returns the number of elements
                 in the sequence.
-    
+
 */
 
 #define BOOST_VMD_SIZE(sequence) \
@@ -41,12 +41,12 @@
 
     \brief Returns the size of a sequence. Re-entrant version.
 
-    d         = The next available BOOST_PP_WHILE iteration. 
+    d         = The next available BOOST_PP_WHILE iteration.
     sequence  = A sequence to test.
 
     returns   = If the sequence is empty returns 0, else returns the number of elements
                 in the sequence.
-    
+
 */
 
 #define BOOST_VMD_SIZE_D(d,sequence) \

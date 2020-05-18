@@ -14,10 +14,10 @@
 # ifndef BOOST_PREPROCESSOR_LIST_CAT_HPP
 # define BOOST_PREPROCESSOR_LIST_CAT_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/list/fold_left.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "adt.hpp"
+# include "fold_left.hpp"
 #
 # /* BOOST_PP_LIST_CAT */
 #

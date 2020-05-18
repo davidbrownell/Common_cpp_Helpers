@@ -14,13 +14,13 @@
 # ifndef BOOST_PREPROCESSOR_ARITHMETIC_DETAIL_DIV_BASE_HPP
 # define BOOST_PREPROCESSOR_ARITHMETIC_DETAIL_DIV_BASE_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/arithmetic/sub.hpp>
-# include <boost_extract/preprocessor/comparison/less_equal.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../inc.hpp"
+# include "../sub.hpp"
+# include "../../comparison/less_equal.hpp"
+# include "../../config/config.hpp"
+# include "../../control/while.hpp"
+# include "../../tuple/elem.hpp"
+# include "../../tuple/rem.hpp"
 #
 # /* BOOST_PP_DIV_BASE */
 #

@@ -7,17 +7,17 @@
 #if !defined(BOOST_VMD_DETAIL_EQUAL_HEADERS_HPP)
 #define BOOST_VMD_DETAIL_EQUAL_HEADERS_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/vmd/to_seq.hpp>
-#include <boost_extract/vmd/get_type.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/adjust_tuple_type.hpp>
-#include <boost_extract/vmd/detail/data_equal.hpp>
-#include <boost_extract/vmd/detail/equal_common.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
+#include "../../../../preprocessor/control/iif.hpp"
+#include "../../../../preprocessor/logical/bitor.hpp"
+#include "../../../../preprocessor/logical/bitand.hpp"
+#include "../../../to_seq.hpp"
+#include "../../../get_type.hpp"
+#include "../../../identity.hpp"
+#include "../../../is_empty.hpp"
+#include "../../adjust_tuple_type.hpp"
+#include "../../data_equal.hpp"
+#include "../../equal_common.hpp"
+#include "../../equal_type.hpp"
+#include "../../modifiers.hpp"
 
 #endif /* BOOST_VMD_DETAIL_EQUAL_HEADERS_HPP */

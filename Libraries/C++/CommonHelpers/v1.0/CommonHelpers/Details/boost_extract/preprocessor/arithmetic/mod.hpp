@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_ARITHMETIC_MOD_HPP
 # define BOOST_PREPROCESSOR_ARITHMETIC_MOD_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/detail/div_base.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "detail/div_base.hpp"
+# include "../config/config.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_MOD */
 #

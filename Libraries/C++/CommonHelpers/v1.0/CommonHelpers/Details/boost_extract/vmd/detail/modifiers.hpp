@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_MODIFIERS_HPP)
 #define BOOST_VMD_DETAIL_MODIFIERS_HPP
 
-#include <boost_extract/vmd/detail/match_single_identifier.hpp>
+#include "../detail/match_single_identifier.hpp"
 
 #define BOOST_VMD_REGISTER_BOOST_VMD_RETURN_NO_TYPE (BOOST_VMD_RETURN_NO_TYPE)
 #define BOOST_VMD_REGISTER_BOOST_VMD_RETURN_TYPE (BOOST_VMD_RETURN_TYPE)

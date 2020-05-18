@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_FACILITIES_IS_1_HPP
 # define BOOST_PREPROCESSOR_FACILITIES_IS_1_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/facilities/is_empty.hpp>
+# include "../cat.hpp"
+# include "is_empty.hpp"
 #
 # /* BOOST_PP_IS_1 */
 #

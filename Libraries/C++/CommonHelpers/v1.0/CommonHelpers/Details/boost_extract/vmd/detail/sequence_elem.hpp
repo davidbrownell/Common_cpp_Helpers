@@ -7,38 +7,38 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_ELEM_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_ELEM_HPP
 
-#include <boost_extract/preprocessor/arithmetic/dec.hpp>
-#include <boost_extract/preprocessor/comparison/greater.hpp>
-#include <boost_extract/preprocessor/control/expr_if.hpp>
-#include <boost_extract/preprocessor/control/expr_iif.hpp>
-#include <boost_extract/preprocessor/control/if.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/logical/compl.hpp>
-#include <boost_extract/preprocessor/seq/elem.hpp>
-#include <boost_extract/preprocessor/seq/size.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/push_back.hpp>
-#include <boost_extract/preprocessor/tuple/replace.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_identifier.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/match_identifier.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
-#include <boost_extract/vmd/detail/only_after.hpp>
-#include <boost_extract/vmd/detail/sequence_common.hpp>
+#include "../../preprocessor/arithmetic/dec.hpp"
+#include "../../preprocessor/comparison/greater.hpp"
+#include "../../preprocessor/control/expr_if.hpp"
+#include "../../preprocessor/control/expr_iif.hpp"
+#include "../../preprocessor/control/if.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/logical/compl.hpp"
+#include "../../preprocessor/seq/elem.hpp"
+#include "../../preprocessor/seq/size.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/push_back.hpp"
+#include "../../preprocessor/tuple/replace.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../empty.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_identifier.hpp"
+#include "empty_result.hpp"
+#include "equal_type.hpp"
+#include "match_identifier.hpp"
+#include "mods.hpp"
+#include "not_empty.hpp"
+#include "only_after.hpp"
+#include "sequence_common.hpp"
 
 /*
 
-    Given modifications and the requested type, 
+    Given modifications and the requested type,
     determine whether or not we should be checking for specific identifiers
-    
+
     1 = check for specific identifiers
     0 = do no check for specific identifiers
 
@@ -78,7 +78,7 @@
 /*
 
     Given modifications, determine whether or not an index should be part of the result
-    
+
     1 = index should be part of the result
     0 = index should not be part of the result
 
@@ -258,7 +258,7 @@
 /*
 
     Determines whether the result from the element access has failed or not
-    
+
     returns 1 if it has failed, otherwise 0.
 
 */

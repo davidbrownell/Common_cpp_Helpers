@@ -83,16 +83,16 @@
 
 /////////////////////////////////////////////////////////////////////////
 ///  \def           PPOFImpl
-///  \brief         Preprocessor object functionality implementation. This is 
+///  \brief         Preprocessor object functionality implementation. This is
 ///                 a macro that is used by other macros when implementing
 ///                 preprocessor object functionality. This macro allows for a
 ///                 variety of different calling conventions, reconciling each
 ///                 into a consistent macro invocation.
-/// 
+///
 ///                 Note that all groups are converted into preprocessor sequences
 ///                 for ease in enumeration in the implementation macro.
-/// 
-///                 Examples 
+///
+///                 Examples
 ///                 ========
 ///                     Macro with no special params
 ///                     ----------------------------
@@ -239,7 +239,7 @@
 /////////////////////////////////////////////////////////////////////////
 ///  \def           CONTEXT_TO_TUPLE
 ///  \brief         Creates a tuple with values generated from the provided sequence.
-/// 
+///
 ///                 Examples:
 ///                     #define ZERO_FLAG       0
 ///                     #define ONE_FLAG        1
@@ -260,7 +260,7 @@
 /////////////////////////////////////////////////////////////////////////
 ///  \def           CONTEXT_TO_INITIALIZED_TUPLE
 ///  \brief         See CONTEXT_TO_TUPLE
-/// 
+///
 ///                 Example                                                             | Output
 ///                 -------                                                             | ------
 ///                 CONTEXT_TO_INITIALIZED_TUPLE(5, 0, );                               | ( 0, 0, 0, 0, 0 )
@@ -292,9 +292,9 @@
 
 /////////////////////////////////////////////////////////////////////////
 ///  \def           BOOST_PP_SEQ_FOR_EACH_ENUM
-///  \brief         Combines the benefits of BOOST_PP_SEQ_FOR_EACH and 
+///  \brief         Combines the benefits of BOOST_PP_SEQ_FOR_EACH and
 ///                 BOOST_PP_SEQ_ENUM by delimiting (with commas) the result
-///                 of invoking the given macro on each element of the 
+///                 of invoking the given macro on each element of the
 ///                 sequence.
 ///
 #define BOOST_PP_SEQ_FOR_EACH_ENUM(Macro, Data, Sequence)                   BOOST_PP_SEQ_FOR_EACH_I(BOOST_PP_SEQ_FOR_EACH_ENUM_Macro, (Macro, BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(Sequence)), Data, 0), Sequence)
@@ -329,7 +329,7 @@
 
 #define BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro(r, Data, Index, Element)                                     BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2(r, BOOST_PP_SEQ_ELEM(0, Data), BOOST_PP_SEQ_ELEM(1, Data), BOOST_PP_SEQ_ELEM(2, Data), BOOST_PP_SEQ_ELEM(3, Data), Index, Element)
 #define BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2(r, LastIndex, Macro, Data, IncludeIndex, Index, Element)    BOOST_PP_IIF(IncludeIndex, BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2_Index, BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2_NoIndex)(r, Macro, Data, Index, Element) BOOST_PP_COMMA_IF(BOOST_PP_NOT_EQUAL(Index, LastIndex))
-#define BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2_NoIndex(r, Macro, Data, Index, Element)                     Macro(r, Data, Element) 
+#define BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2_NoIndex(r, Macro, Data, Index, Element)                     Macro(r, Data, Element)
 #define BOOST_PP_TUPLE_FOR_EACH_ENUM_Macro2_Index(r, Macro, Data, Index, Element)                       Macro(r, Data, Index, Element)
 
 // clang-format on
