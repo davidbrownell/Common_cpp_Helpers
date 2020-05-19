@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_TO_ARRAY_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_TO_ARRAY_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
-#include <boost_extract/vmd/detail/sequence_elem.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "modifiers.hpp"
+#include "mods.hpp"
+#include "not_empty.hpp"
+#include "sequence_elem.hpp"
 
 #define BOOST_VMD_DETAIL_SEQUENCE_TO_ARRAY(...) \
     BOOST_PP_IIF \

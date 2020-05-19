@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_SELECTION_MIN_HPP
 # define BOOST_PREPROCESSOR_SELECTION_MIN_HPP
 #
-# include <boost_extract/preprocessor/comparison/less_equal.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
+# include "../comparison/less_equal.hpp"
+# include "../config/config.hpp"
+# include "../control/iif.hpp"
 #
 # /* BOOST_PP_MIN */
 #

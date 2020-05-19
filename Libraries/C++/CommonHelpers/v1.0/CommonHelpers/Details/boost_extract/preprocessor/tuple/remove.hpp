@@ -12,16 +12,16 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_REMOVE_HPP
 # define BOOST_PREPROCESSOR_TUPLE_REMOVE_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../config/config.hpp"
 #
 # if BOOST_PP_VARIADICS
 #
-# include <boost_extract/preprocessor/array/remove.hpp>
-# include <boost_extract/preprocessor/array/to_tuple.hpp>
-# include <boost_extract/preprocessor/comparison/greater.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/tuple/size.hpp>
-# include <boost_extract/preprocessor/tuple/to_array.hpp>
+# include "../array/remove.hpp"
+# include "../array/to_tuple.hpp"
+# include "../comparison/greater.hpp"
+# include "../control/iif.hpp"
+# include "size.hpp"
+# include "to_array.hpp"
 #
 # /* BOOST_PP_TUPLE_REMOVE */
 #

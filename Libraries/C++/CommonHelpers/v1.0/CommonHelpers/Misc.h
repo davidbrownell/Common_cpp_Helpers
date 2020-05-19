@@ -23,11 +23,11 @@
 
 #include "TypeTraits.h"
 
-#include "boost_extract/preprocessor/control/iif.hpp"
-#include "boost_extract/preprocessor/empty.hpp"
+#include "Details/boost_extract/preprocessor/control/iif.hpp"
+#include "Details/boost_extract/preprocessor/empty.hpp"
 
-#include "boost_extract/vmd/empty.hpp"
-#include "boost_extract/vmd/is_empty.hpp"
+#include "Details/boost_extract/vmd/empty.hpp"
+#include "Details/boost_extract/vmd/is_empty.hpp"
 
 #include <stdexcept>
 

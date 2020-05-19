@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_ENUM_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_ENUM_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/enum.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/sequence_to_tuple.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/enum.hpp"
+#include "../empty.hpp"
+#include "../is_empty.hpp"
+#include "sequence_to_tuple.hpp"
 
 #define BOOST_VMD_DETAIL_SEQUENCE_ENUM_PROCESS(tuple) \
     BOOST_PP_IIF \

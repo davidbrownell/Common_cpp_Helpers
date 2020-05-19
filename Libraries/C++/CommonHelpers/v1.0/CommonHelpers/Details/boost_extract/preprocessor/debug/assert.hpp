@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_DEBUG_ASSERT_HPP
 # define BOOST_PREPROCESSOR_DEBUG_ASSERT_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/logical/not.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "../config/config.hpp"
+# include "../control/expr_iif.hpp"
+# include "../control/iif.hpp"
+# include "../logical/not.hpp"
+# include "../tuple/eat.hpp"
 #
 # /* BOOST_PP_ASSERT */
 #

@@ -7,32 +7,32 @@
 #if !defined(BOOST_VMD_DETAIL_EQUAL_HPP)
 #define BOOST_VMD_DETAIL_EQUAL_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/detail/auto_rec.hpp>
-#include <boost_extract/preprocessor/facilities/empty.hpp>
-#include <boost_extract/preprocessor/facilities/overload.hpp>
-#include <boost_extract/preprocessor/logical/compl.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_headers.hpp>
-#include <boost_extract/vmd/is_identifier.hpp>
-#include <boost_extract/vmd/is_empty_list.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/detail/auto_rec.hpp"
+#include "../../preprocessor/facilities/empty.hpp"
+#include "../../preprocessor/facilities/overload.hpp"
+#include "../../preprocessor/logical/compl.hpp"
+#include "recurse/equal/equal_headers.hpp"
+#include "../is_identifier.hpp"
+#include "../is_empty_list.hpp"
+#include "not_empty.hpp"
 
-#include <boost_extract/vmd/detail/recurse/equal/equal_1.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_2.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_3.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_4.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_5.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_6.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_7.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_8.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_9.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_10.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_11.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_12.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_13.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_14.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_15.hpp>
-#include <boost_extract/vmd/detail/recurse/equal/equal_16.hpp>
+#include "recurse/equal/equal_1.hpp"
+#include "recurse/equal/equal_2.hpp"
+#include "recurse/equal/equal_3.hpp"
+#include "recurse/equal/equal_4.hpp"
+#include "recurse/equal/equal_5.hpp"
+#include "recurse/equal/equal_6.hpp"
+#include "recurse/equal/equal_7.hpp"
+#include "recurse/equal/equal_8.hpp"
+#include "recurse/equal/equal_9.hpp"
+#include "recurse/equal/equal_10.hpp"
+#include "recurse/equal/equal_11.hpp"
+#include "recurse/equal/equal_12.hpp"
+#include "recurse/equal/equal_13.hpp"
+#include "recurse/equal/equal_14.hpp"
+#include "recurse/equal/equal_15.hpp"
+#include "recurse/equal/equal_16.hpp"
 
 #define BOOST_VMD_DETAIL_EQUAL_SIMPLE_D_1(d,vseq1,vseq2) BOOST_VMD_DETAIL_EQUAL_1_D(d,vseq1,vseq2)
 #define BOOST_VMD_DETAIL_EQUAL_SIMPLE_D_2(d,vseq1,vseq2) BOOST_VMD_DETAIL_EQUAL_2_D(d,vseq1,vseq2)

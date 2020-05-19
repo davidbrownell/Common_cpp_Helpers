@@ -12,7 +12,7 @@
 #ifndef BOOST_PREPROCESSOR_DETAIL_IS_EMPTY_HPP
 #define BOOST_PREPROCESSOR_DETAIL_IS_EMPTY_HPP
 
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
+#include "../../punctuation/is_begin_parens.hpp"
 
 #if BOOST_PP_VARIADICS_MSVC
 

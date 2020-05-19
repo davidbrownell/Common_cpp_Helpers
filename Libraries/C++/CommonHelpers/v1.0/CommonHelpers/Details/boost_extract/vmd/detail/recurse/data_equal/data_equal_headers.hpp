@@ -7,16 +7,16 @@
 #if !defined(BOOST_VMD_DETAIL_DATA_EQUAL_HEADERS_HPP)
 #define BOOST_VMD_DETAIL_DATA_EQUAL_HEADERS_HPP
 
-#include <boost_extract/preprocessor/array/size.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/list/size.hpp>
-#include <boost_extract/preprocessor/seq/size.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/equal.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/detail/data_equal_common.hpp>
+#include "../../../../preprocessor/array/size.hpp"
+#include "../../../../preprocessor/comparison/equal.hpp"
+#include "../../../../preprocessor/control/iif.hpp"
+#include "../../../../preprocessor/control/while.hpp"
+#include "../../../../preprocessor/list/size.hpp"
+#include "../../../../preprocessor/seq/size.hpp"
+#include "../../../../preprocessor/tuple/elem.hpp"
+#include "../../../../preprocessor/tuple/size.hpp"
+#include "../../../equal.hpp"
+#include "../../../identity.hpp"
+#include "../../data_equal_common.hpp"
 
 #endif /* BOOST_VMD_DETAIL_DATA_EQUAL_HEADERS_HPP */

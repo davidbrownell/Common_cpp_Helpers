@@ -7,12 +7,12 @@
 #if !defined(BOOST_VMD_DETAIL_ADJUST_TUPLE_TYPE_HPP)
 #define BOOST_VMD_DETAIL_ADJUST_TUPLE_TYPE_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/is_array_common.hpp>
-#include <boost_extract/vmd/detail/is_list.hpp>
-#include <boost_extract/vmd/detail/type_registration.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../identity.hpp"
+#include "equal_type.hpp"
+#include "is_array_common.hpp"
+#include "is_list.hpp"
+#include "type_registration.hpp"
 
 #define BOOST_VMD_DETAIL_ADJUST_TUPLE_TYPE_CHECK_ARRAY(data,type) \
     BOOST_PP_IIF \
@@ -61,7 +61,7 @@
 /*
 
   Input is any VMD data and a VMD type for that data
-  
+
   If the type is a tuple, checks to see if it is a more specific
   type and, if it is, returns that type,
   otherwise returns the type passed as a parameter

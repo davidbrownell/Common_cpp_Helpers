@@ -12,13 +12,13 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_FILTER_HPP
 # define BOOST_PREPROCESSOR_SEQ_FILTER_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/expr_if.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/seq/fold_left.hpp>
-# include <boost_extract/preprocessor/seq/seq.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../config/config.hpp"
+# include "../control/expr_if.hpp"
+# include "../facilities/empty.hpp"
+# include "fold_left.hpp"
+# include "seq.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_SEQ_FILTER */
 #

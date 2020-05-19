@@ -7,16 +7,16 @@
 #if !defined(BOOST_VMD_DETAIL_ASSERT_HPP)
 #define BOOST_VMD_DETAIL_ASSERT_HPP
 
-#include <boost_extract/preprocessor/debug/assert.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
+#include "../../preprocessor/debug/assert.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
 
 #if BOOST_VMD_MSVC
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/if.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/variadic/size.hpp>
-#include <boost_extract/vmd/empty.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/if.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/variadic/size.hpp"
+#include "../empty.hpp"
 
 #define BOOST_VMD_DETAIL_ASSERT_VC_GEN_ERROR_OUTPUT(errstr) \
     BOOST_PP_ASSERT(0) \

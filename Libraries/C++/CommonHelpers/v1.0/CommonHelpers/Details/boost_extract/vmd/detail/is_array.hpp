@@ -7,10 +7,10 @@
 #if !defined(BOOST_VMD_DETAIL_IS_ARRAY_HPP)
 #define BOOST_VMD_DETAIL_IS_ARRAY_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
-#include <boost_extract/vmd/detail/is_array_common.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../identity.hpp"
+#include "../is_tuple.hpp"
+#include "is_array_common.hpp"
 
 #define BOOST_VMD_DETAIL_IS_ARRAY(vseq) \
     BOOST_VMD_IDENTITY_RESULT \

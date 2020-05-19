@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_ARRAY_TO_TUPLE_HPP)
 #define BOOST_VMD_ARRAY_TO_TUPLE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/array/to_tuple.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/is_empty_array.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/array/to_tuple.hpp"
+#include "../empty.hpp"
+#include "../is_empty_array.hpp"
 
 /*
 
@@ -30,7 +30,7 @@
     \brief converts an array to a tuple.
 
     array = array to be converted.
-    
+
     If the array is an array of 0 elements it is converted to an empty tuple.
     Otherwise the array is converted to a tuple with the same number of elements as the array.
 */

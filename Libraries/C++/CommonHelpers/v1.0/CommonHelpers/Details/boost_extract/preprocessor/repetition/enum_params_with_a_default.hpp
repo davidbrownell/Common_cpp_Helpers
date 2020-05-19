@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_ENUM_PARAMS_WITH_A_DEFAULT_HPP
 # define BOOST_PREPROCESSOR_REPETITION_ENUM_PARAMS_WITH_A_DEFAULT_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/facilities/intercept.hpp>
-# include <boost_extract/preprocessor/repetition/enum_binary_params.hpp>
+# include "../config/config.hpp"
+# include "../facilities/intercept.hpp"
+# include "enum_binary_params.hpp"
 #
 # /* BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT */
 #

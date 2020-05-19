@@ -7,17 +7,17 @@
 #if !defined(BOOST_VMD_DETAIL_LIST_HPP)
 #define BOOST_VMD_DETAIL_LIST_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/pop_back.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/identifier.hpp>
-#include <boost_extract/vmd/detail/is_list.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/parens.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/pop_back.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../is_empty.hpp"
+#include "empty_result.hpp"
+#include "identifier.hpp"
+#include "is_list.hpp"
+#include "mods.hpp"
+#include "parens.hpp"
 
 #define BOOST_VMD_DETAIL_LIST_CHECK_FOR_LIST(tuple) \
     BOOST_PP_IIF \

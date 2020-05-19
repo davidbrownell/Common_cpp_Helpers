@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_IDENTIFIER_CONCAT_HPP)
 #define BOOST_VMD_DETAIL_IDENTIFIER_CONCAT_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/vmd/detail/idprefix.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "idprefix.hpp"
 
 #define BOOST_VMD_DETAIL_IDENTIFIER_CONCATENATE(vseq) \
     BOOST_PP_CAT \

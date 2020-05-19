@@ -12,9 +12,9 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_ELEM_HPP
 # define BOOST_PREPROCESSOR_SEQ_ELEM_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../facilities/empty.hpp"
 #
 # /* BOOST_PP_SEQ_ELEM */
 #

@@ -12,14 +12,14 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_REPLACE_HPP
 # define BOOST_PREPROCESSOR_SEQ_REPLACE_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/comparison/equal.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/seq/first_n.hpp>
-# include <boost_extract/preprocessor/seq/rest_n.hpp>
-# include <boost_extract/preprocessor/seq/size.hpp>
+# include "../arithmetic/dec.hpp"
+# include "../arithmetic/inc.hpp"
+# include "../config/config.hpp"
+# include "../comparison/equal.hpp"
+# include "../control/iif.hpp"
+# include "first_n.hpp"
+# include "rest_n.hpp"
+# include "size.hpp"
 #
 # /* BOOST_PP_SEQ_REPLACE */
 #

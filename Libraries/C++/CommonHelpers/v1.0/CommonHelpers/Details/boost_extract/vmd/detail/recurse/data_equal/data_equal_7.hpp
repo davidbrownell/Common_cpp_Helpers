@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_DATA_EQUAL_7_HPP)
 #define BOOST_VMD_DETAIL_DATA_EQUAL_7_HPP
 
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_headers.hpp>
+#include "data_equal_headers.hpp"
 
 #define BOOST_VMD_DETAIL_DATA_EQUAL_7_OP_TEQ_CMP_PARENS(d,em1,em2) \
     BOOST_VMD_IDENTITY_RESULT \

@@ -7,20 +7,20 @@
 #if !defined(BOOST_VMD_DETAIL_SEQ_HPP)
 #define BOOST_VMD_DETAIL_SEQ_HPP
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/facilities/empty.hpp>
-#include <boost_extract/preprocessor/seq/push_back.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/push_back.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
-#include <boost_extract/vmd/detail/parens.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/control/while.hpp"
+#include "../../preprocessor/facilities/empty.hpp"
+#include "../../preprocessor/seq/push_back.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/push_back.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../is_empty.hpp"
+#include "empty_result.hpp"
+#include "mods.hpp"
+#include "not_empty.hpp"
+#include "parens.hpp"
 
 #define BOOST_VMD_DETAIL_SEQ_STATE_INIT(seq) \
     BOOST_PP_TUPLE_PUSH_BACK \

@@ -7,18 +7,18 @@
 #if !defined(BOOST_VMD_DETAIL_IS_ARRAY_COMMON_HPP)
 #define BOOST_VMD_DETAIL_IS_ARRAY_COMMON_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/if.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/facilities/empty.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_number.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
-#include <boost_extract/vmd/detail/is_empty_tuple.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/if.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/facilities/empty.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_number.hpp"
+#include "../is_tuple.hpp"
+#include "is_empty_tuple.hpp"
 
 #define BOOST_VMD_DETAIL_IS_ARRAY_SYNTAX(tuple) \
     BOOST_VMD_IDENTITY_RESULT \

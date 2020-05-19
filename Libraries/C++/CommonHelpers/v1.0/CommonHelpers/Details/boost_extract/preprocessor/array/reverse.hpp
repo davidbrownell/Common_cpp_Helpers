@@ -12,10 +12,10 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_REVERSE_HPP
 # define BOOST_PREPROCESSOR_ARRAY_REVERSE_HPP
 #
-# include <boost_extract/preprocessor/array/data.hpp>
-# include <boost_extract/preprocessor/array/size.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/tuple/reverse.hpp>
+# include "data.hpp"
+# include "size.hpp"
+# include "../config/config.hpp"
+# include "../tuple/reverse.hpp"
 #
 # /* BOOST_PP_ARRAY_REVERSE */
 #

@@ -12,9 +12,9 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_REVERSE_HPP
 # define BOOST_PREPROCESSOR_SEQ_REVERSE_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/seq/fold_left.hpp>
+# include "../config/config.hpp"
+# include "../facilities/empty.hpp"
+# include "fold_left.hpp"
 #
 # /* BOOST_PP_SEQ_REVERSE */
 #

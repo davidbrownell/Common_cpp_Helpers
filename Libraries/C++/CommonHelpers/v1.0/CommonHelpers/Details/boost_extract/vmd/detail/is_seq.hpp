@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_IS_SEQ_HPP)
 #define BOOST_VMD_DETAIL_IS_SEQ_HPP
 
-#include <boost_extract/vmd/detail/is_entire.hpp>
-#include <boost_extract/vmd/detail/seq.hpp>
+#include "is_entire.hpp"
+#include "seq.hpp"
 
 #define BOOST_VMD_DETAIL_IS_SEQ(seq) \
     BOOST_VMD_DETAIL_IS_ENTIRE \

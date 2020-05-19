@@ -7,19 +7,19 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_TYPE_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_TYPE_HPP
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/preprocessor/variadic/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/is_array_common.hpp>
-#include <boost_extract/vmd/detail/is_list.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/sequence_elem.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../../preprocessor/variadic/size.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "equal_type.hpp"
+#include "is_array_common.hpp"
+#include "is_list.hpp"
+#include "modifiers.hpp"
+#include "mods.hpp"
+#include "sequence_elem.hpp"
 
 #define BOOST_VMD_DETAIL_SEQUENCE_TYPE_TUPLE_ARRAY(dtuple) \
     BOOST_PP_IIF \

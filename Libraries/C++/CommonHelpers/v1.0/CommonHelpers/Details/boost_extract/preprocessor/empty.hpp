@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_EMPTY_HPP
 # define BOOST_PREPROCESSOR_EMPTY_HPP
 #
-# include <boost_extract/preprocessor/facilities/empty.hpp>
+# include "facilities/empty.hpp"
 #
 # endif

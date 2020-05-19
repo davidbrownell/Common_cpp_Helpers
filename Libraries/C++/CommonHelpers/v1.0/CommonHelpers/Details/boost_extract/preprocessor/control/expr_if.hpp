@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_CONTROL_EXPR_IF_HPP
 # define BOOST_PREPROCESSOR_CONTROL_EXPR_IF_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
+# include "../config/config.hpp"
+# include "expr_iif.hpp"
+# include "../logical/bool.hpp"
 #
 # /* BOOST_PP_EXPR_IF */
 #

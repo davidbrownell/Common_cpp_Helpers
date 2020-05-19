@@ -13,11 +13,11 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
 # define BOOST_PREPROCESSOR_TUPLE_TO_ARRAY_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/facilities/overload.hpp>
-# include <boost_extract/preprocessor/tuple/size.hpp>
-# include <boost_extract/preprocessor/variadic/size.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../facilities/overload.hpp"
+# include "size.hpp"
+# include "../variadic/size.hpp"
 #
 # /* BOOST_PP_TUPLE_TO_ARRAY */
 #

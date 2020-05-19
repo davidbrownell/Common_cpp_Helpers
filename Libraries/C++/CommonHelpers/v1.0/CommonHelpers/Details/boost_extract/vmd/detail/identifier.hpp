@@ -7,23 +7,23 @@
 #if !defined(BOOST_VMD_DETAIL_IDENTIFIER_HPP)
 #define BOOST_VMD_DETAIL_IDENTIFIER_HPP
 
-#include <boost_extract/preprocessor/arithmetic/dec.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/expr_iif.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/identifier_concat.hpp>
-#include <boost_extract/vmd/detail/is_entire.hpp>
-#include <boost_extract/vmd/detail/match_identifier.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
-#include <boost_extract/vmd/detail/parens.hpp>
+#include "../../preprocessor/arithmetic/dec.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/expr_iif.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "identifier_concat.hpp"
+#include "is_entire.hpp"
+#include "match_identifier.hpp"
+#include "mods.hpp"
+#include "not_empty.hpp"
+#include "parens.hpp"
 
 #define BOOST_VMD_DETAIL_IDENTIFIER_PROCESS_KEYS_SUCCESS(id,rest,keymatch,mods) \
     BOOST_VMD_DETAIL_IDENTIFIER_SUCCESS_MODS(id,rest,BOOST_PP_DEC(keymatch),mods) \

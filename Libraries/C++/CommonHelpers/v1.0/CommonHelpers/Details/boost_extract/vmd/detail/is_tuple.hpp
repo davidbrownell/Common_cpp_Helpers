@@ -7,9 +7,9 @@
 #if !defined(BOOST_VMD_DETAIL_IS_TUPLE_HPP)
 #define BOOST_VMD_DETAIL_IS_TUPLE_HPP
 
-#include <boost_extract/vmd/detail/is_entire.hpp>
-#include <boost_extract/vmd/detail/parens_split.hpp>
-  
+#include "is_entire.hpp"
+#include "parens_split.hpp"
+
 #define BOOST_VMD_DETAIL_IS_TUPLE(vseq) \
     BOOST_VMD_DETAIL_IS_ENTIRE \
         ( \

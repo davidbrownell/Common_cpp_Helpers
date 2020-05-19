@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_SLOT_COUNTER_HPP
 # define BOOST_PREPROCESSOR_SLOT_COUNTER_HPP
 #
-# include <boost_extract/preprocessor/slot/detail/def.hpp>
+# include "detail/def.hpp"
 #
 # /* BOOST_PP_COUNTER */
 #

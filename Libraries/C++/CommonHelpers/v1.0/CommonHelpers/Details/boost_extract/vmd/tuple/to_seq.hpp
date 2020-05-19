@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_TUPLE_TO_SEQ_HPP)
 #define BOOST_VMD_TUPLE_TO_SEQ_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/to_seq.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/to_seq.hpp"
+#include "../empty.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -30,7 +30,7 @@
     \brief converts a tuple to a seq.
 
     tuple = tuple to be converted.
-    
+
     If the tuple is an empty tuple it is converted to an empty seq.
     Otherwise the tuple is converted to a seq with the same number of elements as the tuple.
 */

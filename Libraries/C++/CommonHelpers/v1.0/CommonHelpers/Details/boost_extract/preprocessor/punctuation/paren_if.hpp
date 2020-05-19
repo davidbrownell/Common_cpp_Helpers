@@ -12,10 +12,10 @@
 # ifndef BOOST_PREPROCESSOR_PUNCTUATION_PAREN_IF_HPP
 # define BOOST_PREPROCESSOR_PUNCTUATION_PAREN_IF_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/if.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/punctuation/paren.hpp>
+# include "../config/config.hpp"
+# include "../control/if.hpp"
+# include "../facilities/empty.hpp"
+# include "paren.hpp"
 #
 # /* BOOST_PP_LPAREN_IF */
 #

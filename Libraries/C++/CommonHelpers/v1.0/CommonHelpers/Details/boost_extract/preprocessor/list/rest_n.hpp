@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_LIST_REST_N_HPP
 # define BOOST_PREPROCESSOR_LIST_REST_N_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../arithmetic/dec.hpp"
+# include "../config/config.hpp"
+# include "../control/while.hpp"
+# include "adt.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_LIST_REST_N */
 #

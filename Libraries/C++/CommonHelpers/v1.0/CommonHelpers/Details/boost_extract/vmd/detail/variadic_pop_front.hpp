@@ -7,9 +7,9 @@
 #if !defined(BOOST_VMD_DETAIL_VARIADIC_POP_FRONT_HPP)
 #define BOOST_VMD_DETAIL_VARIADIC_POP_FRONT_HPP
 
-#include <boost_extract/preprocessor/tuple/enum.hpp>
-#include <boost_extract/preprocessor/tuple/pop_front.hpp>
-#include <boost_extract/preprocessor/variadic/to_tuple.hpp>
+#include "../../preprocessor/tuple/enum.hpp"
+#include "../../preprocessor/tuple/pop_front.hpp"
+#include "../../preprocessor/variadic/to_tuple.hpp"
 
 #define BOOST_VMD_DETAIL_VARIADIC_POP_FRONT(...) \
     BOOST_PP_TUPLE_ENUM \

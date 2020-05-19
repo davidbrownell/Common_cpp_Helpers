@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_SLOT_SLOT_HPP
 # define BOOST_PREPROCESSOR_SLOT_SLOT_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/slot/detail/def.hpp>
+# include "../cat.hpp"
+# include "detail/def.hpp"
 #
 # /* BOOST_PP_ASSIGN_SLOT */
 #

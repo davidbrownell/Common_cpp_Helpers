@@ -15,8 +15,8 @@
 # ifndef BOOST_PREPROCESSOR_FACILITIES_IDENTITY_HPP
 # define BOOST_PREPROCESSOR_FACILITIES_IDENTITY_HPP
 #
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "empty.hpp"
+# include "../tuple/eat.hpp"
 #
 # /* BOOST_PP_IDENTITY */
 #

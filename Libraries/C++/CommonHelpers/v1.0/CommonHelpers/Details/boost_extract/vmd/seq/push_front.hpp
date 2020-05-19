@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_SEQ_PUSH_FRONT_HPP)
 #define BOOST_VMD_SEQ_PUSH_FRONT_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/seq/push_front.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/seq/push_front.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -27,7 +27,7 @@
 
 /** \def BOOST_VMD_SEQ_PUSH_FRONT(seq,elem)
 
-    \brief inserts an element at the beginning of a seq. 
+    \brief inserts an element at the beginning of a seq.
 
     seq = seq to insert an element at.
     elem  = element to insert.

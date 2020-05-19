@@ -12,14 +12,14 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_DETAIL_IS_SINGLE_RETURN_HPP
 # define BOOST_PREPROCESSOR_TUPLE_DETAIL_IS_SINGLE_RETURN_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../../config/config.hpp"
 #
 # /* BOOST_PP_TUPLE_IS_SINGLE_RETURN */
 #
 # if BOOST_PP_VARIADICS && BOOST_PP_VARIADICS_MSVC
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/facilities/is_1.hpp>
-# include <boost_extract/preprocessor/tuple/size.hpp>
+# include "../../control/iif.hpp"
+# include "../../facilities/is_1.hpp"
+# include "size.hpp"
 # define BOOST_PP_TUPLE_IS_SINGLE_RETURN(sr,nsr,tuple)	\
 	BOOST_PP_IIF(BOOST_PP_IS_1(BOOST_PP_TUPLE_SIZE(tuple)),sr,nsr) \
 	/**/

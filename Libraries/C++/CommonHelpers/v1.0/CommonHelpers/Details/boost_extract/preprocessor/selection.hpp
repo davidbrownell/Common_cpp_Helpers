@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_SELECTION_HPP
 # define BOOST_PREPROCESSOR_SELECTION_HPP
 #
-# include <boost_extract/preprocessor/selection/max.hpp>
-# include <boost_extract/preprocessor/selection/min.hpp>
+# include "selection/max.hpp"
+# include "selection/min.hpp"
 #
 # endif

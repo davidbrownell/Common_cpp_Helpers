@@ -7,19 +7,19 @@
 #if !defined(BOOST_VMD_DETAIL_IS_IDENTIFIER_HPP)
 #define BOOST_VMD_DETAIL_IS_IDENTIFIER_HPP
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/variadic/size.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
-#include <boost_extract/vmd/detail/identifier.hpp>
-#include <boost_extract/vmd/detail/identifier_concat.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/variadic/size.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_tuple.hpp"
+#include "identifier.hpp"
+#include "identifier_concat.hpp"
+#include "not_empty.hpp"
 
 #define BOOST_VMD_DETAIL_IS_IDENTIFIER_VSEQ_MATCH(tup) \
     BOOST_VMD_DETAIL_NOT_EMPTY \
