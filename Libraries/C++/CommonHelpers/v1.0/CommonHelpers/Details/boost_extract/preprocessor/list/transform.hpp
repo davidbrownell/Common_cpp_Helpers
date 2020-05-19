@@ -14,10 +14,10 @@
 # ifndef BOOST_PREPROCESSOR_LIST_TRANSFORM_HPP
 # define BOOST_PREPROCESSOR_LIST_TRANSFORM_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/fold_right.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../config/config.hpp"
+# include "fold_right.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_LIST_TRANSFORM */
 #

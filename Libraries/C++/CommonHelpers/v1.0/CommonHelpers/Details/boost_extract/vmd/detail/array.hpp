@@ -7,17 +7,17 @@
 #if !defined(BOOST_VMD_DETAIL_ARRAY_HPP)
 #define BOOST_VMD_DETAIL_ARRAY_HPP
 
-#include <boost_extract/preprocessor/control/expr_iif.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/is_array_common.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/tuple.hpp>
+#include "../../preprocessor/control/expr_iif.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../empty.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "empty_result.hpp"
+#include "is_array_common.hpp"
+#include "mods.hpp"
+#include "tuple.hpp"
 
 #define BOOST_VMD_DETAIL_ARRAY_CHECK_FOR_ARRAY(tuple) \
     BOOST_VMD_IDENTITY_RESULT \

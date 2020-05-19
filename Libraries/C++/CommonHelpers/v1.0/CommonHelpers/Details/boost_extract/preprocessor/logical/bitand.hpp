@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_LOGICAL_BITAND_HPP
 # define BOOST_PREPROCESSOR_LOGICAL_BITAND_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../config/config.hpp"
 #
 # /* BOOST_PP_BITAND */
 #

@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_EQUAL_TYPE_HPP)
 #define BOOST_VMD_DETAIL_EQUAL_TYPE_HPP
 
-#include <boost_extract/vmd/detail/match_single_identifier.hpp>
-#include <boost_extract/vmd/detail/type_registration.hpp>
+#include "match_single_identifier.hpp"
+#include "type_registration.hpp"
 
 #define BOOST_VMD_DETAIL_EQUAL_TYPE(type1,type2) \
     BOOST_VMD_DETAIL_MATCH_SINGLE_IDENTIFIER(type1,type2) \

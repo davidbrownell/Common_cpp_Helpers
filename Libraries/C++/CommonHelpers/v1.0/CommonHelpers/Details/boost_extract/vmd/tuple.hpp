@@ -7,20 +7,20 @@
 #if !defined(BOOST_VMD_TUPLE_HPP)
 #define BOOST_VMD_TUPLE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/tuple/is_vmd_tuple.hpp>
-#include <boost_extract/vmd/tuple/pop_back.hpp>
-#include <boost_extract/vmd/tuple/pop_front.hpp>
-#include <boost_extract/vmd/tuple/push_back.hpp>
-#include <boost_extract/vmd/tuple/push_front.hpp>
-#include <boost_extract/vmd/tuple/remove.hpp>
-#include <boost_extract/vmd/tuple/size.hpp>
-#include <boost_extract/vmd/tuple/to_array.hpp>
-#include <boost_extract/vmd/tuple/to_list.hpp>
-#include <boost_extract/vmd/tuple/to_seq.hpp>
+#include "tuple/is_vmd_tuple.hpp"
+#include "tuple/pop_back.hpp"
+#include "tuple/pop_front.hpp"
+#include "tuple/push_back.hpp"
+#include "tuple/push_front.hpp"
+#include "tuple/remove.hpp"
+#include "tuple/size.hpp"
+#include "tuple/to_array.hpp"
+#include "tuple/to_list.hpp"
+#include "tuple/to_seq.hpp"
 
 #endif /* BOOST_PP_VARIADICS */
 #endif /* BOOST_VMD_TUPLE_HPP */

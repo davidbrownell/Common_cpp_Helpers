@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_TUPLE_PUSH_FRONT_HPP)
 #define BOOST_VMD_TUPLE_PUSH_FRONT_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/push_front.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/push_front.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -27,7 +27,7 @@
 
 /** \def BOOST_VMD_TUPLE_PUSH_FRONT(tuple,elem)
 
-    \brief inserts an element at the beginning of a tuple. 
+    \brief inserts an element at the beginning of a tuple.
 
     tuple = tuple to insert an element at.
     elem  = element to insert.

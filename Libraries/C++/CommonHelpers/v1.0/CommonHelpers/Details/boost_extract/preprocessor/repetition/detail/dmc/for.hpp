@@ -14,10 +14,10 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_DETAIL_FOR_HPP
 # define BOOST_PREPROCESSOR_REPETITION_DETAIL_FOR_HPP
 #
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "../../../control/expr_iif.hpp"
+# include "../../../control/iif.hpp"
+# include "../../../logical/bool.hpp"
+# include "../../../tuple/eat.hpp"
 #
 # define BOOST_PP_FOR_1(s, p, o, m) BOOST_PP_FOR_1_C(BOOST_PP_BOOL(p##(2, s)), s, p, o, m)
 # define BOOST_PP_FOR_2(s, p, o, m) BOOST_PP_FOR_2_C(BOOST_PP_BOOL(p##(3, s)), s, p, o, m)

@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_LOGICAL_OR_HPP
 # define BOOST_PREPROCESSOR_LOGICAL_OR_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
-# include <boost_extract/preprocessor/logical/bitor.hpp>
+# include "../config/config.hpp"
+# include "bool.hpp"
+# include "bitor.hpp"
 #
 # /* BOOST_PP_OR */
 #

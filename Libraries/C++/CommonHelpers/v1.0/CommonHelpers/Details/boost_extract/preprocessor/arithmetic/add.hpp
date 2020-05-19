@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_ARITHMETIC_ADD_HPP
 # define BOOST_PREPROCESSOR_ARITHMETIC_ADD_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "dec.hpp"
+# include "inc.hpp"
+# include "../config/config.hpp"
+# include "../control/while.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_ADD */
 #

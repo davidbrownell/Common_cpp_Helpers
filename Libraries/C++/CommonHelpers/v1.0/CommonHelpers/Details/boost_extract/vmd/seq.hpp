@@ -7,20 +7,20 @@
 #if !defined(BOOST_VMD_SEQ_HPP)
 #define BOOST_VMD_SEQ_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/seq/is_vmd_seq.hpp>
-#include <boost_extract/vmd/seq/pop_back.hpp>
-#include <boost_extract/vmd/seq/pop_front.hpp>
-#include <boost_extract/vmd/seq/push_back.hpp>
-#include <boost_extract/vmd/seq/push_front.hpp>
-#include <boost_extract/vmd/seq/remove.hpp>
-#include <boost_extract/vmd/seq/size.hpp>
-#include <boost_extract/vmd/seq/to_array.hpp>
-#include <boost_extract/vmd/seq/to_list.hpp>
-#include <boost_extract/vmd/seq/to_tuple.hpp>
+#include "seq/is_vmd_seq.hpp"
+#include "seq/pop_back.hpp"
+#include "seq/pop_front.hpp"
+#include "seq/push_back.hpp"
+#include "seq/push_front.hpp"
+#include "seq/remove.hpp"
+#include "seq/size.hpp"
+#include "seq/to_array.hpp"
+#include "seq/to_list.hpp"
+#include "seq/to_tuple.hpp"
 
 #endif /* BOOST_PP_VARIADICS */
 #endif /* BOOST_VMD_SEQ_HPP */

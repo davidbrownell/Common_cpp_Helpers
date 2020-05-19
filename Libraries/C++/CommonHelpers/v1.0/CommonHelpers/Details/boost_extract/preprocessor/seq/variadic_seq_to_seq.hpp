@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_VARIADIC_SEQ_TO_SEQ_HPP
 # define BOOST_PREPROCESSOR_SEQ_VARIADIC_SEQ_TO_SEQ_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
 #
 # /* BOOST_PP_VARIADIC_SEQ_TO_SEQ */
 #

@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_SEQ_TO_LIST_HPP)
 #define BOOST_VMD_SEQ_TO_LIST_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/seq/to_list.hpp>
-// #include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/seq/to_list.hpp"
+// #include "../identity.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -30,7 +30,7 @@
     \brief converts a seq to a list.
 
     seq = seq to be converted.
-    
+
     If the seq is an empty seq it is converted to an empty list (BOOST_PP_NIL).
     Otherwise the seq is converted to a list with the same number of elements as the seq.
 */

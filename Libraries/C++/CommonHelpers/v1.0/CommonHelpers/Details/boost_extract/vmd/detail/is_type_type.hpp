@@ -7,13 +7,13 @@
 #if !defined(BOOST_VMD_DETAIL_IS_TYPE_TYPE_HPP)
 #define BOOST_VMD_DETAIL_IS_TYPE_TYPE_HPP
 
-#include <boost_extract/vmd/detail/type_registration.hpp>
-#include <boost_extract/vmd/detail/match_single_identifier.hpp>
+#include "type_registration.hpp"
+#include "match_single_identifier.hpp"
 
 /*
 
     Check to see if the 'id' is BOOST_VMD_TYPE_TYPE
-    
+
     Returns 1 if it is, else 0
 
 */

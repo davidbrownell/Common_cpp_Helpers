@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_DEBUG_HPP
 # define BOOST_PREPROCESSOR_DEBUG_HPP
 #
-# include <boost_extract/preprocessor/debug/assert.hpp>
-# include <boost_extract/preprocessor/debug/line.hpp>
+# include "debug/assert.hpp"
+# include "debug/line.hpp"
 #
 # endif

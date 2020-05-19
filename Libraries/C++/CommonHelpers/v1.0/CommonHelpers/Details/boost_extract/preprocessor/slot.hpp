@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_SLOT_HPP
 # define BOOST_PREPROCESSOR_SLOT_HPP
 #
-# include <boost_extract/preprocessor/slot/slot.hpp>
+# include "slot/slot.hpp"
 #
 # endif

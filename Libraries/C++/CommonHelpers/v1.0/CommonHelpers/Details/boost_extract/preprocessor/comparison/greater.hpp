@@ -14,8 +14,8 @@
 # ifndef BOOST_PREPROCESSOR_COMPARISON_GREATER_HPP
 # define BOOST_PREPROCESSOR_COMPARISON_GREATER_HPP
 #
-# include <boost_extract/preprocessor/comparison/less.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "less.hpp"
+# include "../config/config.hpp"
 #
 # /* BOOST_PP_GREATER */
 #

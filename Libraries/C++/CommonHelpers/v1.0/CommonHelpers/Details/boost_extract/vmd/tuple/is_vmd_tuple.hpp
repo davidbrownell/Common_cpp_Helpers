@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_IS_VMD_TUPLE_HPP)
 #define BOOST_VMD_IS_VMD_TUPLE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_tuple.hpp"
 
 /*
 
@@ -32,11 +32,11 @@
     The macro checks that the sequence is a VMD tuple.
     A VMD tuple, which may be a Boost PP tuple or emptiness, is a superset of a Boost PP tuple.
     It returns 1 if it is a VMD tuple, else if returns 0.
-    
+
     sequence = a possible Boost PP tuple
 
     returns = 1 if it a VMD tuple, else returns 0.
-    
+
 */
 
 #define BOOST_VMD_IS_VMD_TUPLE(sequence) \

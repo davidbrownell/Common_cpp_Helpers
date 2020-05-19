@@ -7,21 +7,21 @@
 #if !defined(BOOST_VMD_DETAIL_EQUAL_COMMON_HPP)
 #define BOOST_VMD_DETAIL_EQUAL_COMMON_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/comparison/not_equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/logical/bitxor.hpp>
-#include <boost_extract/preprocessor/logical/compl.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/get_type.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/match_single_identifier.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/comparison/not_equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/logical/bitxor.hpp"
+#include "../../preprocessor/logical/compl.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../get_type.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "match_single_identifier.hpp"
+#include "equal_type.hpp"
 
 #define BOOST_VMD_DETAIL_EQUAL_CONCAT_1 (1)
 

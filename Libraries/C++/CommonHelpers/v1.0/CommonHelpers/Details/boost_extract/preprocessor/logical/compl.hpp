@@ -12,7 +12,7 @@
 # ifndef BOOST_PREPROCESSOR_LOGICAL_COMPL_HPP
 # define BOOST_PREPROCESSOR_LOGICAL_COMPL_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../config/config.hpp"
 #
 # /* BOOST_PP_COMPL */
 #

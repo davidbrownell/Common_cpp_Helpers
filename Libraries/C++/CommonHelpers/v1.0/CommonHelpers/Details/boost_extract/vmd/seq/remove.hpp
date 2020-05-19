@@ -7,16 +7,16 @@
 #if !defined(BOOST_VMD_SEQ_REMOVE_HPP)
 #define BOOST_VMD_SEQ_REMOVE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/seq/remove.hpp>
-#include <boost_extract/preprocessor/seq/size.hpp>
-#include <boost_extract/vmd/empty.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/seq/remove.hpp"
+#include "../../preprocessor/seq/size.hpp"
+#include "../empty.hpp"
 
 /*
 

@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_SIZE_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_SIZE_HPP
 
-#include <boost_extract/preprocessor/array/size.hpp>
-#include <boost_extract/vmd/detail/sequence_to_array.hpp>
+#include "../../preprocessor/array/size.hpp"
+#include "sequence_to_array.hpp"
 
 #define BOOST_VMD_DETAIL_SEQUENCE_SIZE(vseq) \
     BOOST_PP_ARRAY_SIZE(BOOST_VMD_DETAIL_SEQUENCE_TO_ARRAY(vseq)) \

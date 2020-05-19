@@ -7,16 +7,16 @@
 #if !defined(BOOST_VMD_TUPLE_REMOVE_HPP)
 #define BOOST_VMD_TUPLE_REMOVE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/tuple/remove.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/empty.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/tuple/remove.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../empty.hpp"
 
 /*
 
@@ -57,7 +57,7 @@
 
     \brief removes an element from a tuple. It reenters BOOST_PP_WHILE with maximum efficiency.
 
-    d     = The next available BOOST_PP_WHILE iteration. 
+    d     = The next available BOOST_PP_WHILE iteration.
     tuple = tuple from which an element is to be removed.
     index = The zero-based position in tuple of the element to be removed.
 

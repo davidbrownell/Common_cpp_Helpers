@@ -14,10 +14,10 @@
 # ifndef BOOST_PREPROCESSOR_LIST_FOLD_LEFT_HPP
 # define BOOST_PREPROCESSOR_LIST_FOLD_LEFT_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/debug/error.hpp>
-# include <boost_extract/preprocessor/detail/auto_rec.hpp>
+# include "../cat.hpp"
+# include "../control/while.hpp"
+# include "../debug/error.hpp"
+# include "../detail/auto_rec.hpp"
 #
 # /* BOOST_PP_LIST_FOLD_LEFT */
 #
@@ -34,11 +34,11 @@
 # define BOOST_PP_LIST_FOLD_LEFT_2ND_D BOOST_PP_LIST_FOLD_LEFT_D
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    include <boost_extract/preprocessor/list/detail/edg/fold_left.hpp>
+#    include "detail/edg/fold_left.hpp"
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_DMC()
-#    include <boost_extract/preprocessor/list/detail/dmc/fold_left.hpp>
+#    include "detail/dmc/fold_left.hpp"
 # else
-#    include <boost_extract/preprocessor/list/detail/fold_left.hpp>
+#    include "detail/fold_left.hpp"
 # endif
 #
 # define BOOST_PP_LIST_FOLD_LEFT_CHECK_BOOST_PP_NIL 1

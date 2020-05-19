@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_FOR_HPP
 # define BOOST_PREPROCESSOR_FOR_HPP
 #
-# include <boost_extract/preprocessor/repetition/for.hpp>
+# include "repetition/for.hpp"
 #
 # endif

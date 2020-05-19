@@ -7,16 +7,16 @@
 #if !defined(BOOST_VMD_DETAIL_IDENTIFIER_TYPE_HPP)
 #define BOOST_VMD_DETAIL_IDENTIFIER_TYPE_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
-#include <boost_extract/vmd/detail/idprefix.hpp>
-#include <boost_extract/vmd/detail/number_registration.hpp>
-#include <boost_extract/vmd/detail/type_registration.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../identity.hpp"
+#include "../is_tuple.hpp"
+#include "idprefix.hpp"
+#include "number_registration.hpp"
+#include "type_registration.hpp"
 
 #define BOOST_VMD_DETAIL_IDENTIFIER_TYPE_CONCATENATE(id) \
     BOOST_PP_CAT \
@@ -90,12 +90,12 @@
 /*
 
   Determines the type of an identifier.
-  
+
   The type may be that of an identifier or else
   it may be a subtype.
-  
+
   Assumes the 'id' is a valid identifier id
-  
+
   Expands to the appropriate type
 
 */

@@ -13,11 +13,11 @@
 # ifndef BOOST_PREPROCESSOR_FACILITIES_HPP
 # define BOOST_PREPROCESSOR_FACILITIES_HPP
 #
-# include <boost_extract/preprocessor/facilities/apply.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/facilities/expand.hpp>
-# include <boost_extract/preprocessor/facilities/identity.hpp>
-# include <boost_extract/preprocessor/facilities/intercept.hpp>
-# include <boost_extract/preprocessor/facilities/overload.hpp>
+# include "facilities/apply.hpp"
+# include "facilities/empty.hpp"
+# include "facilities/expand.hpp"
+# include "facilities/identity.hpp"
+# include "facilities/intercept.hpp"
+# include "facilities/overload.hpp"
 #
 # endif

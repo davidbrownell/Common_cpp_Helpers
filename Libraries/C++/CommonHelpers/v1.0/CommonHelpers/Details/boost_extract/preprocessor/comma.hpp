@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_COMMA_HPP
 # define BOOST_PREPROCESSOR_COMMA_HPP
 #
-# include <boost_extract/preprocessor/punctuation/comma.hpp>
+# include "punctuation/comma.hpp"
 #
 # endif

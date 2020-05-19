@@ -14,13 +14,13 @@
 # ifndef BOOST_PREPROCESSOR_CONTROL_WHILE_HPP
 # define BOOST_PREPROCESSOR_CONTROL_WHILE_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/debug/error.hpp>
-# include <boost_extract/preprocessor/detail/auto_rec.hpp>
-# include <boost_extract/preprocessor/list/fold_left.hpp>
-# include <boost_extract/preprocessor/list/fold_right.hpp>
-# include <boost_extract/preprocessor/logical/bitand.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../debug/error.hpp"
+# include "../detail/auto_rec.hpp"
+# include "../list/fold_left.hpp"
+# include "../list/fold_right.hpp"
+# include "../logical/bitand.hpp"
 #
 # /* BOOST_PP_WHILE */
 #
@@ -39,13 +39,13 @@
 # define BOOST_PP_WHILE_F(d, _) 0
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    include <boost_extract/preprocessor/control/detail/edg/while.hpp>
+#    include "detail/edg/while.hpp"
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#    include <boost_extract/preprocessor/control/detail/msvc/while.hpp>
+#    include "detail/msvc/while.hpp"
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_DMC()
-#    include <boost_extract/preprocessor/control/detail/dmc/while.hpp>
+#    include "detail/dmc/while.hpp"
 # else
-#    include <boost_extract/preprocessor/control/detail/while.hpp>
+#    include "detail/while.hpp"
 # endif
 #
 # define BOOST_PP_WHILE_257(p, o, s) BOOST_PP_ERROR(0x0001)

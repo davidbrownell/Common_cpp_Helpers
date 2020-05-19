@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_IF_HPP
 # define BOOST_PREPROCESSOR_IF_HPP
 #
-# include <boost_extract/preprocessor/control/if.hpp>
+# include "control/if.hpp"
 #
 # endif

@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_LIST_ENUM_HPP
 # define BOOST_PREPROCESSOR_LIST_ENUM_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/for_each_i.hpp>
-# include <boost_extract/preprocessor/punctuation/comma_if.hpp>
+# include "../config/config.hpp"
+# include "for_each_i.hpp"
+# include "../punctuation/comma_if.hpp"
 #
 # /* BOOST_PP_LIST_ENUM */
 #

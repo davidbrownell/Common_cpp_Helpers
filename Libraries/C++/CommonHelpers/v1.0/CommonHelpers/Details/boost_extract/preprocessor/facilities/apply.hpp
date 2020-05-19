@@ -12,10 +12,10 @@
 # ifndef BOOST_PREPROCESSOR_FACILITIES_APPLY_HPP
 # define BOOST_PREPROCESSOR_FACILITIES_APPLY_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/detail/is_unary.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../config/config.hpp"
+# include "../control/expr_iif.hpp"
+# include "../detail/is_unary.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_APPLY */
 #

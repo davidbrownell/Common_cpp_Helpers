@@ -12,13 +12,13 @@
 # ifndef BOOST_PREPROCESSOR_TUPLE_INSERT_HPP
 # define BOOST_PREPROCESSOR_TUPLE_INSERT_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../config/config.hpp"
 #
 # if BOOST_PP_VARIADICS
 #
-# include <boost_extract/preprocessor/array/insert.hpp>
-# include <boost_extract/preprocessor/array/to_tuple.hpp>
-# include <boost_extract/preprocessor/tuple/to_array.hpp>
+# include "../array/insert.hpp"
+# include "../array/to_tuple.hpp"
+# include "to_array.hpp"
 #
 # /* BOOST_PP_TUPLE_INSERT */
 #

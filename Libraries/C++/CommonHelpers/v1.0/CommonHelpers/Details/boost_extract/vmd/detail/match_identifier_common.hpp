@@ -7,9 +7,9 @@
 #if !defined(BOOST_VMD_DETAIL_MATCH_IDENTIFIER_COMMON_HPP)
 #define BOOST_VMD_DETAIL_MATCH_IDENTIFIER_COMMON_HPP
 
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/idprefix.hpp>
+#include "../../preprocessor/cat.hpp"
+#include "../is_empty.hpp"
+#include "idprefix.hpp"
 
 #define BOOST_VMD_DETAIL_MATCH_IDENTIFIER_OP_CREATE_ID_RESULT(id,keyid) \
     BOOST_PP_CAT \

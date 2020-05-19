@@ -7,13 +7,13 @@
 #if !defined(BOOST_VMD_DETAIL_IS_EMPTY_TUPLE_HPP)
 #define BOOST_VMD_DETAIL_IS_EMPTY_TUPLE_HPP
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_tuple.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_tuple.hpp"
 
 #define BOOST_VMD_DETAIL_IS_EMPTY_TUPLE_CEM(tuple) \
     BOOST_VMD_IS_EMPTY(BOOST_PP_TUPLE_ELEM(0,tuple)) \

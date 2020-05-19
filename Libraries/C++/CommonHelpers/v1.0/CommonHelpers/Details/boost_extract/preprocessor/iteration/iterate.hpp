@@ -12,13 +12,13 @@
 # ifndef BOOST_PREPROCESSOR_ITERATION_ITERATE_HPP
 # define BOOST_PREPROCESSOR_ITERATION_ITERATE_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/array/elem.hpp>
-# include <boost_extract/preprocessor/array/size.hpp>
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/slot/slot.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../arithmetic/dec.hpp"
+# include "../arithmetic/inc.hpp"
+# include "../array/elem.hpp"
+# include "../array/size.hpp"
+# include "../cat.hpp"
+# include "../slot/slot.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_ITERATION_DEPTH */
 #

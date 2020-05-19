@@ -7,12 +7,12 @@
 #if !defined(BOOST_VMD_ARRAY_HPP)
 #define BOOST_VMD_ARRAY_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/array/to_seq.hpp>
-#include <boost_extract/vmd/array/to_tuple.hpp>
+#include "array/to_seq.hpp"
+#include "array/to_tuple.hpp"
 
 #endif /* BOOST_PP_VARIADICS */
 #endif /* BOOST_VMD_ARRAY_HPP */

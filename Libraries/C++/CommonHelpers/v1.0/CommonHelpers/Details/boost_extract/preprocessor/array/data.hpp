@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_DATA_HPP
 # define BOOST_PREPROCESSOR_ARRAY_DATA_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../config/config.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_ARRAY_DATA */
 #

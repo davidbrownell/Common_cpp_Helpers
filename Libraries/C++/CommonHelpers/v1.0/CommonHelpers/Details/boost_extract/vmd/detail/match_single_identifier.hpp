@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_DETAIL_MATCH_SINGLE_IDENTIFIER_HPP)
 #define BOOST_VMD_DETAIL_MATCH_SINGLE_IDENTIFIER_HPP
 
-#include <boost_extract/vmd/detail/match_identifier_common.hpp>
+#include "match_identifier_common.hpp"
 
 #define BOOST_VMD_DETAIL_MATCH_SINGLE_IDENTIFIER(id,key) \
     BOOST_VMD_DETAIL_MATCH_IDENTIFIER_OP_CMP_IDS(id,key) \
