@@ -12,11 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_DETAIL_IS_EMPTY_HPP
 # define BOOST_PREPROCESSOR_SEQ_DETAIL_IS_EMPTY_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/arithmetic/dec.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
-# include <boost_extract/preprocessor/logical/compl.hpp>
-# include <boost_extract/preprocessor/seq/size.hpp>
+# include "../../config/config.hpp"
+# include "../../arithmetic/dec.hpp"
+# include "../../logical/bool.hpp"
+# include "../../logical/compl.hpp"
+# include "../size.hpp"
 #
 /* An empty seq is one that is just BOOST_PP_SEQ_NIL */
 #

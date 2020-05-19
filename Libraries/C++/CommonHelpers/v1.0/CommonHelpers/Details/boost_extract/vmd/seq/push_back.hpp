@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_SEQ_PUSH_BACK_HPP)
 #define BOOST_VMD_SEQ_PUSH_BACK_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/seq/push_back.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/seq/push_back.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
 
 /*
 
@@ -27,7 +27,7 @@
 
 /** \def BOOST_VMD_SEQ_PUSH_BACK(seq,elem)
 
-    \brief appends an element to the end of a seq. 
+    \brief appends an element to the end of a seq.
 
     seq = seq to to append an element to.
     elem  = element to append.

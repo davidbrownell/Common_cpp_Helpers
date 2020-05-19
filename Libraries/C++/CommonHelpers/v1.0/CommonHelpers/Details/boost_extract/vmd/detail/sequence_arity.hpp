@@ -7,13 +7,13 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_ARITY_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_ARITY_HPP
 
-#include <boost_extract/preprocessor/logical/bitand.hpp>
-#include <boost_extract/preprocessor/logical/bitnor.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
-#include <boost_extract/vmd/detail/not_empty.hpp>
-#include <boost_extract/vmd/detail/sequence_elem.hpp>
+#include "../../preprocessor/logical/bitand.hpp"
+#include "../../preprocessor/logical/bitnor.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../is_empty.hpp"
+#include "modifiers.hpp"
+#include "not_empty.hpp"
+#include "sequence_elem.hpp"
 
 #define BOOST_VMD_DETAIL_IS_MULTI_TUPLE(tuple) \
     BOOST_PP_BITNOR \

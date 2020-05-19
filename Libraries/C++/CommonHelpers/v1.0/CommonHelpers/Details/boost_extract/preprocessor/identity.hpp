@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_IDENTITY_HPP
 # define BOOST_PREPROCESSOR_IDENTITY_HPP
 #
-# include <boost_extract/preprocessor/facilities/identity.hpp>
+# include "facilities/identity.hpp"
 #
 # endif

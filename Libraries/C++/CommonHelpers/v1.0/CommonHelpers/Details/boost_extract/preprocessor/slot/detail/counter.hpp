@@ -11,7 +11,7 @@
 #
 # define BOOST_PP_VALUE BOOST_PP_COUNTER + 1
 #
-# include <boost_extract/preprocessor/slot/detail/shared.hpp>
+# include "shared.hpp"
 #
 # undef BOOST_PP_COUNTER
 #

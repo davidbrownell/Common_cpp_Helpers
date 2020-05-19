@@ -7,18 +7,18 @@
 #if !defined(BOOST_VMD_DETAIL_TUPLE_HPP)
 #define BOOST_VMD_DETAIL_TUPLE_HPP
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/parens.hpp>
-  
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../empty.hpp"
+#include "../is_empty.hpp"
+#include "../identity.hpp"
+#include "empty_result.hpp"
+#include "mods.hpp"
+#include "parens.hpp"
+
 #define BOOST_VMD_DETAIL_TUPLE_BST_CS(vseq) \
     BOOST_PP_EQUAL(BOOST_PP_TUPLE_SIZE(BOOST_VMD_DETAIL_BEGIN_PARENS(vseq)),1) \
 /**/

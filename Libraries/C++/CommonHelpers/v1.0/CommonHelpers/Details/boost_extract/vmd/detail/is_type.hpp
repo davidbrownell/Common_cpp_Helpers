@@ -7,12 +7,12 @@
 #if !defined(BOOST_VMD_DETAIL_IS_TYPE_HPP)
 #define BOOST_VMD_DETAIL_IS_TYPE_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/detail/identifier_type.hpp>
-#include <boost_extract/vmd/detail/is_type_type.hpp>
-#include <boost_extract/vmd/detail/is_identifier.hpp>
-#include <boost_extract/vmd/detail/type_registration.hpp>
+#include "../../preprocessor/control/iif.hpp"
+#include "../identity.hpp"
+#include "identifier_type.hpp"
+#include "is_type_type.hpp"
+#include "is_identifier.hpp"
+#include "type_registration.hpp"
 
 #define BOOST_VMD_DETAIL_IS_TYPE_IMP_TYPE(vseq) \
     BOOST_VMD_DETAIL_IS_TYPE_TYPE \

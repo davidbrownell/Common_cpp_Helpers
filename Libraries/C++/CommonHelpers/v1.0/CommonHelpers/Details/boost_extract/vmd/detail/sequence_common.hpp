@@ -7,36 +7,36 @@
 #if !defined(BOOST_VMD_DETAIL_SEQUENCE_COMMON_HPP)
 #define BOOST_VMD_DETAIL_SEQUENCE_COMMON_HPP
 
-#include <boost_extract/preprocessor/arithmetic/inc.hpp>
-#include <boost_extract/preprocessor/array/push_back.hpp>
-#include <boost_extract/preprocessor/cat.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/comparison/less_equal.hpp>
-#include <boost_extract/preprocessor/comparison/not_equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/list/append.hpp>
-#include <boost_extract/preprocessor/logical/bitor.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/seq/push_back.hpp>
-#include <boost_extract/preprocessor/seq/size.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/push_back.hpp>
-#include <boost_extract/preprocessor/tuple/replace.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_empty_list.hpp>
-#include <boost_extract/vmd/detail/array.hpp>
-#include <boost_extract/vmd/detail/equal_type.hpp>
-#include <boost_extract/vmd/detail/identifier.hpp>
-#include <boost_extract/vmd/detail/identifier_type.hpp>
-#include <boost_extract/vmd/detail/list.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/seq.hpp>
-#include <boost_extract/vmd/detail/tuple.hpp>
+#include "../../preprocessor/arithmetic/inc.hpp"
+#include "../../preprocessor/array/push_back.hpp"
+#include "../../preprocessor/cat.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/comparison/less_equal.hpp"
+#include "../../preprocessor/comparison/not_equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/control/while.hpp"
+#include "../../preprocessor/list/append.hpp"
+#include "../../preprocessor/logical/bitor.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/seq/push_back.hpp"
+#include "../../preprocessor/seq/size.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/push_back.hpp"
+#include "../../preprocessor/tuple/replace.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../empty.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_empty_list.hpp"
+#include "array.hpp"
+#include "equal_type.hpp"
+#include "identifier.hpp"
+#include "identifier_type.hpp"
+#include "list.hpp"
+#include "modifiers.hpp"
+#include "mods.hpp"
+#include "seq.hpp"
+#include "tuple.hpp"
 
 #define BOOST_VMD_DETAIL_SEQUENCE_STATE_INPUT_ELEM 0
 #define BOOST_VMD_DETAIL_SEQUENCE_STATE_RESULT_ELEM 1
@@ -367,7 +367,7 @@
         call(BOOST_VMD_DETAIL_SEQUENCE_STATE_INPUT(state),BOOST_VMD_RETURN_AFTER) \
         ) \
 /**/
-    
+
 #define    BOOST_VMD_DETAIL_SEQUENCE_TEST_TYPE_D(d,call,state) \
     BOOST_VMD_DETAIL_SEQUENCE_TEST_TYPE_TUPLE \
         ( \
@@ -376,7 +376,7 @@
         call(d,BOOST_VMD_DETAIL_SEQUENCE_STATE_INPUT(state),BOOST_VMD_RETURN_AFTER) \
         ) \
 /**/
-    
+
 #define BOOST_VMD_DETAIL_SEQUENCE_GCLRT(state) \
     BOOST_PP_CAT \
         ( \
@@ -700,7 +700,7 @@
             BOOST_VMD_DETAIL_SEQUENCE_STATE_INPUT(state) \
             ), \
             BOOST_VMD_DETAIL_SEQUENCE_STATE_RESULT(state) \
-        ) 
+        )
 /**/
 
 #define BOOST_VMD_DETAIL_SEQUENCE_ELEM_PROCESS_TUPLE_GET_D(d,state) \
@@ -716,7 +716,7 @@
             BOOST_VMD_DETAIL_SEQUENCE_STATE_INPUT(state) \
             ), \
             BOOST_VMD_DETAIL_SEQUENCE_STATE_RESULT(state) \
-        ) 
+        )
 /**/
 
 #define BOOST_VMD_DETAIL_SEQUENCE_ELEM_PROCESS_TUPLE(vseq,elem,output,from) \

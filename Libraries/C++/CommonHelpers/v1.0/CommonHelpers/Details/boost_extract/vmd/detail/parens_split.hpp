@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_DETAIL_PARENS_SPLIT_HPP)
 #define BOOST_VMD_DETAIL_PARENS_SPLIT_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/vmd/detail/empty_result.hpp>
-#include <boost_extract/vmd/detail/parens_common.hpp>
-  
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "empty_result.hpp"
+#include "parens_common.hpp"
+
 #define BOOST_VMD_DETAIL_PARENS_SPLIT(vseq) \
     BOOST_PP_IIF \
       ( \

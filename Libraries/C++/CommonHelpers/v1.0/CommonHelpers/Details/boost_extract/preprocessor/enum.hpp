@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_ENUM_HPP
 # define BOOST_PREPROCESSOR_ENUM_HPP
 #
-# include <boost_extract/preprocessor/repetition/enum.hpp>
+# include "repetition/enum.hpp"
 #
 # endif

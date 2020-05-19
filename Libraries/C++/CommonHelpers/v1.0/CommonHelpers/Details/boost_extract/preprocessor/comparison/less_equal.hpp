@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_COMPARISON_LESS_EQUAL_HPP
 # define BOOST_PREPROCESSOR_COMPARISON_LESS_EQUAL_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/sub.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/logical/not.hpp>
+# include "../arithmetic/sub.hpp"
+# include "../config/config.hpp"
+# include "../logical/not.hpp"
 #
 # /* BOOST_PP_LESS_EQUAL */
 #

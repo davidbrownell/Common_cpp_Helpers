@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_ENUM_TRAILING_PARAMS_HPP
 # define BOOST_PREPROCESSOR_REPETITION_ENUM_TRAILING_PARAMS_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/repetition/repeat.hpp>
+# include "../config/config.hpp"
+# include "repeat.hpp"
 #
 # /* BOOST_PP_ENUM_TRAILING_PARAMS */
 #

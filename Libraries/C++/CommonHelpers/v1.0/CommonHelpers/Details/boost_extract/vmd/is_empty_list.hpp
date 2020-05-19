@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_IS_EMPTY_LIST_HPP)
 #define BOOST_VMD_IS_EMPTY_LIST_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/detail/is_list.hpp>
+#include "detail/is_list.hpp"
 
 /*
 
@@ -28,17 +28,17 @@
 
     An empty Boost PP list consists of the single identifier 'BOOST_PP_NIL'.
     This identifier also serves as a list terminator for a non-empty list.
-    
+
     sequence = a preprocessor parameter
 
     returns = 1 if the sequence is an empty Boost PP list
               0 if it is not.
-              
+
     The macro will generate a preprocessing error if the input
-    as an empty list marker, instead of being an identifier, is 
-    a preprocessor token which VMD cannot parse, as in the 
+    as an empty list marker, instead of being an identifier, is
+    a preprocessor token which VMD cannot parse, as in the
     example '&BOOST_PP_NIL'.
-    
+
 */
 
 #define BOOST_VMD_IS_EMPTY_LIST(sequence) \
@@ -51,18 +51,18 @@
 
     An empty Boost PP list consists of the single identifier 'BOOST_PP_NIL'.
     This identifier also serves as a list terminator for a non-empty list.
-    
+
     d        = The next available BOOST_PP_WHILE iteration
     sequence = a preprocessor parameter
 
     returns = 1 if the sequence is an empty Boost PP list
               0 if it is not.
-              
+
     The macro will generate a preprocessing error if the input
-    as an empty list marker, instead of being an identifier, is 
-    a preprocessor token which VMD cannot parse, as in the 
+    as an empty list marker, instead of being an identifier, is
+    a preprocessor token which VMD cannot parse, as in the
     example '&BOOST_PP_NIL'.
-    
+
 */
 
 #define BOOST_VMD_IS_EMPTY_LIST_D(d,sequence) \

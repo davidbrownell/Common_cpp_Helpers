@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_LIMITS_HPP
 # define BOOST_PREPROCESSOR_LIMITS_HPP
 #
-# include <boost_extract/preprocessor/config/limits.hpp>
+# include "config/limits.hpp"
 #
 # endif

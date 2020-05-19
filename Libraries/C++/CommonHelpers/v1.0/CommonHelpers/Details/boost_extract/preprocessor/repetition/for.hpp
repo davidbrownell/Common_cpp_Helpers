@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_FOR_HPP
 # define BOOST_PREPROCESSOR_REPETITION_FOR_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/debug/error.hpp>
-# include <boost_extract/preprocessor/facilities/empty.hpp>
-# include <boost_extract/preprocessor/logical/bool.hpp>
-# include <boost_extract/preprocessor/detail/auto_rec.hpp>
+# include "../cat.hpp"
+# include "../debug/error.hpp"
+# include "../facilities/empty.hpp"
+# include "../logical/bool.hpp"
+# include "../detail/auto_rec.hpp"
 #
 # /* BOOST_PP_FOR */
 #
@@ -35,13 +35,13 @@
 # define BOOST_PP_FOR_SR_M(r, s) BOOST_PP_NIL
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    include <boost_extract/preprocessor/repetition/detail/edg/for.hpp>
+#    include "detail/edg/for.hpp"
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#    include <boost_extract/preprocessor/repetition/detail/msvc/for.hpp>
+#    include "detail/msvc/for.hpp"
 # elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_DMC()
-#    include <boost_extract/preprocessor/repetition/detail/dmc/for.hpp>
+#    include "detail/dmc/for.hpp"
 # else
-#    include <boost_extract/preprocessor/repetition/detail/for.hpp>
+#    include "detail/for.hpp"
 # endif
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_DMC()

@@ -13,20 +13,20 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_HPP
 # define BOOST_PREPROCESSOR_ARRAY_HPP
 #
-# include <boost_extract/preprocessor/array/data.hpp>
-# include <boost_extract/preprocessor/array/elem.hpp>
-# include <boost_extract/preprocessor/array/enum.hpp>
-# include <boost_extract/preprocessor/array/insert.hpp>
-# include <boost_extract/preprocessor/array/pop_back.hpp>
-# include <boost_extract/preprocessor/array/pop_front.hpp>
-# include <boost_extract/preprocessor/array/push_back.hpp>
-# include <boost_extract/preprocessor/array/push_front.hpp>
-# include <boost_extract/preprocessor/array/remove.hpp>
-# include <boost_extract/preprocessor/array/replace.hpp>
-# include <boost_extract/preprocessor/array/reverse.hpp>
-# include <boost_extract/preprocessor/array/size.hpp>
-# include <boost_extract/preprocessor/array/to_list.hpp>
-# include <boost_extract/preprocessor/array/to_seq.hpp>
-# include <boost_extract/preprocessor/array/to_tuple.hpp>
+# include "array/data.hpp"
+# include "array/elem.hpp"
+# include "array/enum.hpp"
+# include "array/insert.hpp"
+# include "array/pop_back.hpp"
+# include "array/pop_front.hpp"
+# include "array/push_back.hpp"
+# include "array/push_front.hpp"
+# include "array/remove.hpp"
+# include "array/replace.hpp"
+# include "array/reverse.hpp"
+# include "array/size.hpp"
+# include "array/to_list.hpp"
+# include "array/to_seq.hpp"
+# include "array/to_tuple.hpp"
 #
 # endif

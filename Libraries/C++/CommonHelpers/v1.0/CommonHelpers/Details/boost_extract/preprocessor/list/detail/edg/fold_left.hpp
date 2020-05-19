@@ -14,10 +14,10 @@
 # ifndef BOOST_PREPROCESSOR_LIST_DETAIL_EDG_FOLD_LEFT_HPP
 # define BOOST_PREPROCESSOR_LIST_DETAIL_EDG_FOLD_LEFT_HPP
 #
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "../../../control/expr_iif.hpp"
+# include "../../../control/iif.hpp"
+# include "../../adt.hpp"
+# include "../../../tuple/eat.hpp"
 #
 # define BOOST_PP_LIST_FOLD_LEFT_1(o, s, l) BOOST_PP_LIST_FOLD_LEFT_1_D(o, s, l)
 # define BOOST_PP_LIST_FOLD_LEFT_2(o, s, l) BOOST_PP_LIST_FOLD_LEFT_2_D(o, s, l)

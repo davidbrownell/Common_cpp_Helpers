@@ -14,16 +14,16 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_REPEAT_FROM_TO_HPP
 # define BOOST_PREPROCESSOR_REPETITION_REPEAT_FROM_TO_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/add.hpp>
-# include <boost_extract/preprocessor/arithmetic/sub.hpp>
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/while.hpp>
-# include <boost_extract/preprocessor/debug/error.hpp>
-# include <boost_extract/preprocessor/detail/auto_rec.hpp>
-# include <boost_extract/preprocessor/repetition/repeat.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../arithmetic/add.hpp"
+# include "../arithmetic/sub.hpp"
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../control/while.hpp"
+# include "../debug/error.hpp"
+# include "../detail/auto_rec.hpp"
+# include "../repetition/repeat.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_REPEAT_FROM_TO */
 #

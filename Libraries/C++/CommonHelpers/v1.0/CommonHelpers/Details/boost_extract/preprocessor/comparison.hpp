@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_COMPARISON_HPP
 # define BOOST_PREPROCESSOR_COMPARISON_HPP
 #
-# include <boost_extract/preprocessor/comparison/equal.hpp>
-# include <boost_extract/preprocessor/comparison/greater.hpp>
-# include <boost_extract/preprocessor/comparison/greater_equal.hpp>
-# include <boost_extract/preprocessor/comparison/less.hpp>
-# include <boost_extract/preprocessor/comparison/less_equal.hpp>
-# include <boost_extract/preprocessor/comparison/not_equal.hpp>
+# include "comparison/equal.hpp"
+# include "comparison/greater.hpp"
+# include "comparison/greater_equal.hpp"
+# include "comparison/less.hpp"
+# include "comparison/less_equal.hpp"
+# include "comparison/not_equal.hpp"
 #
 # endif

@@ -7,15 +7,15 @@
 #if !defined(BOOST_VMD_TUPLE_POP_FRONT_HPP)
 #define BOOST_VMD_TUPLE_POP_FRONT_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "../detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/tuple/pop_front.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/vmd/empty.hpp>
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/tuple/pop_front.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../empty.hpp"
 
 /*
 
@@ -28,7 +28,7 @@
 
 /** \def BOOST_VMD_TUPLE_POP_FRONT(tuple)
 
-    \brief pops an element from the front of a tuple. 
+    \brief pops an element from the front of a tuple.
 
     tuple = tuple to pop an element from.
 

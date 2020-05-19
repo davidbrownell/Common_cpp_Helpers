@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_DETAIL_CHECK_HPP
 # define BOOST_PREPROCESSOR_DETAIL_CHECK_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
 #
 # /* BOOST_PP_CHECK */
 #

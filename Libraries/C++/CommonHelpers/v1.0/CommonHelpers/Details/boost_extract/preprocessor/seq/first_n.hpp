@@ -12,11 +12,11 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_FIRST_N_HPP
 # define BOOST_PREPROCESSOR_SEQ_FIRST_N_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/if.hpp>
-# include <boost_extract/preprocessor/seq/detail/split.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../config/config.hpp"
+# include "../control/if.hpp"
+# include "detail/split.hpp"
+# include "../tuple/eat.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_SEQ_FIRST_N */
 #

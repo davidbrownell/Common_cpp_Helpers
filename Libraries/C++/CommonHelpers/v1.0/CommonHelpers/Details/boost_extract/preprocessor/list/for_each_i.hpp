@@ -14,12 +14,12 @@
 # ifndef BOOST_PREPROCESSOR_LIST_LIST_FOR_EACH_I_HPP
 # define BOOST_PREPROCESSOR_LIST_LIST_FOR_EACH_I_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/repetition/for.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
+# include "../arithmetic/inc.hpp"
+# include "../config/config.hpp"
+# include "adt.hpp"
+# include "../repetition/for.hpp"
+# include "../tuple/elem.hpp"
+# include "../tuple/rem.hpp"
 #
 # /* BOOST_PP_LIST_FOR_EACH_I */
 #

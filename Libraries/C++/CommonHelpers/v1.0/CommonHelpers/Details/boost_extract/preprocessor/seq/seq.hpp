@@ -12,8 +12,8 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_SEQ_HPP
 # define BOOST_PREPROCESSOR_SEQ_SEQ_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/seq/elem.hpp>
+# include "../config/config.hpp"
+# include "elem.hpp"
 #
 # /* BOOST_PP_SEQ_HEAD */
 #

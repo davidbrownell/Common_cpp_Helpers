@@ -14,9 +14,9 @@
 # ifndef BOOST_PREPROCESSOR_LIST_AT_HPP
 # define BOOST_PREPROCESSOR_LIST_AT_HPP
 #
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/list/adt.hpp>
-# include <boost_extract/preprocessor/list/rest_n.hpp>
+# include "../config/config.hpp"
+# include "adt.hpp"
+# include "rest_n.hpp"
 #
 # /* BOOST_PP_LIST_AT */
 #

@@ -12,6 +12,6 @@
 # ifndef BOOST_PREPROCESSOR_REPEAT_3RD_HPP
 # define BOOST_PREPROCESSOR_REPEAT_3RD_HPP
 #
-# include <boost_extract/preprocessor/repetition/repeat.hpp>
+# include "repetition/repeat.hpp"
 #
 # endif

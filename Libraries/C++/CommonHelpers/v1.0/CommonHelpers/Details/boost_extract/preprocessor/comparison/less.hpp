@@ -14,12 +14,12 @@
 # ifndef BOOST_PREPROCESSOR_COMPARISON_LESS_HPP
 # define BOOST_PREPROCESSOR_COMPARISON_LESS_HPP
 #
-# include <boost_extract/preprocessor/comparison/less_equal.hpp>
-# include <boost_extract/preprocessor/comparison/not_equal.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/iif.hpp>
-# include <boost_extract/preprocessor/logical/bitand.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "less_equal.hpp"
+# include "not_equal.hpp"
+# include "../config/config.hpp"
+# include "../control/iif.hpp"
+# include "../logical/bitand.hpp"
+# include "../tuple/eat.hpp"
 #
 # /* BOOST_PP_LESS */
 #

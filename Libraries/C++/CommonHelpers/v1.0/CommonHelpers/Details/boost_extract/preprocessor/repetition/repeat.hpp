@@ -14,11 +14,11 @@
 # ifndef BOOST_PREPROCESSOR_REPETITION_REPEAT_HPP
 # define BOOST_PREPROCESSOR_REPETITION_REPEAT_HPP
 #
-# include <boost_extract/preprocessor/cat.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/debug/error.hpp>
-# include <boost_extract/preprocessor/detail/auto_rec.hpp>
-# include <boost_extract/preprocessor/tuple/eat.hpp>
+# include "../cat.hpp"
+# include "../config/config.hpp"
+# include "../debug/error.hpp"
+# include "../detail/auto_rec.hpp"
+# include "../tuple/eat.hpp"
 #
 # /* BOOST_PP_REPEAT */
 #

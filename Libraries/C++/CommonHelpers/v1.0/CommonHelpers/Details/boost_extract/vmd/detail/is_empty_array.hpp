@@ -7,8 +7,8 @@
 #if !defined(BOOST_VMD_DETAIL_IS_EMPTY_ARRAY_HPP)
 #define BOOST_VMD_DETAIL_IS_EMPTY_ARRAY_HPP
 
-#include <boost_extract/preprocessor/array/size.hpp>
-#include <boost_extract/preprocessor/logical/not.hpp>
+#include "../../preprocessor/array/size.hpp"
+#include "../../preprocessor/logical/not.hpp"
 
 #define BOOST_VMD_DETAIL_IS_EMPTY_ARRAY_SIZE(array) \
     BOOST_PP_NOT \

@@ -12,15 +12,15 @@
 # ifndef BOOST_PREPROCESSOR_SEQ_REST_N_HPP
 # define BOOST_PREPROCESSOR_SEQ_REST_N_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/comparison/not_equal.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/control/expr_iif.hpp>
-# include <boost_extract/preprocessor/facilities/identity.hpp>
-# include <boost_extract/preprocessor/logical/bitand.hpp>
-# include <boost_extract/preprocessor/seq/detail/is_empty.hpp>
-# include <boost_extract/preprocessor/seq/detail/split.hpp>
-# include <boost_extract/preprocessor/tuple/elem.hpp>
+# include "../arithmetic/inc.hpp"
+# include "../comparison/not_equal.hpp"
+# include "../config/config.hpp"
+# include "../control/expr_iif.hpp"
+# include "../facilities/identity.hpp"
+# include "../logical/bitand.hpp"
+# include "detail/is_empty.hpp"
+# include "detail/split.hpp"
+# include "../tuple/elem.hpp"
 #
 # /* BOOST_PP_SEQ_REST_N */
 #

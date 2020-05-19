@@ -7,11 +7,11 @@
 #if !defined(BOOST_VMD_IS_PARENS_EMPTY_HPP)
 #define BOOST_VMD_IS_PARENS_EMPTY_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
-#include <boost_extract/vmd/detail/is_empty_tuple.hpp>
+#include "detail/is_empty_tuple.hpp"
 
 /*
 
@@ -30,15 +30,15 @@
 
     returns = 1 if the sequence is a set of parens with no data,
               else returns 0.
-              
+
     A set of parens with no data may be:
-    
+
     1) a tuple whose size is a single element which is empty
-    
+
                 or
-                
+
     2) a single element seq whose data is empty
-    
+
 */
 
 #define BOOST_VMD_IS_PARENS_EMPTY(sequence) \
@@ -54,15 +54,15 @@
 
     returns = 1 if the sequence is a set of parens with no data,
               else returns 0.
-              
+
     A set of parens with no data may be:
-    
+
     1) a tuple whose size is a single element which is empty
-    
+
                 or
-                
+
     2) a single element seq whose data is empty
-    
+
 */
 
 #define BOOST_VMD_IS_PARENS_EMPTY_D(d,sequence) \

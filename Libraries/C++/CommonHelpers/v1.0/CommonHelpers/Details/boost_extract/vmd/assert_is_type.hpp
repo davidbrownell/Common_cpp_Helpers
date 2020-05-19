@@ -7,7 +7,7 @@
 #if !defined(BOOST_VMD_ASSERT_IS_TYPE_HPP)
 #define BOOST_VMD_ASSERT_IS_TYPE_HPP
 
-#include <boost_extract/vmd/detail/setup.hpp>
+#include "detail/setup.hpp"
 
 #if BOOST_PP_VARIADICS
 
@@ -26,28 +26,28 @@
 
     The macro checks that the sequence is a VMD type.
     If it is not a VMD type, it forces a compiler error.
-    
-    The macro normally checks for a VMD type only in 
-    debug mode. However an end-user can force the macro 
-    to check or not check by defining the macro 
+
+    The macro normally checks for a VMD type only in
+    debug mode. However an end-user can force the macro
+    to check or not check by defining the macro
     BOOST_VMD_ASSERT_DATA to 1 or 0 respectively.
 
     sequence = a possible VMD type.
 
-    returns = Normally the macro returns nothing. 
-    
-              If the sequence is a VMD type, nothing is 
+    returns = Normally the macro returns nothing.
+
+              If the sequence is a VMD type, nothing is
               output.
-              
-              For VC++, because there is no sure way of forcing  
+
+              For VC++, because there is no sure way of forcing
               a compiler error from within a macro without producing
-              output, if the sequence is not a VMD type the 
+              output, if the sequence is not a VMD type the
               macro forces a compiler error by outputting invalid C++.
-              
-              For all other compilers a compiler error is forced 
-              without producing output if the sequence is not a 
+
+              For all other compilers a compiler error is forced
+              without producing output if the sequence is not a
               VMD type.
-    
+
 */
 
 /** \def BOOST_VMD_ASSERT_IS_TYPE_D(d,sequence)
@@ -56,29 +56,29 @@
 
     The macro checks that the sequence is a VMD type.
     If it is not a VMD type, it forces a compiler error.
-    
-    The macro normally checks for a VMD type only in 
-    debug mode. However an end-user can force the macro 
-    to check or not check by defining the macro 
+
+    The macro normally checks for a VMD type only in
+    debug mode. However an end-user can force the macro
+    to check or not check by defining the macro
     BOOST_VMD_ASSERT_DATA to 1 or 0 respectively.
 
-    d       = The next available BOOST_PP_WHILE iteration. 
+    d       = The next available BOOST_PP_WHILE iteration.
     sequence = a possible VMD type.
 
-    returns = Normally the macro returns nothing. 
-    
-              If the sequence is a VMD type, nothing is 
+    returns = Normally the macro returns nothing.
+
+              If the sequence is a VMD type, nothing is
               output.
-              
-              For VC++, because there is no sure way of forcing  
+
+              For VC++, because there is no sure way of forcing
               a compiler error from within a macro without producing
-              output, if the sequence is not a VMD type the 
+              output, if the sequence is not a VMD type the
               macro forces a compiler error by outputting invalid C++.
-              
-              For all other compilers a compiler error is forced 
-              without producing output if the sequence is not a 
+
+              For all other compilers a compiler error is forced
+              without producing output if the sequence is not a
               VMD type.
-    
+
 */
 
 #if !BOOST_VMD_ASSERT_DATA
@@ -88,8 +88,8 @@
 
 #else
 
-#include <boost_extract/vmd/assert.hpp>
-#include <boost_extract/vmd/is_type.hpp>
+#include "assert.hpp"
+#include "is_type.hpp"
 
 #define BOOST_VMD_ASSERT_IS_TYPE(sequence) \
     BOOST_VMD_ASSERT \

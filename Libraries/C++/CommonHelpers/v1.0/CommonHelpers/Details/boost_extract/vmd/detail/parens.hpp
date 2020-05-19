@@ -7,14 +7,14 @@
 #if !defined(BOOST_VMD_DETAIL_PARENS_HPP)
 #define BOOST_VMD_DETAIL_PARENS_HPP
 
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/variadic/elem.hpp>
-#include <boost_extract/vmd/empty.hpp>
-#include <boost_extract/vmd/detail/mods.hpp>
-#include <boost_extract/vmd/detail/parens_split.hpp>
-#include <boost_extract/vmd/detail/parens_common.hpp>
-  
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/variadic/elem.hpp"
+#include "../empty.hpp"
+#include "mods.hpp"
+#include "parens_split.hpp"
+#include "parens_common.hpp"
+
 #define BOOST_VMD_DETAIL_PARENS_PROCESS(vseq) \
     BOOST_PP_IIF \
       ( \

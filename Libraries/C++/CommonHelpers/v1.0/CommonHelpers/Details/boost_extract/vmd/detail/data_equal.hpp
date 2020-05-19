@@ -7,24 +7,24 @@
 #if !defined(BOOST_VMD_DETAIL_DATA_EQUAL_HPP)
 #define BOOST_VMD_DETAIL_DATA_EQUAL_HPP
 
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_1.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_2.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_3.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_4.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_5.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_6.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_7.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_8.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_9.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_10.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_11.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_12.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_13.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_14.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_15.hpp>
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_16.hpp>
+#include "recurse/data_equal/data_equal_1.hpp"
+#include "recurse/data_equal/data_equal_2.hpp"
+#include "recurse/data_equal/data_equal_3.hpp"
+#include "recurse/data_equal/data_equal_4.hpp"
+#include "recurse/data_equal/data_equal_5.hpp"
+#include "recurse/data_equal/data_equal_6.hpp"
+#include "recurse/data_equal/data_equal_7.hpp"
+#include "recurse/data_equal/data_equal_8.hpp"
+#include "recurse/data_equal/data_equal_9.hpp"
+#include "recurse/data_equal/data_equal_10.hpp"
+#include "recurse/data_equal/data_equal_11.hpp"
+#include "recurse/data_equal/data_equal_12.hpp"
+#include "recurse/data_equal/data_equal_13.hpp"
+#include "recurse/data_equal/data_equal_14.hpp"
+#include "recurse/data_equal/data_equal_15.hpp"
+#include "recurse/data_equal/data_equal_16.hpp"
 
-#include <boost_extract/vmd/detail/recurse/data_equal/data_equal_headers.hpp>
+#include "recurse/data_equal/data_equal_headers.hpp"
 
 #define BOOST_VMD_DETAIL_DATA_EQUAL_OP_TEQ_CMP_PARENS(d,em1,em2) \
     BOOST_VMD_IDENTITY_RESULT \

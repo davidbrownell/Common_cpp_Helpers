@@ -13,13 +13,13 @@
 # ifndef BOOST_PREPROCESSOR_ARRAY_PUSH_BACK_HPP
 # define BOOST_PREPROCESSOR_ARRAY_PUSH_BACK_HPP
 #
-# include <boost_extract/preprocessor/arithmetic/inc.hpp>
-# include <boost_extract/preprocessor/array/data.hpp>
-# include <boost_extract/preprocessor/array/size.hpp>
-# include <boost_extract/preprocessor/config/config.hpp>
-# include <boost_extract/preprocessor/punctuation/comma_if.hpp>
-# include <boost_extract/preprocessor/tuple/rem.hpp>
-# include <boost_extract/preprocessor/array/detail/get_data.hpp>
+# include "../arithmetic/inc.hpp"
+# include "data.hpp"
+# include "size.hpp"
+# include "../config/config.hpp"
+# include "../punctuation/comma_if.hpp"
+# include "../tuple/rem.hpp"
+# include "detail/get_data.hpp"
 #
 # /* BOOST_PP_ARRAY_PUSH_BACK */
 #

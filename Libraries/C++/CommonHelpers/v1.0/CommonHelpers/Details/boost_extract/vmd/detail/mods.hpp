@@ -7,22 +7,22 @@
 #if !defined(BOOST_VMD_DETAIL_MODS_HPP)
 #define BOOST_VMD_DETAIL_MODS_HPP
 
-#include <boost_extract/preprocessor/arithmetic/inc.hpp>
-#include <boost_extract/preprocessor/comparison/equal.hpp>
-#include <boost_extract/preprocessor/comparison/greater.hpp>
-#include <boost_extract/preprocessor/control/iif.hpp>
-#include <boost_extract/preprocessor/control/while.hpp>
-#include <boost_extract/preprocessor/punctuation/is_begin_parens.hpp>
-#include <boost_extract/preprocessor/tuple/elem.hpp>
-#include <boost_extract/preprocessor/tuple/pop_front.hpp>
-#include <boost_extract/preprocessor/tuple/push_back.hpp>
-#include <boost_extract/preprocessor/tuple/replace.hpp>
-#include <boost_extract/preprocessor/tuple/size.hpp>
-#include <boost_extract/preprocessor/variadic/to_tuple.hpp>
-#include <boost_extract/vmd/identity.hpp>
-#include <boost_extract/vmd/is_empty.hpp>
-#include <boost_extract/vmd/is_type.hpp>
-#include <boost_extract/vmd/detail/modifiers.hpp>
+#include "../../preprocessor/arithmetic/inc.hpp"
+#include "../../preprocessor/comparison/equal.hpp"
+#include "../../preprocessor/comparison/greater.hpp"
+#include "../../preprocessor/control/iif.hpp"
+#include "../../preprocessor/control/while.hpp"
+#include "../../preprocessor/punctuation/is_begin_parens.hpp"
+#include "../../preprocessor/tuple/elem.hpp"
+#include "../../preprocessor/tuple/pop_front.hpp"
+#include "../../preprocessor/tuple/push_back.hpp"
+#include "../../preprocessor/tuple/replace.hpp"
+#include "../../preprocessor/tuple/size.hpp"
+#include "../../preprocessor/variadic/to_tuple.hpp"
+#include "../identity.hpp"
+#include "../is_empty.hpp"
+#include "../is_type.hpp"
+#include "modifiers.hpp"
 
 #define BOOST_VMD_DETAIL_MODS_NO_RETURN 0
 #define BOOST_VMD_DETAIL_MODS_RETURN 1
@@ -656,44 +656,44 @@
 /*
 
   Returns a six-element tuple:
-  
+
   First tuple element  = 0 No type return
                          1 Exact type return
                          2 General tuple type return
                          3 Array return
                          4 List return
-                         
+
   Second tuple element = 0 No after return
                          1 After return
-                         
+
   Third tuple element  = 0 No identifier index
                          1 Identifier Index
-                         
+
   Fourth tuple element = Tuple of other identifiers
-  
+
   Fifth tuple element  = 0 No after only return
                          1 After only return
-                         
+
   Sixth tuple element  = Type identifier
-                         
+
   Input                = allow, either
                          BOOST_VMD_ALLOW_ALL
                          BOOST_VMD_ALLOW_RETURN
                          BOOST_VMD_ALLOW_AFTER
                          BOOST_VMD_ALLOW_INDEX
-                         
+
                            ..., modifiers, first variadic is discarded
                          Possible modifiers are:
-                         
+
                          BOOST_VMD_RETURN_NO_TYPE = (0,0)
                          BOOST_VMD_RETURN_TYPE = (1,0)
                          BOOST_VMD_RETURN_TYPE_TUPLE = (2,0)
                          BOOST_VMD_RETURN_TYPE_ARRAY = (3,0)
                          BOOST_VMD_RETURN_TYPE_LIST = (4,0)
-                         
+
                          BOOST_VMD_RETURN_NO_AFTER = (0,0)
                          BOOST_VMD_RETURN_AFTER = (0,1)
-  
+
 */
 
 #define BOOST_VMD_DETAIL_NEW_MODS(allow,...) \
