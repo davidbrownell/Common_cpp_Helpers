@@ -117,7 +117,7 @@ namespace CommonHelpers {
         BOOST_PP_COMMA_IF(BOOST_PP_AND(HasMembers, HasBases))                                    \
         BOOST_PP_IIF(HasMembers, MOVE_Impl_Ctor_Members, BOOST_VMD_EMPTY)(Members)               \
         {                                                                                        \
-            (other);                                                                             \
+            UNUSED(other);                                                                       \
             CommonHelpers::TypeTraits::Access::MoveFinalConstruct(*this);                        \
             CommonHelpers::TypeTraits::Access::FinalConstruct(*this);                            \
         }
@@ -131,7 +131,7 @@ namespace CommonHelpers {
 // ----------------------------------------------------------------------
 #define MOVE_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)               \
     ClassName & operator =(ClassName && other) {                                            \
-        (other);                                                                            \
+        UNUSED(other);                                                                      \
         BOOST_PP_IIF(HasBases, MOVE_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)          \
         BOOST_PP_IIF(HasMembers, MOVE_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)    \
                                                                                             \
