@@ -114,7 +114,7 @@ namespace CommonHelpers {
         BOOST_PP_COMMA_IF(BOOST_PP_AND(HasMembers, HasBases))                                    \
         BOOST_PP_IIF(HasMembers, COPY_Impl_Ctor_Members, BOOST_VMD_EMPTY)(Members)               \
         {                                                                                        \
-            (other);                                                                             \
+            UNUSED(other);                                                                       \
             CommonHelpers::TypeTraits::Access::CopyFinalConstruct(*this);                        \
             CommonHelpers::TypeTraits::Access::FinalConstruct(*this);                            \
         }
@@ -128,7 +128,7 @@ namespace CommonHelpers {
 // ----------------------------------------------------------------------
 #define COPY_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)               \
     ClassName & operator =(ClassName const &other) {                                        \
-        (other);                                                                            \
+        UNUSED(other);                                                                      \
         BOOST_PP_IIF(HasBases, COPY_Impl_Assignment_Bases, BOOST_VMD_EMPTY)(Bases)          \
         BOOST_PP_IIF(HasMembers, COPY_Impl_Assignment_Members, BOOST_VMD_EMPTY)(Members)    \
                                                                                             \
