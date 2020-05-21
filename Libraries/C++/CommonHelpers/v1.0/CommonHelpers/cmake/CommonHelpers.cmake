@@ -34,6 +34,7 @@ function(Impl)
             ${_this_path}/../Misc.h
             ${_this_path}/../Move.h
             ${_this_path}/../SharedObject.h
+            ${_this_path}/../Stl.h
             ${_this_path}/../TestHelpers.h
             ${_this_path}/../TypeTraits.h
 
