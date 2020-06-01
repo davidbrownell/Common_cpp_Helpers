@@ -22,20 +22,20 @@ function(Impl)
         NAME
             CommonHelpers
 
-        IS_INTERFACE
-            ON
-
         FILES
             ${_details_files}
 
             ${_this_path}/../Compare.h
             ${_this_path}/../Constructor.h
             ${_this_path}/../Copy.h
+            ${_this_path}/../Finally.h
             ${_this_path}/../Misc.h
             ${_this_path}/../Move.h
             ${_this_path}/../SharedObject.h
             ${_this_path}/../Stl.h
             ${_this_path}/../TestHelpers.h
+            ${_this_path}/../ThreadPool.cpp
+            ${_this_path}/../ThreadPool.h
             ${_this_path}/../TypeTraits.h
 
         PUBLIC_INCLUDE_DIRECTORIES
