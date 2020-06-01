@@ -24,6 +24,8 @@
 
 #include "Details/boost_extract/preprocessor/cat.hpp"
 
+#include <utility>
+
 namespace CommonHelpers {
 
 // ----------------------------------------------------------------------
@@ -57,10 +59,16 @@ class FinalAction {
 public:
     // ----------------------------------------------------------------------
     // |  Public Methods
-    explicit FinalAction(FuncT f) noexcept : f_(std::move(f)) {}
+    explicit FinalAction(FuncT f) noexcept :
+        _f(std::move(f)),
+        _invoke(true)
+    {}
 
-    FinalAction(FinalAction && other) noexcept : f_(std::move(other.f_)) {
-        other.invoke_ = false;
+    FinalAction(FinalAction && other) noexcept :
+        _f(std::move(other._f)),
+        _invoke(true)
+    {
+        other._invoke = false;
     }
 
     FinalAction(FinalAction const &) = delete;
@@ -68,14 +76,15 @@ public:
     FinalAction & operator=(FinalAction &&) = delete;
 
     ~FinalAction(void) noexcept {
-        if(invoke_) f_();
+        if(_invoke)
+            _f();
     }
 
 private:
     // ----------------------------------------------------------------------
     // |  Private Data
-    FuncT                                   f_;
-    bool                                    invoke_{true};
+    FuncT                                   _f;
+    bool                                    _invoke;
 };
 
 // ----------------------------------------------------------------------
