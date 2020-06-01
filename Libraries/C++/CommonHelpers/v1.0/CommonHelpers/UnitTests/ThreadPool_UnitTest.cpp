@@ -146,11 +146,10 @@ TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
 
 TEST_CASE("Shutdown flag") {
     SECTION("Not set") {
-        std::mutex                          m;
         std::condition_variable             cv;
 
         auto const                          work(
-            [&m, &cv](bool isActive) {
+            [&cv](bool isActive) {
                 CHECK(isActive);
 
                 cv.notify_one();
@@ -161,6 +160,7 @@ TEST_CASE("Shutdown flag") {
 
         pool.enqueue_work(std::move(work));
 
+        std::mutex                          m;
         std::unique_lock                    lock(m);
 
         cv.wait(lock);
