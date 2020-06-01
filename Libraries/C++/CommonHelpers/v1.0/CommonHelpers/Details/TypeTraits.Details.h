@@ -233,6 +233,63 @@ template <typename T>
 constexpr bool const IsIteratorImpl
     = std::is_same_v<std::true_type, decltype(Details::IsIteratorImplHelper<T>(nullptr, nullptr, nullptr, nullptr))>;
 
+template <typename T>
+class FunctionTraitsHasCallOperatorImpl {
+private:
+    // ----------------------------------------------------------------------
+    // |  Private Methods
+    template <typename U> static std::true_type Check(U *, decltype(&U::operator()));
+    template <typename U> static std::false_type Check(...);
+
+public:
+    // ----------------------------------------------------------------------
+    // |  Public Types
+    static bool const                       value = std::is_same_v<std::true_type, decltype(Check<T>(nullptr, nullptr))>;
+};
+
+template <typename T>
+constexpr bool const FunctionTraitsHasCallOperator      = FunctionTraitsHasCallOperatorImpl<T>::value;
+
+template <typename T, bool HasCallOperatorV>
+struct FunctionTraitsImpl : public FunctionTraitsImpl<decltype(&T::operator()), false>
+{
+    // If here, we are looking at a class with a call operator; which could be
+    // a lambda or a standard class. Unfortunately, we don't have a way to distinguish
+    // between the two and are therefore defaulting to lambda-like semantics.
+    static bool const is_method             = false;
+    static bool const is_const              = false;
+};
+
+template <typename ReturnT, typename... ArgTs>
+struct FunctionTraitsImpl<ReturnT (ArgTs...), false>
+{
+    using return_type                       = ReturnT;
+    using args                              = std::tuple<ArgTs...>;
+    static bool const is_method             = false;
+    static bool const is_const              = false;
+};
+
+template <typename ClassT, typename ReturnT, typename... ArgTs>
+struct FunctionTraitsImpl<ReturnT (ClassT::*)(ArgTs...), false> {
+    using return_type                       = ReturnT;
+    using args                              = std::tuple<ArgTs...>;
+    static bool const is_method             = true;
+    static bool const is_const              = false;
+};
+
+template <typename ClassT, typename ReturnT, typename... ArgTs>
+struct FunctionTraitsImpl<ReturnT (ClassT::*)(ArgTs...) const, false> {
+    using return_type                       = ReturnT;
+    using args                              = std::tuple<ArgTs...>;
+    static bool const is_method             = true;
+    static bool const is_const              = true;
+};
+
+template <typename T>
+struct FunctionTraitsImpl<T, false> {
+    static_assert(std::is_same_v<T, T> == false, "FunctionTraits does not support 'T'");
+};
+
 }  // namespace Details
 }  // namespace TypeTraits
 }  // namespace CommonHelpers
