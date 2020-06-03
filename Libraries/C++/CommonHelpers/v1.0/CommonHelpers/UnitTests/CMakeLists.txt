@@ -22,11 +22,13 @@ function(Impl)
             ${_this_path}/Compare_UnitTest.cpp
             ${_this_path}/Constructor_UnitTest.cpp
             ${_this_path}/Copy_UnitTest.cpp
+            ${_this_path}/Finally_UnitTest.cpp
             ${_this_path}/Misc_UnitTest.cpp
             ${_this_path}/Move_UnitTest.cpp
             ${_this_path}/SharedObject_UnitTest.cpp
             ${_this_path}/Stl_UnitTest.cpp
             ${_this_path}/TestHelpers_UnitTest.cpp
+            ${_this_path}/ThreadPool_UnitTest.cpp
             ${_this_path}/TypeTraits_UnitTest.cpp
 
         LINK_LIBRARIES
