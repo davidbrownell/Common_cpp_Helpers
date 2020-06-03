@@ -833,3 +833,107 @@ TEST_CASE("Access") {
     CommonHelpers::TypeTraits::Access::FinalConstruct(without);
     CHECK(true); // Avoid warnings
 }
+
+// ----------------------------------------------------------------------
+// |
+// |  FunctionTraits
+// |
+// ----------------------------------------------------------------------
+int Func(void);
+void Func1(int);
+int Func2(int, bool);
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func)>::args, std::tuple<>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func)>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func)>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func1)>::return_type, void>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func1)>::args, std::tuple<int>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func1)>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func1)>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func2)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(Func2)>::args, std::tuple<int, bool>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func2)>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(Func2)>::is_const == false, "");
+
+struct FunctionTraitsObj {
+    int Method(void);
+    void Method1(int);
+    int Method2(int, bool);
+
+    int ConstMethod(void) const;
+    void ConstMethod1(int) const;
+    int ConstMethod2(int, bool) const;
+};
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method)>::args, std::tuple<>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method)>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method1)>::return_type, void>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method1)>::args, std::tuple<int>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method1)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method1)>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method2)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method2)>::args, std::tuple<int, bool>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method2)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::Method2)>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod)>::args, std::tuple<>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod)>::is_const, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod1)>::return_type, void>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod1)>::args, std::tuple<int>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod1)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod1)>::is_const, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod2)>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod2)>::args, std::tuple<int, bool>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod2)>::is_method, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(&FunctionTraitsObj::ConstMethod2)>::is_const, "");
+
+// std::function
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<int (void)>>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<int (void)>>::args, std::tuple<>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<int (void)>>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<int (void)>>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<void (int)>>::return_type, void>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<void (int)>>::args, std::tuple<int>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<void (int)>>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<void (int)>>::is_const == false, "");
+
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<int (int, bool)>>::return_type, int>, "");
+static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<std::function<int (int, bool)>>::args, std::tuple<int, bool>>, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<int (int, bool)>>::is_method == false, "");
+static_assert(CommonHelpers::TypeTraits::FunctionTraits<std::function<int (int, bool)>>::is_const == false, "");
+
+TEST_CASE("FunctionTraits - lambda") {
+    auto const                              func([](void) { return 10; });
+    auto const                              func1([](int) {});
+    auto const                              func2([](int, bool) { return 10; });
+
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func)>::return_type, int>, "");
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func)>::args, std::tuple<>>, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func)>::is_method == false, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func)>::is_const == false, "");
+
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func1)>::return_type, void>, "");
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func1)>::args, std::tuple<int>>, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func1)>::is_method == false, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func1)>::is_const == false, "");
+
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func2)>::return_type, int>, "");
+    static_assert(std::is_same_v<CommonHelpers::TypeTraits::FunctionTraits<decltype(func2)>::args, std::tuple<int, bool>>, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func2)>::is_method == false, "");
+    static_assert(CommonHelpers::TypeTraits::FunctionTraits<decltype(func2)>::is_const == false, "");
+
+    // Avoid warnings
+    CHECK(true);
+}
