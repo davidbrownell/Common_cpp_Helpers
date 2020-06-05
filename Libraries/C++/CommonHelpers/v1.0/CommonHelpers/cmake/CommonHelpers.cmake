@@ -36,6 +36,7 @@ function(Impl)
             ${_this_path}/../TestHelpers.h
             ${_this_path}/../ThreadPool.cpp
             ${_this_path}/../ThreadPool.h
+            ${_this_path}/../ThreadSafeCounter.h
             ${_this_path}/../TypeTraits.h
 
         PUBLIC_INCLUDE_DIRECTORIES

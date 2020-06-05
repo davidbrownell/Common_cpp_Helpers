@@ -85,7 +85,7 @@ TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
 
 template <typename ThreadPoolT>
 void TaskTestImpl(size_t numItems) {
-    std::vector<std::future<size_t>>        futures;
+    std::vector<CommonHelpers::ThreadPoolFuture<size_t>>                    futures;
 
     futures.reserve(numItems);
 
@@ -184,4 +184,80 @@ TEST_CASE("Shutdown flag") {
             }
         );
     }
+}
+
+TEST_CASE("Default Exception") {
+    bool                                    value(false);
+
+    std::cerr << "The following exception description is expected...\n\n\n";
+
+    {
+        CommonHelpers::SimpleThreadPool     pool(1);
+
+        pool.enqueue_work(
+            [](void) {
+                throw std::exception("This is an exception handled by the default processor; it will not kill the thread");
+            }
+        );
+
+        pool.enqueue_work(
+            [&value](void) {
+                value = true;
+            }
+        );
+    }
+
+    std::cerr << "\n...no more exception descriptions are expected.\n\n";
+
+    CHECK(value);
+}
+
+TEST_CASE("Custom Exception Handler") {
+    bool                                    value(false);
+    bool                                    sawException(false);
+
+    {
+        CommonHelpers::SimpleThreadPool     pool(
+            1,
+            [&sawException](size_t threadIndex, std::exception const &ex) {
+                CHECK(threadIndex == 0);
+                CHECK(std::string(ex.what()) == "My custom exception");
+
+                sawException = true;
+            }
+        );
+
+        pool.enqueue_work(
+            [](void) {
+                throw std::logic_error("My custom exception");
+            }
+        );
+
+        pool.enqueue_work(
+            [&value](void) {
+                value = true;
+            }
+        );
+    }
+
+    CHECK(sawException);
+    CHECK(value);
+}
+
+TEST_CASE("Reentrant Tasks") {
+    int                                     value(0);
+
+    {
+        CommonHelpers::SimpleThreadPool     pool(1);
+
+        pool.enqueue_work(
+            [&value, &pool](void) {
+                value = pool.enqueue_task(
+                    [](void) { return 10; }
+                ).get();
+            }
+        );
+    }
+
+    CHECK(value == 10);
 }

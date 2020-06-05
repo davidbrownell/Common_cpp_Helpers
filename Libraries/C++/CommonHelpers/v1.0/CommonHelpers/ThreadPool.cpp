@@ -42,8 +42,7 @@ public:
     // ----------------------------------------------------------------------
     // |  Public Methods
     ThreadPoolQueue(void) :
-        _isDone(false),
-        _activePops(0)
+        _isDone(false)
     {}
 
     ~ThreadPoolQueue(void) {
@@ -61,13 +60,6 @@ public:
         }
 
         _pushed.notify_all();
-
-        {
-            UniqueLock                      lock(_mutex);
-
-            while(_activePops != 0)
-                _exitedPop.wait(lock);
-        }
     }
 
     void push(Functor functor) {
@@ -105,22 +97,11 @@ public:
     }
 
     // Blocking
-    Functor pop(void) {
+    Functor pop(std::chrono::steady_clock::duration duration) {
         UniqueLock                          lock(_mutex);
 
-        ++_activePops;
-
-        FINALLY(
-            [this](void) {
-                assert(_activePops);
-                --_activePops;
-
-                _exitedPop.notify_one();
-            }
-        );
-
         while(_queue.empty() && _isDone == false)
-            _pushed.wait(lock);
+            _pushed.wait_for(lock, duration);
 
         if(_queue.empty())
             throw ThreadPoolQueueDoneException();
@@ -157,10 +138,7 @@ private:
     std::queue<Functor>                     _queue;
 
     std::condition_variable                 _pushed;
-    std::condition_variable                 _exitedPop;
-
     bool                                    _isDone;
-    size_t                                  _activePops;
 };
 
 } // namespace Details
@@ -170,7 +148,11 @@ private:
 // |  SimpleThreadPool
 // |
 // ----------------------------------------------------------------------
-SimpleThreadPool::SimpleThreadPool(size_t numThreads) :
+SimpleThreadPool::SimpleThreadPool(
+    size_t numThreads,
+    std::optional<OnExceptionCallback> onExceptionCallback
+) :
+    BaseType(std::move(onExceptionCallback)),
     _pQueue(std::make_unique<Details::ThreadPoolQueue>())
 {
     ENSURE_ARGUMENT(numThreads);
@@ -189,8 +171,8 @@ void SimpleThreadPool::AddWork(std::function<void (void)> functor) {
     _pQueue->push(std::move(functor));
 }
 
-std::function<void (void)> SimpleThreadPool::GetWork(size_t) {
-    return _pQueue->pop();
+std::function<void (void)> SimpleThreadPool::GetWork(size_t, std::chrono::steady_clock::duration duration) {
+    return _pQueue->pop(duration);
 }
 
 void SimpleThreadPool::StopQueues(void) {
@@ -202,7 +184,12 @@ void SimpleThreadPool::StopQueues(void) {
 // |  ComplexThreadPool
 // |
 // ----------------------------------------------------------------------
-ComplexThreadPool::ComplexThreadPool(size_t numThreads, size_t workerIterations) :
+ComplexThreadPool::ComplexThreadPool(
+    size_t numThreads,
+    size_t workerIterations,
+    std::optional<OnExceptionCallback> onExceptionCallback
+) :
+    BaseType(std::move(onExceptionCallback)),
     _numTries(
         [&numThreads, &workerIterations](void) {
             ENSURE_ARGUMENT(numThreads);
@@ -252,7 +239,7 @@ void ComplexThreadPool::AddWork(std::function<void (void)> functor) {
     queue.push(std::move(functor));
 }
 
-std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex) {
+std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration) {
     for(size_t ctr = 0; ctr < _numTries; ++ctr) {
         Details::ThreadPoolQueue &                                          queue(*_queues[(threadIndex + ctr) % _queues.size()]);
         std::optional<std::function<void (void)>>                           func(queue.try_pop());
@@ -262,7 +249,7 @@ std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex) {
     }
 
     // If here, we didn't find any work - wait for something
-    return _queues[threadIndex]->pop();
+    return _queues[threadIndex]->pop(duration);
 }
 
 void ComplexThreadPool::StopQueues(void) {
