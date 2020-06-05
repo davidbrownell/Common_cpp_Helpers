@@ -68,7 +68,7 @@ public:
     ThreadSafeCounter & Increment(void);
     ThreadSafeCounter & Decrement(void);
 
-    ThreadSafeCounter & wait(value_type value);
+    ThreadSafeCounter & wait_until(value_type value);
 
 private:
     // ----------------------------------------------------------------------
@@ -144,7 +144,7 @@ inline ThreadSafeCounter & ThreadSafeCounter::Decrement(void) {
     return *this;
 }
 
-inline ThreadSafeCounter & ThreadSafeCounter::wait(value_type value) {
+inline ThreadSafeCounter & ThreadSafeCounter::wait_until(value_type value) {
 #if (defined __cpp_lib_atomic_wait)
     for(;;) {
         value_type                          currentValue(_ctr.load());
@@ -158,8 +158,7 @@ inline ThreadSafeCounter & ThreadSafeCounter::wait(value_type value) {
     {
         std::unique_lock                    lock(_ctrMutex);
 
-        while(_ctr != value)
-            _ctrCV.wait(lock);
+        _ctrCV.wait(lock, [this, &value](void) { return _ctr == value; });
     }
 #endif
 

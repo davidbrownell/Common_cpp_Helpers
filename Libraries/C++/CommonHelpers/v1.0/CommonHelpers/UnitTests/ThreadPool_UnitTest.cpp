@@ -219,9 +219,15 @@ TEST_CASE("Custom Exception Handler") {
     {
         CommonHelpers::SimpleThreadPool     pool(
             1,
-            [&sawException](size_t threadIndex, std::exception const &ex) {
+            [&sawException](size_t threadIndex) {
                 CHECK(threadIndex == 0);
-                CHECK(std::string(ex.what()) == "My custom exception");
+
+                try {
+                    throw;
+                }
+                catch(std::exception const &ex) {
+                    CHECK(std::string(ex.what()) == "My custom exception");
+                }
 
                 sawException = true;
             }

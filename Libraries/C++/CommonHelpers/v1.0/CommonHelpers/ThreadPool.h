@@ -130,7 +130,7 @@ public:
     // |  Public Types
     // |
     // ----------------------------------------------------------------------
-    using OnExceptionCallback               = std::function<void (size_t, std::exception const &)>; // Return true to terminate the worker thread
+    using OnExceptionCallback               = std::function<void (size_t)>;
 
     // ----------------------------------------------------------------------
     // |
@@ -443,15 +443,20 @@ Details::ThreadPoolImpl<SuperT>::ThreadPoolImpl(std::optional<OnExceptionCallbac
                 return *onException;
 
             return OnExceptionCallback(
-                [](size_t threadIndex, std::exception const &ex) {
+                [](size_t threadIndex) {
 #if (!defined THREAD_POOL_NO_DEFAULT_EXCEPTION_OUTPUT)
-                    std::cerr <<
-                        "Uncaught exception in ThreadPool\n"
-                        "  Thread Index: " << threadIndex << "\n"
-                        "  Exception:    " << typeid(ex).name() << "\n"
-                        "  Message:      " << ex.what() << "\n"
-                        "\n"
-                    ;
+                    try {
+                        throw;
+                    }
+                    catch(std::exception const &ex) {
+                        std::cerr <<
+                            "Uncaught exception in ThreadPool\n"
+                            "  Thread Index: " << threadIndex << "\n"
+                            "  Exception:    " << typeid(ex).name() << "\n"
+                            "  Message:      " << ex.what() << "\n"
+                            "\n"
+                        ;
+                    }
 #endif
                 }
             );
@@ -566,7 +571,11 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
             // This value is used in other methods and must be set here
             _threadIndex = threadIndex;
 
-            std::chrono::steady_clock::duration const   maxDuration(std::chrono::steady_clock::duration::max());
+            // We can't use std::chrono::steady_clock::duration::max() here, as
+            // the implementation of wait_for will internally call wait_until with
+            // the current time plus this duration; this will cause an overflow
+            // when using duration::max. Use a really big value instead of duration::max.
+            std::chrono::steady_clock::duration const   maxDuration(std::chrono::hours(24 * 365));
 
             for(;;) {
                 if(DoWork(maxDuration) == false)
@@ -581,7 +590,7 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
         threads.emplace_back(worker, threads.size());
 
     // Wait for the threads to initialize
-    initRemaining.wait(0);
+    initRemaining.wait_until(0);
 
     _threads = std::move(threads);
     _state = State::Started;
@@ -592,7 +601,7 @@ void Details::ThreadPoolImpl<SuperT>::Stop(void) {
     assert(_state == State::Started);
     _state = State::ShuttingDown;
 
-    _activeWork.wait(0);
+    _activeWork.wait_until(0);
     static_cast<SuperT &>(*this).StopQueues();
 
     for(auto & thread : _threads)
@@ -643,8 +652,8 @@ inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::d
     catch(Details::ThreadPoolQueueDoneException const &) {
         return false;
     }
-    catch(std::exception const &ex) {
-        _onExceptionCallback(_threadIndex, ex);
+    catch(...) {
+        _onExceptionCallback(_threadIndex);
     }
 
     return true;
