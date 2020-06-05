@@ -196,7 +196,7 @@ TEST_CASE("Default Exception") {
 
         pool.enqueue_work(
             [](void) {
-                throw std::exception("This is an exception handled by the default processor; it will not kill the thread");
+                throw std::runtime_error("This is an exception handled by the default processor; it will not kill the thread");
             }
         );
 
