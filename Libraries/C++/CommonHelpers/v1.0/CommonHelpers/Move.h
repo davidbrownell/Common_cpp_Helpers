@@ -126,7 +126,7 @@ namespace CommonHelpers {
 #define MOVE_Impl_Ctor_Bases_Macro(r, _, Base)          Base(std::move(static_cast<Base &>(other)))
 
 #define MOVE_Impl_Ctor_Members(Members)                 BOOST_PP_TUPLE_FOR_EACH_ENUM(MOVE_Impl_Ctor_Members_Macro, _, Members)
-#define MOVE_Impl_Ctor_Members_Macro(r, _, Member)      Member(CommonHelpers::Details::ConstructMover(make_mutable(other.Member), std::integral_constant<bool, std::is_reference_v<decltype(other.Member)>>::type()))
+#define MOVE_Impl_Ctor_Members_Macro(r, _, Member)      Member(CommonHelpers::Details::ConstructMover(make_mutable(other.Member), std::integral_constant<bool, std::is_reference_v<decltype(other.Member)>>()))
 
 // ----------------------------------------------------------------------
 #define MOVE_Impl_Assignment(ClassName, HasMembers, Members, HasBases, Bases)               \
@@ -145,7 +145,7 @@ namespace CommonHelpers {
 #define MOVE_Impl_Assignment_Bases_Macro(r, _, Base)    Base::operator =(std::move(other));
 
 #define MOVE_Impl_Assignment_Members(Members)                               BOOST_PP_TUPLE_FOR_EACH(MOVE_Impl_Assignment_Members_Macro, _, Members)
-#define MOVE_Impl_Assignment_Members_Macro(r, _, Member)                    CommonHelpers::Details::AssignMover(make_mutable(Member), make_mutable(other.Member), std::integral_constant<bool, std::is_reference_v<decltype(Member)>>::type());
+#define MOVE_Impl_Assignment_Members_Macro(r, _, Member)                    CommonHelpers::Details::AssignMover(make_mutable(Member), make_mutable(other.Member), std::integral_constant<bool, std::is_reference_v<decltype(Member)>>());
 
 // ----------------------------------------------------------------------
 #define NON_MOVABLE_Impl(ClassName)                       \

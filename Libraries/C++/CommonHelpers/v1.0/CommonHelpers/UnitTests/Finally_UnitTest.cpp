@@ -53,3 +53,28 @@ TEST_CASE("Multiple Args") {
     CHECK(value1 == 1);
     CHECK(value2 == 100);
 }
+
+TEST_CASE("Dismiss") {
+    int                                     value(0);
+
+    SECTION("No dismiss") {
+        {
+            FINALLY([&value](void) { ++value; });
+
+            CHECK(value == 0);
+        }
+
+        CHECK(value == 1);
+    }
+
+    SECTION("With dismiss") {
+        {
+            CommonHelpers::FinalAction      action([&value](void) { ++value; });
+
+            CHECK(value == 0);
+            action.Dismiss();
+        }
+
+        CHECK(value == 0);
+    }
+}
