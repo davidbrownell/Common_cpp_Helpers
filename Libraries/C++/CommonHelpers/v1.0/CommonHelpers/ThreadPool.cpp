@@ -53,12 +53,12 @@ public:
             return;
 
         {
-            std::unique_lock                lock(_mutex); UNUSED(lock);
+            std::unique_lock                lock(_mxQueue); UNUSED(lock);
 
             _isDone = true;
         }
 
-        _pushed.notify_all();
+        _cvQueue.notify_all();
     }
 
     void push(Functor functor) {
@@ -68,12 +68,12 @@ public:
             throw ThreadPoolQueueDoneException();
 
         {
-            std::unique_lock                lock(_mutex); UNUSED(lock);
+            std::unique_lock                lock(_mxQueue); UNUSED(lock);
 
             _queue.emplace(std::move(functor));
         }
 
-        _pushed.notify_one();
+        _cvQueue.notify_one();
     }
 
     bool try_push(Functor const &functor) {
@@ -83,7 +83,7 @@ public:
             throw ThreadPoolQueueDoneException();
 
         {
-            std::unique_lock                lock(_mutex, std::try_to_lock);
+            std::unique_lock                lock(_mxQueue, std::try_to_lock);
 
             if(!lock)
                 return false;
@@ -91,44 +91,48 @@ public:
             _queue.push(functor);
         }
 
-        _pushed.notify_one();
+        _cvQueue.notify_one();
         return true;
     }
 
     // Blocking
     Functor pop(std::chrono::steady_clock::duration duration) {
-        std::unique_lock                    lock(_mutex);
+        Functor                             result;
 
-        if(
-            _pushed.wait_for(
-                lock,
-                duration,
-                [this](void) {
-                    return _queue.empty() == false || _isDone;
-                }
-            ) == false
-        )
-            return Functor();
+        {
+            std::unique_lock                lock(_mxQueue);
 
-        if(_queue.empty())
-            throw ThreadPoolQueueDoneException();
+            if(
+                _cvQueue.wait_for(
+                    lock,
+                    duration,
+                    [this](void) {
+                        return _queue.empty() == false || _isDone;
+                    }
+                )
+            ) {
+                if(_queue.empty())
+                    throw ThreadPoolQueueDoneException();
 
-        Functor                             result(std::move(_queue.front()));
-
-        _queue.pop();
+                result = std::move(_queue.front());
+                _queue.pop();
+            }
+        }
 
         return result;
     }
 
     Functor try_pop(void) {
-        std::unique_lock                    lock(_mutex, std::try_to_lock);
+        Functor                             result;
 
-        if(!lock || _queue.empty())
-            return Functor();
+        {
+            std::unique_lock                lock(_mxQueue, std::try_to_lock);
 
-        Functor                             result(std::move(_queue.front()));
-
-        _queue.pop();
+            if(lock && _queue.empty() == false) {
+                result = std::move(_queue.front());
+                _queue.pop();
+            }
+        }
 
         return result;
     }
@@ -136,10 +140,10 @@ public:
 private:
     // ----------------------------------------------------------------------
     // |  Private Data
-    mutable std::mutex                      _mutex;
     std::queue<Functor>                     _queue;
+    mutable std::mutex                      _mxQueue;
+    std::condition_variable                 _cvQueue;
 
-    std::condition_variable                 _pushed;
     bool                                    _isDone;
 };
 
@@ -202,6 +206,8 @@ ComplexThreadPool::ComplexThreadPool(
     ),
     _queues(
         [&numThreads](void) {
+            assert(numThreads);
+
             ThreadPoolQueueUniquePtrs       queues;
 
             while(queues.size() < numThreads)
@@ -212,6 +218,7 @@ ComplexThreadPool::ComplexThreadPool(
     ),
     _currentEnqueueIndex(0)
 {
+    assert(numThreads);
     BaseType::Start(numThreads);
 }
 
