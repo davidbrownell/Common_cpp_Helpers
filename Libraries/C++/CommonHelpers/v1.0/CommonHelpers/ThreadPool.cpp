@@ -50,10 +50,14 @@ public:
     }
 
     void Done(void) {
-        if(_isDone)
-            return;
+        {
+            std::scoped_lock                lock(_mutex); UNUSED(lock);
 
-        _isDone = true;
+            if(_isDone)
+                return;
+
+            _isDone = true;
+        }
 
         _cvQueue.notify_all();
         _activePops.wait_until(0);
@@ -62,11 +66,11 @@ public:
     void push(Functor functor) {
         assert(functor);
 
-        if(_isDone)
-            throw ThreadPoolQueueDoneException();
-
         {
-            std::unique_lock                lock(_mxQueue); UNUSED(lock);
+            std::unique_lock                lock(_mutex); UNUSED(lock);
+
+            if(_isDone)
+                throw ThreadPoolQueueDoneException();
 
             _queue.emplace(std::move(functor));
         }
@@ -77,11 +81,11 @@ public:
     bool try_push(Functor const &functor) {
         assert(functor);
 
-        if(_isDone)
-            throw ThreadPoolQueueDoneException();
-
         {
-            std::unique_lock                lock(_mxQueue, std::try_to_lock);
+            std::unique_lock                lock(_mutex, std::try_to_lock);
+
+            if(_isDone)
+                throw ThreadPoolQueueDoneException();
 
             if(!lock)
                 return false;
@@ -95,16 +99,16 @@ public:
 
     // Blocking
     Functor pop(std::chrono::steady_clock::duration duration) {
-        if(_isDone)
-            throw ThreadPoolQueueDoneException();
-
         Functor                             result;
 
-        _activePops.Increment();
-        FINALLY([this](void) { _activePops.Decrement(); });
-
         {
-            std::unique_lock                lock(_mxQueue);
+            std::unique_lock                lock(_mutex);
+
+            if(_isDone)
+                throw ThreadPoolQueueDoneException();
+
+            _activePops.Increment();
+            FINALLY([this](void) { _activePops.Decrement(); });
 
             if(
                 _cvQueue.wait_for(
@@ -127,13 +131,13 @@ public:
     }
 
     Functor try_pop(void) {
-        if(_isDone)
-            throw ThreadPoolQueueDoneException();
-
         Functor                             result;
 
         {
-            std::unique_lock                lock(_mxQueue, std::try_to_lock);
+            std::unique_lock                lock(_mutex, std::try_to_lock);
+
+            if(_isDone)
+                throw ThreadPoolQueueDoneException();
 
             if(lock && _queue.empty() == false) {
                 result = std::move(_queue.front());
@@ -147,11 +151,11 @@ public:
 private:
     // ----------------------------------------------------------------------
     // |  Private Data
+    mutable std::mutex                      _mutex;
+    bool                                    _isDone;
     std::queue<Functor>                     _queue;
-    mutable std::mutex                      _mxQueue;
-    std::condition_variable                 _cvQueue;
 
-    std::atomic<bool>                       _isDone;
+    std::condition_variable                 _cvQueue;
     ThreadSafeCounter                       _activePops;
 };
 
