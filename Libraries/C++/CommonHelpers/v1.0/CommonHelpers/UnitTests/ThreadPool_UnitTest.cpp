@@ -55,7 +55,10 @@ void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nu
 }
 
 TEST_CASE("Simple Work") {
+    for(int ctr = 0; ctr < 1000; ++ctr) {// BugBug
+        std::cout << ctr << "\n";
     WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
+    }
 }
 
 TEST_CASE("Complex Work") {
@@ -63,14 +66,14 @@ TEST_CASE("Complex Work") {
 }
 
 #if (!defined DEBUG)
-// BugBug TEST_CASE("Simple Work Benchmark", "[Benchmark]") {
-// BugBug     BENCHMARK("100") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(100); };
-// BugBug     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
-// BugBug     BENCHMARK("5000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
-// BugBug     BENCHMARK("10000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-// BugBug     BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
-// BugBug }
-// BugBug
+TEST_CASE("Simple Work Benchmark", "[Benchmark]") {
+    // BugBug BENCHMARK("100") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(100); };
+    // BugBug BENCHMARK("1000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
+    // BugBug BENCHMARK("5000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
+    // BugBug BENCHMARK("10000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
+    // BugBug BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
+}
+
 // BugBug TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
 // BugBug     BENCHMARK("100") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(100); };
 // BugBug     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
@@ -124,21 +127,21 @@ TEST_CASE("Complex Task") {
 }
 
 #if (!defined DEBUG)
-TEST_CASE("Simple Task Benchmark", "[Benchmark]") {
-    BENCHMARK("100") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(100); };
-    BENCHMARK("1000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
-    BENCHMARK("5000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
-    BENCHMARK("10000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
-}
-
-TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
-    BENCHMARK("100") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(100); };
-    BENCHMARK("1000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
-    BENCHMARK("5000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
-    BENCHMARK("10000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
-}
+// BugBug TEST_CASE("Simple Task Benchmark", "[Benchmark]") {
+// BugBug     BENCHMARK("100") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(100); };
+// BugBug     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
+// BugBug     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
+// BugBug     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
+// BugBug     BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
+// BugBug }
+// BugBug
+// BugBug TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
+// BugBug     BENCHMARK("100") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(100); };
+// BugBug     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
+// BugBug     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
+// BugBug     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
+// BugBug     BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
+// BugBug }
 #endif
 
 TEST_CASE("Shutdown flag") {

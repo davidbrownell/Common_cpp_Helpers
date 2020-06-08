@@ -80,7 +80,12 @@ public:
     // |
     // ----------------------------------------------------------------------
     NON_COPYABLE(ThreadPoolFuture);
-    MOVE(ThreadPoolFuture, _yieldFunc, _future);
+
+#define ARGS                                MEMBERS(_yieldFunc, _future)
+
+    MOVE(ThreadPoolFuture, ARGS);
+
+#undef ARGS
 
     ~ThreadPoolFuture(void) = default;
 
@@ -229,7 +234,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     OnExceptionCallback const               _onExceptionCallback;
-    State                                   _state;
+    std::atomic<State>                      _state;
     Threads                                 _threads;
 
     static thread_local size_t              _threadIndex;
@@ -408,8 +413,8 @@ void ThreadPoolFuture<T>::wait(void) const {
 template <typename T>
 template <typename RepT, typename PeriodT>
 std::future_status ThreadPoolFuture<T>::wait_for(std::chrono::duration<RepT, PeriodT> const &timeout) const {
-    std::chrono::steady_clock const         now(std::chrono::steady_clock::now());
-    std::chrono::steady_clock               waitUntil(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
+    std::chrono::steady_clock::time_point const         now(std::chrono::steady_clock::now());
+    std::chrono::steady_clock::time_point const         waitUntil(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
 
     ENSURE_ARGUMENT(timeout, now <= waitUntil);
 
@@ -497,7 +502,7 @@ Details::ThreadPoolImpl<SuperT>::ThreadPoolImpl(std::optional<OnExceptionCallbac
 
 template <typename SuperT>
 Details::ThreadPoolImpl<SuperT>::~ThreadPoolImpl(void) {
-    assert(_state == State::Stopped);
+    assert(_state.load() == State::Stopped);
 }
 
 template <typename SuperT>
@@ -597,7 +602,7 @@ std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
     assert(numThreads);
-    assert(_state == State::Initializing);
+    assert(_state.load() == State::Initializing);
 
     ThreadSafeCounter                       initRemaining(static_cast<ThreadSafeCounter::value_type>(numThreads));
 
@@ -636,7 +641,7 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
 
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::Stop(void) {
-    assert(_state == State::Started);
+    assert(_state.load() == State::Started);
     _state = State::ShuttingDown;
 
     _activeWork.wait_until(0);
@@ -658,7 +663,7 @@ thread_local size_t Details::ThreadPoolImpl<SuperT>::_threadIndex = 0;
 template <typename SuperT>
 template <typename CallableT>
 void Details::ThreadPoolImpl<SuperT>::EnqueueWork(CallableT && callable, std::true_type /*is_empty_arg*/) {
-    assert(_state != State::Initializing && _state != State::Stopped);
+    assert(_state.load() != State::Initializing && _state.load() != State::Stopped);
 
     _activeWork.Increment();
 
@@ -676,7 +681,7 @@ template <typename CallableT>
 void Details::ThreadPoolImpl<SuperT>::EnqueueWork(CallableT && callable, std::false_type /*is_empty_arg*/) {
     enqueue(
         [this, func=std::forward<CallableT>(callable)](void) {
-            func(_state == State::Started);
+            func(_state.load() == State::Started);
         }
     );
 }
@@ -690,7 +695,7 @@ ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> De
     using Future                            = std::future<ReturnType>;
     // ----------------------------------------------------------------------
 
-    assert(_state != State::Initializing && _state != State::Stopped);
+    assert(_state.load() != State::Initializing && _state.load() != State::Stopped);
 
     // Note that the promise needs to be a shared_ptr to work around copy-related
     // issues when using the promise within the lambda below.
@@ -716,7 +721,7 @@ template <typename CallableT>
 ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::EnqueueTask(CallableT && callable, std::false_type /*is_empty_arg*/) {
     return enqueue(
         [this, func=std::forward<CallableT>(callable)](void) {
-            return func(_state == State::Started);
+            return func(_state.load() == State::Started);
         }
     );
 }

@@ -41,7 +41,8 @@ public:
     // ----------------------------------------------------------------------
     // |  Public Methods
     ThreadPoolQueue(void) :
-        _isDone(false)
+        _isDone(false),
+        _activePops(0)
     {}
 
     ~ThreadPoolQueue(void) {
@@ -59,6 +60,7 @@ public:
         }
 
         _cvQueue.notify_all();
+        _activePops.wait_until(0);
     }
 
     void push(Functor functor) {
@@ -97,7 +99,13 @@ public:
 
     // Blocking
     Functor pop(std::chrono::steady_clock::duration duration) {
+        if(_isDone)
+            throw ThreadPoolQueueDoneException();
+
         Functor                             result;
+
+        _activePops.Increment();
+        FINALLY([this](void) { _activePops.Decrement(); });
 
         {
             std::unique_lock                lock(_mxQueue);
@@ -111,7 +119,7 @@ public:
                     }
                 )
             ) {
-                if(_queue.empty())
+                if(_queue.empty() && _isDone)
                     throw ThreadPoolQueueDoneException();
 
                 result = std::move(_queue.front());
@@ -123,6 +131,9 @@ public:
     }
 
     Functor try_pop(void) {
+        if(_isDone)
+            throw ThreadPoolQueueDoneException();
+
         Functor                             result;
 
         {
@@ -145,6 +156,7 @@ private:
     std::condition_variable                 _cvQueue;
 
     bool                                    _isDone;
+    ThreadSafeCounter                       _activePops;
 };
 
 } // namespace Details
