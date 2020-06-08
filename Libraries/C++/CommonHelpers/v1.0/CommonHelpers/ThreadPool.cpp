@@ -53,11 +53,7 @@ public:
         if(_isDone)
             return;
 
-        {
-            std::unique_lock                lock(_mxQueue); UNUSED(lock);
-
-            _isDone = true;
-        }
+        _isDone = true;
 
         _cvQueue.notify_all();
         _activePops.wait_until(0);
@@ -155,7 +151,7 @@ private:
     mutable std::mutex                      _mxQueue;
     std::condition_variable                 _cvQueue;
 
-    bool                                    _isDone;
+    std::atomic<bool>                       _isDone;
     ThreadSafeCounter                       _activePops;
 };
 

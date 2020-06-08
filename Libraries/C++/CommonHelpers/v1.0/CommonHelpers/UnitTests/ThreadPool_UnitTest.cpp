@@ -50,13 +50,14 @@ void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nu
     }
 
     if(expected) {
-        CHECK(total.load() == *expected);
+        CHECK(total == *expected);
     }
 }
 
 TEST_CASE("Simple Work") {
-    for(int ctr = 0; ctr < 1000; ++ctr) {// BugBug
-        std::cout << ctr << "\n";
+    for(int ctr = 0; ctr < 500000; ++ctr) {// BugBug
+        if((ctr % 10) == 0)
+            std::cout << ctr << "\n";
     WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
     }
 }
