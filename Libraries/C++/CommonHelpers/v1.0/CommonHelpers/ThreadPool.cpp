@@ -84,11 +84,11 @@ public:
         {
             std::unique_lock                lock(_mutex, std::try_to_lock);
 
-            if(_isDone)
-                throw ThreadPoolQueueDoneException();
-
             if(!lock)
                 return false;
+
+            if(_isDone)
+                throw ThreadPoolQueueDoneException();
 
             _queue.push(functor);
         }
@@ -136,12 +136,14 @@ public:
         {
             std::unique_lock                lock(_mutex, std::try_to_lock);
 
-            if(_isDone)
-                throw ThreadPoolQueueDoneException();
+            if(lock) {
+                if(_isDone)
+                    throw ThreadPoolQueueDoneException();
 
-            if(lock && _queue.empty() == false) {
-                result = std::move(_queue.front());
-                _queue.pop();
+                if(_queue.empty() == false) {
+                    result = std::move(_queue.front());
+                    _queue.pop();
+                }
             }
         }
 
