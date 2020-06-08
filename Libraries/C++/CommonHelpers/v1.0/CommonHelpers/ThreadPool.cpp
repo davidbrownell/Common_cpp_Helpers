@@ -101,14 +101,14 @@ public:
     Functor pop(std::chrono::steady_clock::duration duration) {
         Functor                             result;
 
+        _activePops.Increment();
+        FINALLY([this](void) { _activePops.Decrement(); });
+
         {
             std::unique_lock                lock(_mutex);
 
             if(_isDone)
                 throw ThreadPoolQueueDoneException();
-
-            _activePops.Increment();
-            FINALLY([this](void) { _activePops.Decrement(); });
 
             if(
                 _cvQueue.wait_for(
