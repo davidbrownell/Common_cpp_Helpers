@@ -26,6 +26,8 @@
 
 #include "../ThreadSafeCounter.h"
 
+#include <thread>
+
 using Queue                                 = CommonHelpers::ThreadSafeQueue<int>;
 
 TEST_CASE("Push and Pop") {
