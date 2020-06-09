@@ -24,6 +24,8 @@
 #include "../Finally.h"
 #include <catch.hpp>
 
+#include "../Misc.h"
+
 TEST_CASE("Single Arg") {
     int                                     value(0);
 
@@ -73,6 +75,42 @@ TEST_CASE("Dismiss") {
 
             CHECK(value == 0);
             action.Dismiss();
+        }
+
+        CHECK(value == 0);
+    }
+}
+
+TEST_CASE("Assignment") {
+    int                                     value(0);
+
+    SECTION("Default Construction") {
+        {
+            CommonHelpers::FinalAction<>    action;
+
+            action = [&value](void) { value += 1; };
+        }
+
+        CHECK(value == 1);
+    }
+
+    SECTION("Standard Construction") {
+        {
+            CommonHelpers::FinalAction<>    action(
+                [&value](void) { value += 10; }
+            );
+
+            action = [&value](void) { value += 1; };
+        }
+
+        CHECK(value == 11);
+    }
+
+    SECTION("No assignment") {
+        {
+            CommonHelpers::FinalAction<>    action;
+
+            UNUSED(action);
         }
 
         CHECK(value == 0);

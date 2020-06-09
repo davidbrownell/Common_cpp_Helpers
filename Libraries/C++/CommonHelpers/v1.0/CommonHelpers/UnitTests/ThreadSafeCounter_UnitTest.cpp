@@ -44,7 +44,7 @@ TEST_CASE("Standard") {
         }
     );
 
-    ctr.wait_until(0);
+    ctr.wait_value(0);
     CHECK(ctr.GetValue() == 0);
 
     thread.join();
