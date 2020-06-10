@@ -108,7 +108,6 @@ public:
     );
 
     optional_value_type Pop(std::chrono::steady_clock::duration const &waitFor);
-    optional_value_type Pop(std::chrono::steady_clock::time_point const &waitUntil);
 
     optional_value_type TryPop(void);
 
@@ -166,7 +165,9 @@ private:
     // ----------------------------------------------------------------------
     optional_value_type PopImpl(
         bool shouldWait,
-        std::chrono::steady_clock::time_point const &wait=std::chrono::steady_clock::time_point::max()
+        // We can't use std::chrono::steady_clock::duration::max() here, as that value leads
+        // to overflow on Linux. Use a very large value instead.
+        std::chrono::steady_clock::duration const &waitFor=std::chrono::hours(24 * 365)
     );
 };
 
@@ -287,18 +288,7 @@ typename ThreadSafeQueue<T1, T2>::value_type ThreadSafeQueue<T1, T2>::Pop(QueueP
 
 template <typename T1, typename T2>
 typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::Pop(std::chrono::steady_clock::duration const &waitFor) {
-    // Detect overflow
-    std::chrono::steady_clock::time_point const         now(std::chrono::steady_clock::now());
-    std::chrono::steady_clock::time_point const         waitUntil(now + waitFor);
-
-    ENSURE_ARGUMENT(waitUntil, now <= waitUntil);
-
-    return PopImpl(true, waitUntil);
-}
-
-template <typename T1, typename T2>
-typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::Pop(std::chrono::steady_clock::time_point const &waitUntil) {
-    return PopImpl(true, waitUntil);
+    return PopImpl(true, waitFor);
 }
 
 template <typename T1, typename T2>
@@ -310,7 +300,7 @@ typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::T
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 template <typename T1, typename T2>
-typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::PopImpl(bool shouldWait, std::chrono::steady_clock::time_point const &waitUntil) {
+typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::PopImpl(bool shouldWait, std::chrono::steady_clock::duration const &waitFor) {
     _activePops.Increment();
     FINALLY(_decrementActivePopsFunc);
 
@@ -324,19 +314,20 @@ typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::P
             if(shouldWait == false)
                 return optional_value_type();
 
-            if(
-                _infoCV.wait_until(
-                    lock,
-                    waitUntil,
-                    [this](void) {
-                        return _info.queue.empty() == false || _info.stopped;
-                    }
-                ) == false
-            )
-                return optional_value_type();
+            _infoCV.wait_for(
+                lock,
+                waitFor,
+                [this](void) {
+                    return _info.queue.empty() == false || _info.stopped;
+                }
+            );
 
-            if(_info.queue.empty() && _info.stopped)
-                throw ThreadSafeQueueStoppedException();
+            if(_info.queue.empty()) {
+                if(_info.stopped)
+                    throw ThreadSafeQueueStoppedException();
+
+                return optional_value_type();
+            }
         }
 
         assert(_info.queue.empty() == false);
