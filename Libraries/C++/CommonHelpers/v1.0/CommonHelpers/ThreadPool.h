@@ -26,6 +26,7 @@
 #include "Misc.h"
 #include "Move.h"
 #include "ThreadSafeCounter.h"
+#include "ThreadSafeQueue.h"
 #include "TypeTraits.h"
 
 #include <cassert>
@@ -40,7 +41,7 @@ namespace CommonHelpers {
 namespace Details {
 
 // ----------------------------------------------------------------------
-// |  Forward Declarations
+// |  Forward Declaration
 template <typename SuperT>
 class ThreadPoolImpl;
 
@@ -80,7 +81,12 @@ public:
     // |
     // ----------------------------------------------------------------------
     NON_COPYABLE(ThreadPoolFuture);
-    MOVE(ThreadPoolFuture, _yieldFunc, _future);
+
+#define ARGS                                MEMBERS(_yieldFunc, _future)
+
+    MOVE(ThreadPoolFuture, ARGS);
+
+#undef ARGS
 
     ~ThreadPoolFuture(void) = default;
 
@@ -105,18 +111,7 @@ private:
 
 namespace Details {
 
-/////////////////////////////////////////////////////////////////////////
-///  \class         ThreadPoolQueueDoneException
-///  \brief         Exception thrown when a ThreadPoolQueue is in the
-///                 process of shutting down and no more work remains.
-///
-struct ThreadPoolQueueDoneException : public std::exception {};
-
 static constexpr std::chrono::steady_clock::duration const                  sg_zeroDuration(std::chrono::milliseconds(0));
-
-// ----------------------------------------------------------------------
-// |  Forward Declarations (Defined in ThreadPool.cpp)
-class ThreadPoolQueue;
 
 /////////////////////////////////////////////////////////////////////////
 ///  \class         ThreadPoolImpl
@@ -198,7 +193,13 @@ protected:
     // |  Protected Types
     // |
     // ----------------------------------------------------------------------
-    using ThreadPoolQueueUniquePtr          = std::unique_ptr<Details::ThreadPoolQueue>;
+    using FunctorQueue =
+        ThreadSafeQueue<
+            std::function<void (void)>,
+            std::function<void (void)>
+        >;
+
+    using FunctorQueueUniquePtr             = std::unique_ptr<FunctorQueue>;
 
     // ----------------------------------------------------------------------
     // |
@@ -229,7 +230,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     OnExceptionCallback const               _onExceptionCallback;
-    State                                   _state;
+    std::atomic<State>                      _state;
     Threads                                 _threads;
 
     static thread_local size_t              _threadIndex;
@@ -297,7 +298,7 @@ private:
     // |  Private Data
     // |
     // ----------------------------------------------------------------------
-    typename BaseType::ThreadPoolQueueUniquePtr         _pQueue;
+    typename BaseType::FunctorQueueUniquePtr            _pQueue;
 
     // ----------------------------------------------------------------------
     // |
@@ -356,7 +357,7 @@ private:
     // |  Private Types
     // |
     // ----------------------------------------------------------------------
-    using ThreadPoolQueueUniquePtrs         = std::vector<typename BaseType::ThreadPoolQueueUniquePtr>;
+    using FunctorQueueUniquePtrs            = std::vector<typename BaseType::FunctorQueueUniquePtr>;
 
     // ----------------------------------------------------------------------
     // |
@@ -365,7 +366,7 @@ private:
     // ----------------------------------------------------------------------
     size_t const                            _numTries;
 
-    ThreadPoolQueueUniquePtrs               _queues;
+    FunctorQueueUniquePtrs                  _queues;
     std::atomic_uint                        _currentEnqueueIndex;
 
     // ----------------------------------------------------------------------
@@ -408,8 +409,8 @@ void ThreadPoolFuture<T>::wait(void) const {
 template <typename T>
 template <typename RepT, typename PeriodT>
 std::future_status ThreadPoolFuture<T>::wait_for(std::chrono::duration<RepT, PeriodT> const &timeout) const {
-    std::chrono::steady_clock const         now(std::chrono::steady_clock::now());
-    std::chrono::steady_clock               waitUntil(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
+    std::chrono::steady_clock::time_point const         now(std::chrono::steady_clock::now());
+    std::chrono::steady_clock::time_point const         waitUntil(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
 
     ENSURE_ARGUMENT(timeout, now <= waitUntil);
 
@@ -628,7 +629,7 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
         threads.emplace_back(worker, threads.size());
 
     // Wait for the threads to initialize
-    initRemaining.wait_until(0);
+    initRemaining.wait_value(0);
 
     _threads = std::move(threads);
     _state = State::Started;
@@ -639,7 +640,7 @@ void Details::ThreadPoolImpl<SuperT>::Stop(void) {
     assert(_state == State::Started);
     _state = State::ShuttingDown;
 
-    _activeWork.wait_until(0);
+    _activeWork.wait_value(0);
     static_cast<SuperT &>(*this).StopQueues();
 
     for(auto & thread : _threads)
@@ -891,7 +892,7 @@ inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::d
             func();
         }
     }
-    catch(Details::ThreadPoolQueueDoneException const &) {
+    catch(ThreadSafeQueueStoppedException const &) {
         return false;
     }
     catch(...) {
