@@ -111,8 +111,6 @@ private:
 
 namespace Details {
 
-static constexpr std::chrono::steady_clock::duration const                  sg_zeroDuration(std::chrono::milliseconds(0));
-
 /////////////////////////////////////////////////////////////////////////
 ///  \class         ThreadPoolImpl
 ///  \brief         Implements functionality common to all thread pool types.
@@ -256,7 +254,7 @@ private:
     template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::true_type /*is_single_arg*/);
     template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::false_type /*is_single_arg*/);
 
-    inline bool DoWork(std::chrono::steady_clock::duration const &timeout);
+    inline bool DoWork(QueuePopType type);
 };
 
 } // namespace Details
@@ -306,7 +304,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     void AddWork(std::function<void (void)> functor);
-    std::function<void (void)> GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration);
+    std::function<void (void)> GetWork(size_t threadIndex, QueuePopType type);
 
     void StopQueues(void);
 };
@@ -375,7 +373,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     void AddWork(std::function<void (void)> functor);
-    std::function<void (void)> GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration);
+    std::function<void (void)> GetWork(size_t threadIndex, QueuePopType type);
 
     void StopQueues(void);
 };
@@ -424,8 +422,10 @@ std::future_status ThreadPoolFuture<T>::wait_until(std::chrono::time_point<Clock
     using Clock                             = typename std::chrono::time_point<ClockT, DurationT>::clock;
     // ----------------------------------------------------------------------
 
+    static constexpr std::chrono::steady_clock::duration const              s_zeroDuration(std::chrono::milliseconds(0));
+
     for(;;) {
-        if(_future.wait_for(Details::sg_zeroDuration) == std::future_status::ready)
+        if(_future.wait_for(s_zeroDuration) == std::future_status::ready)
             break;
 
         if(Clock::now() >= timeout)
@@ -529,7 +529,7 @@ ThreadPoolFuture<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::r
 
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::yield(void) {
-    DoWork(sg_zeroDuration);
+    DoWork(QueuePopType::NonBlocking);
 }
 
 template <typename SuperT>
@@ -610,14 +610,8 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
             // This value is used in other methods and must be set here
             _threadIndex = threadIndex;
 
-            // We can't use std::chrono::steady_clock::duration::max() here, as
-            // the implementation of wait_for will internally call wait_until with
-            // the current time plus this duration; this will cause an overflow
-            // when using duration::max. Use a really big value instead of duration::max.
-            std::chrono::steady_clock::duration const   maxDuration(std::chrono::hours(24 * 365));
-
             for(;;) {
-                if(DoWork(maxDuration) == false)
+                if(DoWork(QueuePopType::Blocking) == false)
                     break;
             }
         }
@@ -883,9 +877,9 @@ std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details
 }
 
 template <typename SuperT>
-inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::duration const &timeout) {
+inline bool Details::ThreadPoolImpl<SuperT>::DoWork(QueuePopType type) {
     try {
-        std::function<void (void)>          func(static_cast<SuperT &>(*this).GetWork(_threadIndex, timeout));
+        std::function<void (void)>          func(static_cast<SuperT &>(*this).GetWork(_threadIndex, type));
 
         if(func) {
             FINALLY([this](void) { _activeWork.Decrement(); });

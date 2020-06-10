@@ -273,6 +273,20 @@ bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
     return true;
 }
 
+namespace Details {
+
+template <typename ResultT, typename OptionalResultT>
+inline ResultT PopMove(OptionalResultT &optional, std::enable_if_t<std::is_same_v<ResultT, OptionalResultT>>* =nullptr) {
+    return std::move(optional);
+}
+
+template <typename ResultT, typename OptionalResultT>
+inline ResultT PopMove(OptionalResultT &optional, std::enable_if_t<std::is_same_v<ResultT, OptionalResultT> == false>* =nullptr) {
+    return *optional;
+}
+
+} // namespace Details
+
 template <typename T1, typename T2>
 typename ThreadSafeQueue<T1, T2>::value_type ThreadSafeQueue<T1, T2>::Pop(QueuePopType type) {
     assert(type == QueuePopType::Blocking || type == QueuePopType::NonBlocking);
@@ -282,7 +296,7 @@ typename ThreadSafeQueue<T1, T2>::value_type ThreadSafeQueue<T1, T2>::Pop(QueueP
     if(!result)
         throw ThreadSafeQueueEmptyException();
 
-    return std::move(*result);
+    return Details::PopMove<value_type>(result);
 }
 
 

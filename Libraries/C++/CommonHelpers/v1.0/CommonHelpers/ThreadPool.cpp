@@ -55,9 +55,9 @@ void SimpleThreadPool::AddWork(std::function<void (void)> functor) {
     _pQueue->Push(std::move(functor));
 }
 
-std::function<void (void)> SimpleThreadPool::GetWork(size_t, std::chrono::steady_clock::duration duration) {
+std::function<void (void)> SimpleThreadPool::GetWork(size_t, QueuePopType type) {
     assert(_pQueue);
-    return _pQueue->Pop(duration);
+    return _pQueue->Pop(type);
 }
 
 void SimpleThreadPool::StopQueues(void) {
@@ -128,7 +128,7 @@ void ComplexThreadPool::AddWork(std::function<void (void)> functor) {
     queue.Push(std::move(functor));
 }
 
-std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration) {
+std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, QueuePopType type) {
     assert(_queues.empty() == false);
 
     for(size_t ctr = 0; ctr < _numTries; ++ctr) {
@@ -140,7 +140,7 @@ std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, std::c
     }
 
     // If here, we didn't find any work - wait for something
-    return _queues[threadIndex]->Pop(duration);
+    return _queues[threadIndex]->Pop(type);
 }
 
 void ComplexThreadPool::StopQueues(void) {
