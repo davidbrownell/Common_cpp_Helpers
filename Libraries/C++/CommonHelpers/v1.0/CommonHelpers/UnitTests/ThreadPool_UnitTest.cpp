@@ -30,21 +30,18 @@
 template <typename ThreadPoolT>
 void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nullopt) {
     std::atomic_uint64_t                    total(0);
-    std::vector<std::future<size_t>>        futures;
-
-    futures.reserve(numItems);
 
     {
-        ThreadPoolT                         pool;
-
         auto const                          work(
             [&total](size_t ctr) {
                 total += ctr;
             }
         );
 
+        ThreadPoolT                         pool;
+
         for(size_t ctr = 0; ctr < numItems; ++ctr) {
-            pool.enqueue_work(
+            pool.enqueue(
                 [&work, ctr](void) {
                     work(ctr);
                 }
@@ -90,17 +87,17 @@ void TaskTestImpl(size_t numItems) {
     futures.reserve(numItems);
 
     {
-        ThreadPoolT                         pool;
-
         auto const                          task(
             [](size_t ctr) {
                 return ctr;
             }
         );
 
+        ThreadPoolT                         pool;
+
         while(futures.size() < numItems) {
             futures.emplace_back(
-                pool.enqueue_task(
+                pool.enqueue(
                     [&task, ctr=futures.size()](void) -> size_t {
                         return task(ctr);
                     }
@@ -158,7 +155,7 @@ TEST_CASE("Shutdown flag") {
 
         CommonHelpers::SimpleThreadPool     pool(1);
 
-        pool.enqueue_work(std::move(work));
+        pool.enqueue(work);
 
         std::mutex                          m;
         std::unique_lock                    lock(m);
@@ -169,7 +166,7 @@ TEST_CASE("Shutdown flag") {
     SECTION("Set") {
         CommonHelpers::SimpleThreadPool     pool(1);
 
-        pool.enqueue_work(
+        pool.enqueue(
             [](void) {
                 using namespace std::chrono_literals;
                 std::this_thread::sleep_for(0.5s);
@@ -178,7 +175,7 @@ TEST_CASE("Shutdown flag") {
 
         // The pool should be stopping by the time this is executed
         // due to the sleep above.
-        pool.enqueue_work(
+        pool.enqueue(
             [](bool isActive) {
                 CHECK(isActive == false);
             }
@@ -194,13 +191,13 @@ TEST_CASE("Default Exception") {
     {
         CommonHelpers::SimpleThreadPool     pool(1);
 
-        pool.enqueue_work(
+        pool.enqueue(
             [](void) {
                 throw std::runtime_error("This is an exception handled by the default processor; it will not kill the thread");
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value](void) {
                 value = true;
             }
@@ -233,13 +230,13 @@ TEST_CASE("Custom Exception Handler") {
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [](void) {
                 throw std::logic_error("My custom exception");
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value](void) {
                 value = true;
             }
@@ -256,9 +253,9 @@ TEST_CASE("Reentrant Tasks") {
     {
         CommonHelpers::SimpleThreadPool     pool(1);
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value, &pool](void) {
-                value = pool.enqueue_task(
+                value = pool.enqueue(
                     [](void) { return 10; }
                 ).get();
             }
@@ -266,4 +263,110 @@ TEST_CASE("Reentrant Tasks") {
     }
 
     CHECK(value == 10);
+}
+
+TEST_CASE("parallel work - single item - single arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+    int                                     value(0);
+
+    pool.parallel(10, [&value](int v) { value = v; });
+    CHECK(value == 10);
+}
+
+TEST_CASE("parallel work - single item - multi arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+    int                                     value(0);
+
+    pool.parallel(10, [&value](bool, int v) { value = v; });
+    CHECK(value == 10);
+}
+
+TEST_CASE("parallel task - single item - single arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+
+    CHECK(pool.parallel(10, [](int v) { return v; }) == 10);
+}
+
+TEST_CASE("parallel task - single item - multi arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+
+    CHECK(pool.parallel(10, [](bool, int v) { return v; }) == 10);
+}
+
+TEST_CASE("parallel work - vector - single arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+    std::vector<int>                        v;
+
+    v.resize(3);
+
+    pool.parallel(
+        std::vector<int>{10, 20, 30},
+        [&v](int value) {
+            size_t                          index(
+                [&value](void) -> size_t {
+                    if(value == 10)
+                        return 0;
+                    if(value == 20)
+                        return 1;
+                    if(value == 30)
+                        return 2;
+
+                    return 3;
+                }()
+            );
+
+            v[index] = value;
+        }
+    );
+    CHECK(v == std::vector<int>{10, 20, 30});
+}
+
+TEST_CASE("parallel work - vector - multi arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+    std::vector<int>                        v;
+
+    v.resize(3);
+
+    pool.parallel(
+        std::vector<int>{10, 20, 30},
+        [&v](bool, int value) {
+            size_t                          index(
+                [&value](void) -> size_t {
+                    if(value == 10)
+                        return 0;
+                    if(value == 20)
+                        return 1;
+                    if(value == 30)
+                        return 2;
+
+                    return 3;
+                }()
+            );
+
+            v[index] = value;
+        }
+    );
+    CHECK(v == std::vector<int>{10, 20, 30});
+}
+
+TEST_CASE("parallel task - vector - single arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+
+    CHECK(
+        pool.parallel(
+            std::vector<int>{10, 20, 30},
+            [](int value) { return value; }
+        ) == std::vector<int>{10, 20, 30}
+    );
+}
+
+TEST_CASE("parallel task - vector - multi arg") {
+    CommonHelpers::SimpleThreadPool         pool(1);
+
+    CHECK(
+        pool.parallel(
+            std::vector<int>{10, 20, 30},
+            [](bool, int value) { return value; }
+        ) == std::vector<int>{10, 20, 30}
+    );
 }

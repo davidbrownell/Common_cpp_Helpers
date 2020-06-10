@@ -26,6 +26,7 @@
 #include "Misc.h"
 #include "Move.h"
 #include "ThreadSafeCounter.h"
+#include "ThreadSafeQueue.h"
 #include "TypeTraits.h"
 
 #include <cassert>
@@ -40,7 +41,7 @@ namespace CommonHelpers {
 namespace Details {
 
 // ----------------------------------------------------------------------
-// |  Forward Declarations
+// |  Forward Declaration
 template <typename SuperT>
 class ThreadPoolImpl;
 
@@ -62,7 +63,7 @@ public:
     // |  Public Types
     // |
     // ----------------------------------------------------------------------
-    using DoWorkFunction                = std::function<void (std::chrono::steady_clock::duration const &)>;
+    using YieldFunction                     = std::function<void (void)>;
 
 private:
     // ----------------------------------------------------------------------
@@ -70,8 +71,8 @@ private:
     // |  Private Data (used in public declarations)
     // |
     // ----------------------------------------------------------------------
-    DoWorkFunction const                _doWorkFunc;
-    std::future<T>                      _future;
+    YieldFunction const                     _yieldFunc;
+    std::future<T>                          _future;
 
 public:
     // ----------------------------------------------------------------------
@@ -80,7 +81,12 @@ public:
     // |
     // ----------------------------------------------------------------------
     NON_COPYABLE(ThreadPoolFuture);
-    MOVE(ThreadPoolFuture, _doWorkFunc, _future);
+
+#define ARGS                                MEMBERS(_yieldFunc, _future)
+
+    MOVE(ThreadPoolFuture, ARGS);
+
+#undef ARGS
 
     ~ThreadPoolFuture(void) = default;
 
@@ -100,23 +106,12 @@ private:
     // |  Private Methods
     // |
     // ----------------------------------------------------------------------
-    ThreadPoolFuture(DoWorkFunction function, std::future<T> future);
+    ThreadPoolFuture(YieldFunction function, std::future<T> future);
 };
 
 namespace Details {
 
-/////////////////////////////////////////////////////////////////////////
-///  \class         ThreadPoolQueueDoneException
-///  \brief         Exception thrown when a ThreadPoolQueue is in the
-///                 process of shutting down and no more work remains.
-///
-struct ThreadPoolQueueDoneException : public std::exception {};
-
-constexpr size_t const                      MAIN_THREAD = std::numeric_limits<size_t>::max();
-
-// ----------------------------------------------------------------------
-// |  Forward Declarations (Defined in ThreadPool.cpp)
-class ThreadPoolQueue;
+static constexpr std::chrono::steady_clock::duration const                  sg_zeroDuration(std::chrono::milliseconds(0));
 
 /////////////////////////////////////////////////////////////////////////
 ///  \class         ThreadPoolImpl
@@ -144,37 +139,53 @@ public:
     NON_MOVABLE(ThreadPoolImpl);
 
     /////////////////////////////////////////////////////////////////////////
-    ///  \fn            enqueue_work
-    ///  \brief         Enqueues a functor for execution.
+    ///  \fn            enqueue
+    ///  \brief         Enqueues work to be executed at a later time. Callable can be:
     ///
-    void enqueue_work(std::function<void (void)> functor);
+    ///                     void Func(void);
+    ///                     void Func(bool);
+    ///
+    ///                 Where the bool value passed as the first argument is true
+    ///                 if the task is being executed normally and false if the
+    ///                 pool is in the process of shutting down.
+    ///
+    template <typename CallableT> void enqueue(CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>* =nullptr);
 
     /////////////////////////////////////////////////////////////////////////
-    ///  \fn            enqueue_work
-    ///  \brief         Enqueues a single argument functor for execution. The
-    ///                 argument is true if the pool is in a started state and
-    ///                 false if the pool is in the process of shutting down.
+    ///  \fn            enqueue
+    ///  \brief         Enqueues a teat to be executed at a later time. Callback can be:
     ///
-    void enqueue_work(std::function<void (bool)> functor);
+    ///                     <Some Value> Func(void);
+    ///                     <Some Value> Func(bool);
+    ///
+    ///                 Where the bool value passed as the first argument is true
+    ///                 if the task is being executed normally and false if the
+    ///                 pool is in the process of shutting down.
+    ///
+    template <typename CallableT> ThreadPoolFuture<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> enqueue(CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>* =nullptr);
 
     /////////////////////////////////////////////////////////////////////////
-    ///  \fn            enqueue_task
-    ///  \brief         Enqueues a function that returns a value via a future.
+    ///  \fn            yield
+    ///  \brief         Prevent thread starvation by performing enqueued work.
     ///
-    template <typename ReturnT>
-    ThreadPoolFuture<ReturnT> enqueue_task(std::function<ReturnT (void)> functor);
+    void yield(void);
 
     /////////////////////////////////////////////////////////////////////////
-    ///  \fn            enqueue_task
-    ///  \brief         Enqueues a single argument function that returns a value.
-    ///                 The argument is true if the pool is in a started state and
-    ///                 false if the pool is in the process of shutting down.
+    ///  \fn            parallel
+    ///  \brief         Executes one or more  work items. Callable can be:
     ///
-    template <typename ReturnT>
-    ThreadPoolFuture<ReturnT> enqueue_task(std::function<ReturnT (bool)> functor);
-
-    template <typename CallableT>
-    ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> enqueue_task(CallableT && callable);
+    ///                     <Some Value> Func(InputT const &);
+    ///                     <Some Value> Func(bool, InputT const &);
+    ///
+    ///                 Where the bool value passed as the first argument is true
+    ///                 if the task is being executed normally and false if the
+    ///                 pool is in the process of shutting down.
+    ///
+    template <typename InputT, typename CallableT> typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type parallel(InputT const &input, CallableT && callable);
+    template <typename InputT, typename CallableT> void parallel(std::vector<InputT> const &inputs, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>* =nullptr);
+    template <typename InputT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> parallel(std::vector<InputT> const &inputs, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>* =nullptr);
+    template <typename InputIteratorT, typename CallableT> void parallel(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>* =nullptr);
+    template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> parallel(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>* =nullptr);
 
 protected:
     // ----------------------------------------------------------------------
@@ -182,7 +193,13 @@ protected:
     // |  Protected Types
     // |
     // ----------------------------------------------------------------------
-    using ThreadPoolQueueUniquePtr          = std::unique_ptr<Details::ThreadPoolQueue>;
+    using FunctorQueue =
+        ThreadSafeQueue<
+            std::function<void (void)>,
+            std::function<void (void)>
+        >;
+
+    using FunctorQueueUniquePtr             = std::unique_ptr<FunctorQueue>;
 
     // ----------------------------------------------------------------------
     // |
@@ -213,7 +230,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     OnExceptionCallback const               _onExceptionCallback;
-    State                                   _state;
+    std::atomic<State>                      _state;
     Threads                                 _threads;
 
     static thread_local size_t              _threadIndex;
@@ -225,8 +242,19 @@ private:
     // |  Private Methods
     // |
     // ----------------------------------------------------------------------
-    template <typename CallableT> ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> EnqueueCallableTask(CallableT && callable, std::tuple<>);
-    template <typename CallableT> ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> EnqueueCallableTask(CallableT && callable, std::tuple<bool>);
+    template <typename CallableT> void EnqueueWork(CallableT && callable, std::true_type /*is_empty_arg*/);
+    template <typename CallableT> void EnqueueWork(CallableT && callable, std::false_type /*is_empty_arg*/);
+
+    template <typename CallableT> ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> EnqueueTask(CallableT && callable, std::true_type /*is_empty_arg*/);
+    template <typename CallableT> ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> EnqueueTask(CallableT && callable, std::false_type /*is_empty_arg*/);
+
+    template <typename InputT, typename CallableT, typename IsSingleArgT> void ParallelSingle(InputT const &input, CallableT && callable, std::true_type const &isVoidReturn, IsSingleArgT const &isSingleArg);
+    template <typename InputT, typename CallableT, typename IsSingleArgT> typename TypeTraits::FunctionTraits<CallableT>::return_type ParallelSingle(InputT const &input, CallableT && callable, std::false_type const &isVoidReturn, IsSingleArgT const &isSingleArg);
+
+    template <typename InputIteratorT, typename CallableT> void ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::true_type /*is_void_result*/, std::true_type /*is_single_arg*/);
+    template <typename InputIteratorT, typename CallableT> void ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::true_type /*is_void_result*/, std::false_type /*is_single_arg*/);
+    template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::true_type /*is_single_arg*/);
+    template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::false_type /*is_single_arg*/);
 
     inline bool DoWork(std::chrono::steady_clock::duration const &timeout);
 };
@@ -270,7 +298,7 @@ private:
     // |  Private Data
     // |
     // ----------------------------------------------------------------------
-    typename BaseType::ThreadPoolQueueUniquePtr         _pQueue;
+    typename BaseType::FunctorQueueUniquePtr            _pQueue;
 
     // ----------------------------------------------------------------------
     // |
@@ -329,7 +357,7 @@ private:
     // |  Private Types
     // |
     // ----------------------------------------------------------------------
-    using ThreadPoolQueueUniquePtrs         = std::vector<typename BaseType::ThreadPoolQueueUniquePtr>;
+    using FunctorQueueUniquePtrs            = std::vector<typename BaseType::FunctorQueueUniquePtr>;
 
     // ----------------------------------------------------------------------
     // |
@@ -338,7 +366,7 @@ private:
     // ----------------------------------------------------------------------
     size_t const                            _numTries;
 
-    ThreadPoolQueueUniquePtrs               _queues;
+    FunctorQueueUniquePtrs                  _queues;
     std::atomic_uint                        _currentEnqueueIndex;
 
     // ----------------------------------------------------------------------
@@ -381,7 +409,12 @@ void ThreadPoolFuture<T>::wait(void) const {
 template <typename T>
 template <typename RepT, typename PeriodT>
 std::future_status ThreadPoolFuture<T>::wait_for(std::chrono::duration<RepT, PeriodT> const &timeout) const {
-    return wait_until(std::chrono::steady_clock::now() + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
+    std::chrono::steady_clock::time_point const         now(std::chrono::steady_clock::now());
+    std::chrono::steady_clock::time_point const         waitUntil(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout));
+
+    ENSURE_ARGUMENT(timeout, now <= waitUntil);
+
+    return wait_until(waitUntil);
 }
 
 template <typename T>
@@ -391,17 +424,14 @@ std::future_status ThreadPoolFuture<T>::wait_until(std::chrono::time_point<Clock
     using Clock                             = typename std::chrono::time_point<ClockT, DurationT>::clock;
     // ----------------------------------------------------------------------
 
-    std::chrono::steady_clock::duration const           zero(std::chrono::milliseconds(0));
-    std::chrono::steady_clock::duration const           waitDuration(std::chrono::milliseconds(250));
-
     for(;;) {
-        if(_future.wait_for(zero) == std::future_status::ready)
+        if(_future.wait_for(Details::sg_zeroDuration) == std::future_status::ready)
             break;
 
         if(Clock::now() >= timeout)
             return std::future_status::timeout;
 
-        _doWorkFunc(waitDuration);
+        _yieldFunc();
     }
 
     return std::future_status::ready;
@@ -411,10 +441,10 @@ std::future_status ThreadPoolFuture<T>::wait_until(std::chrono::time_point<Clock
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 template <typename T>
-ThreadPoolFuture<T>::ThreadPoolFuture(DoWorkFunction function, std::future<T> future) :
-    _doWorkFunc(
+ThreadPoolFuture<T>::ThreadPoolFuture(YieldFunction function, std::future<T> future) :
+    _yieldFunc(
         std::move(
-            [&function](void) -> DoWorkFunction & {
+            [&function](void) -> YieldFunction & {
                 assert(function);
                 return function;
             }()
@@ -472,84 +502,93 @@ Details::ThreadPoolImpl<SuperT>::~ThreadPoolImpl(void) {
 }
 
 template <typename SuperT>
-void Details::ThreadPoolImpl<SuperT>::enqueue_work(std::function<void (void)> functor) {
-    ENSURE_ARGUMENT(functor);
-    assert(_state != State::Initializing && _state != State::Stopped);
-
-    _activeWork.Increment();
-
-    try {
-        static_cast<SuperT &>(*this).AddWork(std::move(functor));
-    }
-    catch(...) {
-        _activeWork.Decrement();
-        throw;
-    }
-}
-
-template <typename SuperT>
-void Details::ThreadPoolImpl<SuperT>::enqueue_work(std::function<void (bool)> functor) {
-    ENSURE_ARGUMENT(functor);
-    assert(_state != State::Initializing && _state != State::Stopped);
-
-    this->enqueue_work(
-        [this, f=std::move(functor)](void) {
-            f(_state == State::Started);
-        }
-    );
-}
-
-template <typename SuperT>
-template <typename ReturnT>
-ThreadPoolFuture<ReturnT> Details::ThreadPoolImpl<SuperT>::enqueue_task(std::function<ReturnT (void)> functor) {
+template <typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::enqueue(CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>*) {
     // ----------------------------------------------------------------------
-    using Promise                           = std::promise<ReturnT>;
-    using Future                            = std::future<ReturnT>;
+    using Args                              = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::args;
     // ----------------------------------------------------------------------
 
-    ENSURE_ARGUMENT(functor);
-    assert(_state != State::Initializing && _state != State::Stopped);
-
-    // Note that the promise needs to be a shared_ptr to work around copy-related
-    // issues when using the promise within the lambda below.
-    std::shared_ptr<Promise>                pPromise(std::make_shared<Promise>());
-    Future                                  future(pPromise->get_future());
-
-    static_cast<SuperT &>(*this).enqueue_work(
-        [pPromise=std::move(pPromise), f=std::move(functor)](void) {
-            pPromise->set_value(f());
-        }
-    );
-
-    return ThreadPoolFuture<ReturnT>(
-        [this](std::chrono::steady_clock::duration const &timeout) {
-            DoWork(timeout);
-        },
-        std::move(future)
-    );
-}
-
-template <typename SuperT>
-template <typename ReturnT>
-ThreadPoolFuture<ReturnT> Details::ThreadPoolImpl<SuperT>::enqueue_task(std::function<ReturnT (bool)> functor) {
-    ENSURE_ARGUMENT(functor);
-    assert(_state != State::Initializing && _state != State::Stopped);
-
-    return this->enqueue_task(
-        [this, f=std::move(functor)](void) {
-            return f(_state == State::Started);
-        }
+    EnqueueWork(
+        std::forward<CallableT>(callable),
+        std::integral_constant<bool, std::tuple_size_v<Args> == 0>()
     );
 }
 
 template <typename SuperT>
 template <typename CallableT>
-ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::enqueue_task(CallableT && callable) {
-    assert(_state != State::Initializing && _state != State::Stopped);
+ThreadPoolFuture<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> Details::ThreadPoolImpl<SuperT>::enqueue(CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>*) {
+    // ----------------------------------------------------------------------
+    using Args                              = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::args;
+    // ----------------------------------------------------------------------
 
-    return EnqueueCallableTask(
+    return EnqueueTask(
         std::forward<CallableT>(callable),
-        typename TypeTraits::FunctionTraits<CallableT>::args()
+        std::integral_constant<bool, std::tuple_size_v<Args> == 0>()
+    );
+}
+
+template <typename SuperT>
+void Details::ThreadPoolImpl<SuperT>::yield(void) {
+    DoWork(sg_zeroDuration);
+}
+
+template <typename SuperT>
+template <typename InputT, typename CallableT>
+typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type Details::ThreadPoolImpl<SuperT>::parallel(InputT const &input, CallableT && callable) {
+    // ----------------------------------------------------------------------
+    using ReturnType                        = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type;
+    using Args                              = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::args;
+    // ----------------------------------------------------------------------
+
+    return ParallelSingle(
+        input,
+        std::forward<CallableT>(callable),
+        std::integral_constant<bool, std::is_same_v<void, ReturnType>>(),
+        std::integral_constant<bool, std::tuple_size_v<Args> == 1>()
+    );
+}
+
+template <typename SuperT>
+template <typename InputT, typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::parallel(std::vector<InputT> const &inputs, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>*) {
+    parallel(inputs.cbegin(), inputs.cend(), std::forward<CallableT>(callable));
+}
+
+template <typename SuperT>
+template <typename InputT, typename CallableT>
+std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> Details::ThreadPoolImpl<SuperT>::parallel(std::vector<InputT> const &inputs, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>*) {
+    return parallel(inputs.cbegin(), inputs.cend(), std::forward<CallableT>(callable));
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::parallel(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type>>*) {
+    // ----------------------------------------------------------------------
+    using Args                              = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::args;
+    // ----------------------------------------------------------------------
+
+    ParallelMultiple(
+        begin,
+        end,
+        std::forward<CallableT>(callable),
+        std::true_type(),
+        std::integral_constant<bool, std::tuple_size_v<Args> == 1>()
+    );
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> Details::ThreadPoolImpl<SuperT>::parallel(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::enable_if_t<std::is_same_v<void, typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return_type> == false>*) {
+    // ----------------------------------------------------------------------
+    using Args                              = typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::args;
+    // ----------------------------------------------------------------------
+
+    return ParallelMultiple(
+        begin,
+        end,
+        std::forward<CallableT>(callable),
+        std::false_type(),
+        std::integral_constant<bool, std::tuple_size_v<Args> == 1>()
     );
 }
 
@@ -590,7 +629,7 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
         threads.emplace_back(worker, threads.size());
 
     // Wait for the threads to initialize
-    initRemaining.wait_until(0);
+    initRemaining.wait_value(0);
 
     _threads = std::move(threads);
     _state = State::Started;
@@ -601,7 +640,7 @@ void Details::ThreadPoolImpl<SuperT>::Stop(void) {
     assert(_state == State::Started);
     _state = State::ShuttingDown;
 
-    _activeWork.wait_until(0);
+    _activeWork.wait_value(0);
     static_cast<SuperT &>(*this).StopQueues();
 
     for(auto & thread : _threads)
@@ -615,32 +654,236 @@ void Details::ThreadPoolImpl<SuperT>::Stop(void) {
 // ----------------------------------------------------------------------
 template <typename SuperT>
 // static
-thread_local size_t Details::ThreadPoolImpl<SuperT>::_threadIndex = MAIN_THREAD;
+thread_local size_t Details::ThreadPoolImpl<SuperT>::_threadIndex = 0;
 
 template <typename SuperT>
 template <typename CallableT>
-ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::EnqueueCallableTask(CallableT && callable, std::tuple<>) {
-    return enqueue_task(
-        std::function<typename TypeTraits::FunctionTraits<CallableT>::return_type ()>(
-            std::forward<CallableT>(callable)
-        )
+void Details::ThreadPoolImpl<SuperT>::EnqueueWork(CallableT && callable, std::true_type /*is_empty_arg*/) {
+    assert(_state != State::Initializing && _state != State::Stopped);
+
+    _activeWork.Increment();
+
+    try {
+        static_cast<SuperT &>(*this).AddWork(std::forward<CallableT>(callable));
+    }
+    catch(...) {
+        _activeWork.Decrement();
+        throw;
+    }
+}
+
+template <typename SuperT>
+template <typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::EnqueueWork(CallableT && callable, std::false_type /*is_empty_arg*/) {
+    enqueue(
+        [this, func=std::forward<CallableT>(callable)](void) {
+            func(_state == State::Started);
+        }
     );
 }
 
 template <typename SuperT>
 template <typename CallableT>
-ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::EnqueueCallableTask(CallableT && callable, std::tuple<bool>) {
-    return enqueue_task(
-        std::function<typename TypeTraits::FunctionTraits<CallableT>::return_type (bool)>(
-            std::forward<CallableT>(callable)
+ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::EnqueueTask(CallableT && callable, std::true_type /*is_empty_arg*/) {
+    // ----------------------------------------------------------------------
+    using ReturnType                        = typename TypeTraits::FunctionTraits<CallableT>::return_type;
+    using Promise                           = std::promise<ReturnType>;
+    using Future                            = std::future<ReturnType>;
+    // ----------------------------------------------------------------------
+
+    assert(_state != State::Initializing && _state != State::Stopped);
+
+    // Note that the promise needs to be a shared_ptr to work around copy-related
+    // issues when using the promise within the lambda below.
+    std::shared_ptr<Promise>                pPromise(std::make_shared<Promise>());
+    Future                                  future(pPromise->get_future());
+
+    enqueue(
+        [pPromise=std::move(pPromise), func=std::forward<CallableT>(callable)](void) {
+            pPromise->set_value(func());
+        }
+    );
+
+    return ThreadPoolFuture<ReturnType>(
+        [this](void) {
+            yield();
+        },
+        std::move(future)
+    );
+}
+
+template <typename SuperT>
+template <typename CallableT>
+ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::EnqueueTask(CallableT && callable, std::false_type /*is_empty_arg*/) {
+    return enqueue(
+        [this, func=std::forward<CallableT>(callable)](void) {
+            return func(_state == State::Started);
+        }
+    );
+}
+
+template <typename SuperT>
+template <typename InputT, typename CallableT, typename IsSingleArgT>
+void Details::ThreadPoolImpl<SuperT>::ParallelSingle(InputT const &input, CallableT && callable, std::true_type const &isVoidReturn, IsSingleArgT const &isSingleArg) {
+    ParallelMultiple(
+        &input,
+        &input + 1,
+        std::forward<CallableT>(callable),
+        isVoidReturn,
+        isSingleArg
+    );
+}
+
+template <typename SuperT>
+template <typename InputT, typename CallableT, typename IsSingleArgT>
+typename TypeTraits::FunctionTraits<CallableT>::return_type Details::ThreadPoolImpl<SuperT>::ParallelSingle(InputT const &input, CallableT && callable, std::false_type const &isVoidReturn, IsSingleArgT const &isSingleArg) {
+    // ----------------------------------------------------------------------
+    using ReturnType                        = typename TypeTraits::FunctionTraits<CallableT>::return_type;
+    using ReturnTypes                       = std::vector<ReturnType>;
+    // ----------------------------------------------------------------------
+
+    ReturnTypes                             results(
+        ParallelMultiple(
+            &input,
+            &input + 1,
+            std::forward<CallableT>(callable),
+            isVoidReturn,
+            isSingleArg
         )
     );
+
+    assert(results.size() == 1);
+    return std::move(results[0]);
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::true_type /*is_void_result*/, std::true_type /*is_single_arg*/) {
+    size_t const                            numElements(static_cast<size_t>(std::distance(begin, end)));
+
+    if(numElements == 0)
+        return;
+
+    ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+
+    while(begin != end) {
+        enqueue(
+            [&callable, &ctr, begin](void) {
+                FINALLY([&ctr](void) { ctr.Decrement(); });
+                callable(*begin);
+            }
+        );
+        ++begin;
+    }
+
+    while(ctr.GetValue() != 0)
+        yield();
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::true_type /*is_void_result*/, std::false_type /*is_single_arg*/) {
+    size_t const                            numElements(static_cast<size_t>(std::distance(begin, end)));
+
+    if(numElements == 0)
+        return;
+
+    ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+
+    while(begin != end) {
+        enqueue(
+            [&callable, &ctr, begin](bool isStarted) {
+                FINALLY([&ctr](void) { ctr.Decrement(); });
+                callable(isStarted, *begin);
+            }
+        );
+        ++begin;
+    }
+
+    while(ctr.GetValue() != 0)
+        yield();
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::true_type /*is_single_arg*/) {
+    // ----------------------------------------------------------------------
+    using ReturnType                        = typename TypeTraits::FunctionTraits<CallableT>::return_type;
+    using Future                            = ThreadPoolFuture<ReturnType>;
+    using Futures                           = std::vector<Future>;
+    // ----------------------------------------------------------------------
+
+    size_t const                            numElements(static_cast<size_t>(std::distance(begin, end)));
+
+    if(numElements == 0)
+        return std::vector<ReturnType>();
+
+    Futures                                 futures;
+
+    futures.reserve(numElements);
+
+    while(begin != end) {
+        futures.emplace_back(
+            enqueue(
+                [&callable, begin](void) {
+                    return callable(*begin);
+                }
+            )
+        );
+        ++begin;
+    }
+
+    std::vector<ReturnType>                 results;
+
+    results.reserve(futures.size());
+
+    for(auto & future : futures)
+        results.emplace_back(std::move(future.get()));
+
+    return results;
+}
+
+template <typename SuperT>
+template <typename InputIteratorT, typename CallableT>
+std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::false_type /*is_single_arg*/) {
+    // ----------------------------------------------------------------------
+    using ReturnType                        = typename TypeTraits::FunctionTraits<CallableT>::return_type;
+    using Future                            = ThreadPoolFuture<ReturnType>;
+    using Futures                           = std::vector<Future>;
+    // ----------------------------------------------------------------------
+
+    size_t const                            numElements(static_cast<size_t>(std::distance(begin, end)));
+
+    if(numElements == 0)
+        return std::vector<ReturnType>();
+
+    Futures                                 futures;
+
+    futures.reserve(numElements);
+
+    while(begin != end) {
+        futures.emplace_back(
+            enqueue(
+                [&callable, begin](bool isStarted) {
+                    return callable(isStarted, *begin);
+                }
+            )
+        );
+        ++begin;
+    }
+
+    std::vector<ReturnType>                 results;
+
+    results.reserve(futures.size());
+
+    for(auto & future : futures)
+        results.emplace_back(std::move(future.get()));
+
+    return results;
 }
 
 template <typename SuperT>
 inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::duration const &timeout) {
-    assert(_threadIndex != MAIN_THREAD);
-
     try {
         std::function<void (void)>          func(static_cast<SuperT &>(*this).GetWork(_threadIndex, timeout));
 
@@ -649,7 +892,7 @@ inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::d
             func();
         }
     }
-    catch(Details::ThreadPoolQueueDoneException const &) {
+    catch(ThreadSafeQueueStoppedException const &) {
         return false;
     }
     catch(...) {

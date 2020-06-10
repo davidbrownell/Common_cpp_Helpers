@@ -68,7 +68,7 @@ public:
     ThreadSafeCounter & Increment(void);
     ThreadSafeCounter & Decrement(void);
 
-    ThreadSafeCounter & wait_until(value_type value);
+    ThreadSafeCounter & wait_value(value_type value);
 
 private:
     // ----------------------------------------------------------------------
@@ -100,7 +100,7 @@ inline ThreadSafeCounter::ThreadSafeCounter(value_type initialValue) :
 
 inline ThreadSafeCounter::value_type ThreadSafeCounter::GetValue(void) const {
 #if (defined __cpp_lib_atomic_wait)
-    return _ctr.load();
+    return _ctr;
 #else
     std::scoped_lock                        lock(_ctrMutex); UNUSED(lock);
 
@@ -127,7 +127,7 @@ inline ThreadSafeCounter & ThreadSafeCounter::Increment(void) {
 
 inline ThreadSafeCounter & ThreadSafeCounter::Decrement(void) {
 #if (defined __cpp_lib_atomic_wait)
-    assert(_ctr.load() >= 1);
+    assert(_ctr >= 1);
     --_ctr;
     _ctr.notify_all();
 #else
@@ -144,10 +144,10 @@ inline ThreadSafeCounter & ThreadSafeCounter::Decrement(void) {
     return *this;
 }
 
-inline ThreadSafeCounter & ThreadSafeCounter::wait_until(value_type value) {
+inline ThreadSafeCounter & ThreadSafeCounter::wait_value(value_type value) {
 #if (defined __cpp_lib_atomic_wait)
     for(;;) {
-        value_type                          currentValue(_ctr.load());
+        value_type                          currentValue(_ctr);
 
         if(currentValue == value)
             break;
@@ -158,7 +158,12 @@ inline ThreadSafeCounter & ThreadSafeCounter::wait_until(value_type value) {
     {
         std::unique_lock                    lock(_ctrMutex);
 
-        _ctrCV.wait(lock, [this, &value](void) { return _ctr == value; });
+        _ctrCV.wait(
+            lock,
+            [this, &value](void) {
+                return _ctr == value;
+            }
+        );
     }
 #endif
 
