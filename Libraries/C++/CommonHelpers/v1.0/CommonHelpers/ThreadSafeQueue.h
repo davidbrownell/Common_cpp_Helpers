@@ -150,7 +150,6 @@ private:
     // |
     // ----------------------------------------------------------------------
     std::function<void (void)> const        _decrementActivePopsFunc;
-    std::function<void (void)> const        _notifyOneFunc;
 
     mutable std::mutex                      _infoMutex;
     std::condition_variable                 _infoCV;
@@ -185,11 +184,6 @@ ThreadSafeQueue<T1, T2>::ThreadSafeQueue(void) :
     _decrementActivePopsFunc(
         [this](void) {
             _activePops.Decrement();
-        }
-    ),
-    _notifyOneFunc(
-        [this](void) {
-            _infoCV.notify_one();
         }
     ),
     _activePops(0)
@@ -318,52 +312,35 @@ typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::P
     _activePops.Increment();
     FINALLY(_decrementActivePopsFunc);
 
-    // See the comment below as to why this object is scoped as it is.
-    FinalAction                             notifyAction;
+    std::unique_lock                        lock(_infoMutex);
 
-    {
-        std::unique_lock                    lock(_infoMutex);
+    if(_info.queue.empty()) {
+        if(shouldWait == false)
+            return optional_value_type();
+
+        _infoCV.wait_for(
+            lock,
+            waitFor,
+            [this](void) {
+                return _info.queue.empty() == false || _info.stopped;
+            }
+        );
 
         if(_info.queue.empty()) {
-            if(shouldWait == false)
-                return optional_value_type();
+            if(_info.stopped)
+                throw ThreadSafeQueueStoppedException();
 
-            _infoCV.wait_for(
-                lock,
-                waitFor,
-                [this](void) {
-                    return _info.queue.empty() == false || _info.stopped;
-                }
-            );
-
-            if(_info.queue.empty()) {
-                if(_info.stopped)
-                    throw ThreadSafeQueueStoppedException();
-
-                return optional_value_type();
-            }
+            return optional_value_type();
         }
-
-        assert(_info.queue.empty() == false);
-
-        value_type                          result(std::move(_info.queue.front()));
-
-        _info.queue.pop();
-
-        if(_info.queue.empty() == false) {
-            // The notify has to happen after the lock is released, so
-            // we could move the notify outside of this loop. However, that
-            // means that we need to also move result outside the current scope (as
-            // that is the function's return value). Moving result outside of
-            // the current scope means that the result type must be default
-            // constructible. Rather than requiring default construction, we
-            // place the FinalAction outside of the scope which means it will
-            // fire after the lock is released.
-            notifyAction = _notifyOneFunc;
-        }
-
-        return std::move(result);
     }
+
+    assert(_info.queue.empty() == false);
+
+    value_type                              result(std::move(_info.queue.front()));
+
+    _info.queue.pop();
+
+    return std::move(result);
 }
 
 } // namespace CommonHelpers

@@ -55,9 +55,13 @@ void SimpleThreadPool::AddWork(std::function<void (void)> functor) {
     _pQueue->Push(std::move(functor));
 }
 
-std::function<void (void)> SimpleThreadPool::GetWork(size_t, QueuePopType type) {
+std::function<void (void)> SimpleThreadPool::GetWork(size_t, bool isBlocking) {
     assert(_pQueue);
-    return _pQueue->Pop(type);
+
+    if(isBlocking)
+        return _pQueue->Pop(QueuePopType::Blocking);
+
+    return _pQueue->TryPop();
 }
 
 void SimpleThreadPool::StopQueues(void) {
@@ -128,7 +132,7 @@ void ComplexThreadPool::AddWork(std::function<void (void)> functor) {
     queue.Push(std::move(functor));
 }
 
-std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, QueuePopType type) {
+std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, bool isBlocking) {
     assert(_queues.empty() == false);
 
     for(size_t ctr = 0; ctr < _numTries; ++ctr) {
@@ -139,8 +143,11 @@ std::function<void (void)> ComplexThreadPool::GetWork(size_t threadIndex, QueueP
             return func;
     }
 
+    if(isBlocking == false)
+        return std::function<void (void)>();
+
     // If here, we didn't find any work - wait for something
-    return _queues[threadIndex]->Pop(type);
+    return _queues[threadIndex]->Pop(QueuePopType::Blocking);
 }
 
 void ComplexThreadPool::StopQueues(void) {
