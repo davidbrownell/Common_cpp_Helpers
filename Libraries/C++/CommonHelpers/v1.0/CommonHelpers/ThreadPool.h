@@ -771,11 +771,12 @@ void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, Inp
         return;
 
     ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+    std::function<void (void)> const        decrementFunc([&ctr](void) { ctr.Decrement(); });
 
     while(begin != end) {
         enqueue(
-            [&callable, &ctr, begin](void) {
-                FINALLY([&ctr](void) { ctr.Decrement(); });
+            [&callable, &decrementFunc, begin](void) {
+                FINALLY(decrementFunc);
                 callable(*begin);
             }
         );
@@ -795,11 +796,12 @@ void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, Inp
         return;
 
     ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+    std::function<void (void)> const        decrementFunc([&ctr](void) { ctr.Decrement(); });
 
     while(begin != end) {
         enqueue(
-            [&callable, &ctr, begin](bool isStarted) {
-                FINALLY([&ctr](void) { ctr.Decrement(); });
+            [&callable, &decrementFunc, begin](bool isStarted) {
+                FINALLY(decrementFunc);
                 callable(isStarted, *begin);
             }
         );

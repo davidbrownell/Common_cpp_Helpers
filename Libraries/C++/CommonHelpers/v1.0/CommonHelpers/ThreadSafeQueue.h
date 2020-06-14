@@ -197,7 +197,7 @@ ThreadSafeQueue<T1, T2>::~ThreadSafeQueue(void) {
 template <typename T1, typename T2>
 void ThreadSafeQueue<T1, T2>::Stop(void) {
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         if(_info.stopped)
             return;
@@ -211,7 +211,7 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 
 #if (defined DEBUG)
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         assert(_info.queue.empty());
     }
@@ -220,14 +220,14 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 
 template <typename T1, typename T2>
 bool ThreadSafeQueue<T1, T2>::empty(void) const {
-    std::scoped_lock                        lock(_infoMutex); UNUSED(lock);
+    std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.empty();
 }
 
 template <typename T1, typename T2>
 size_t ThreadSafeQueue<T1, T2>::size(void) const {
-    std::scoped_lock                        lock(_infoMutex); UNUSED(lock);
+    std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.size();
 }
@@ -236,7 +236,7 @@ template <typename T1, typename T2>
 template <typename... ArgTs>
 void ThreadSafeQueue<T1, T2>::Push(ArgTs &&... args) {
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         if(_info.stopped)
             throw ThreadSafeQueueStoppedException();
@@ -251,7 +251,7 @@ template <typename T1, typename T2>
 template <typename... ArgTs>
 bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
     {
-        std::unique_lock                    lock(_infoMutex, std::try_to_lock);
+        std::unique_lock<decltype(_infoMutex)>          lock(_infoMutex, std::try_to_lock);
 
         if(!lock)
             return false;
@@ -312,7 +312,7 @@ typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::P
     _activePops.Increment();
     FINALLY(_decrementActivePopsFunc);
 
-    std::unique_lock                        lock(_infoMutex);
+    std::unique_lock<decltype(_infoMutex)>              lock(_infoMutex);
 
     if(_info.queue.empty()) {
         if(shouldWait == false)

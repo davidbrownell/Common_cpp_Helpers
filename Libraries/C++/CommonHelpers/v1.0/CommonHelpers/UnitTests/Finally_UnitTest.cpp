@@ -71,7 +71,7 @@ TEST_CASE("Dismiss") {
 
     SECTION("With dismiss") {
         {
-            CommonHelpers::FinalAction      action([&value](void) { ++value; });
+            CommonHelpers::FinalAction<>    action([&value](void) { ++value; });
 
             CHECK(value == 0);
             action.Dismiss();

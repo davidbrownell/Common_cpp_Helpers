@@ -27,6 +27,8 @@
 
 #include <optional>
 
+static unsigned long const                  ITERATIONS = 1;
+
 template <typename ThreadPoolT>
 void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nullopt) {
     std::atomic_uint64_t                    total(0);
@@ -55,11 +57,13 @@ void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nu
 }
 
 TEST_CASE("Simple Work") {
-    WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
+    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+        WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
 }
 
 TEST_CASE("Complex Work") {
-    WorkTestImpl<CommonHelpers::ComplexThreadPool>(100, 4950);
+    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+        WorkTestImpl<CommonHelpers::ComplexThreadPool>(100, 4950);
 }
 
 #if (!defined DEBUG)
@@ -116,11 +120,13 @@ void TaskTestImpl(size_t numItems) {
 }
 
 TEST_CASE("Simple Task") {
-    TaskTestImpl<CommonHelpers::SimpleThreadPool>(100);
+    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+        TaskTestImpl<CommonHelpers::SimpleThreadPool>(100);
 }
 
 TEST_CASE("Complex Task") {
-    TaskTestImpl<CommonHelpers::ComplexThreadPool>(100);
+    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+        TaskTestImpl<CommonHelpers::ComplexThreadPool>(100);
 }
 
 #if (!defined DEBUG)
@@ -143,24 +149,26 @@ TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
 
 TEST_CASE("Shutdown flag") {
     SECTION("Is Active") {
-        std::condition_variable             cv;
         std::optional<bool>                 isActive;
-
-        auto const                          work(
-            [&cv, &isActive](bool isActiveParam) {
-                isActive = isActiveParam;
-
-                cv.notify_one();
-            }
-        );
 
         {
             CommonHelpers::SimpleThreadPool             pool(1);
+            std::mutex                                  m;
+            std::condition_variable                     cv;
 
-            pool.enqueue(work);
+            pool.enqueue(
+                [&m, &cv, &isActive](bool isActiveParam) {
+                    {
+                        std::unique_lock<std::decay_t<decltype(m)>>         lock(m); UNUSED(lock);
 
-            std::mutex                      m;
-            std::unique_lock                lock(m);
+                        isActive = isActiveParam;
+                    }
+
+                    cv.notify_one();
+                }
+            );
+
+            std::unique_lock<decltype(m)>   lock(m);
 
             cv.wait(
                 lock,
@@ -199,7 +207,7 @@ TEST_CASE("Shutdown flag") {
         }
 
         std::mutex                          m;
-        std::unique_lock                    lock(m);
+        std::unique_lock<decltype(m)>       lock(m);
 
         cv.wait(lock);
         CHECK((isActive && isActive == false));
@@ -291,13 +299,19 @@ void ReentrantTasksTest(size_t numThreads) {
 
 TEST_CASE("Reentrant Tasks") {
     SECTION("SimpleThreadPool") {
-        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(1);
-        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(1);
-        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -312,13 +326,19 @@ void ParallelWorkSingleItemSingleArgTest(size_t numThreads) {
 
 TEST_CASE("parallel work - single item - single arg") {
     SECTION("SimpleThreadPool") {
-        ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -333,13 +353,19 @@ void ParallelWorkSingleItemMultiArgTest(size_t numThreads) {
 
 TEST_CASE("parallel work - single item - multi arg") {
     SECTION("SimpleThreadPool") {
-        ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -352,13 +378,19 @@ void ParallelTaskSingleItemSingleArgTest(size_t numThreads) {
 
 TEST_CASE("parallel task - single item - single arg") {
     SECTION("SimpleThreadPool") {
-        ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -371,13 +403,19 @@ void ParallelTaskSingleItemMultiArgTest(size_t numThreads) {
 
 TEST_CASE("parallel task - single item - multi arg") {
     SECTION("SimpleThreadPool") {
-        ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -412,13 +450,19 @@ void ParallelWorkVectorSingleArgTest(size_t numThreads) {
 
 TEST_CASE("parallel work - vector - single arg") {
     SECTION("SimpleThreadPool") {
-        ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -453,13 +497,19 @@ void ParallelWorkVectorMultiArgTest(size_t numThreads) {
 
 TEST_CASE("parallel work - vector - multi arg") {
     SECTION("SimpleThreadPool") {
-        ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -477,13 +527,19 @@ void ParallelTaskVectorSingleArgTest(size_t numThreads) {
 
 TEST_CASE("parallel task - vector - single arg") {
     SECTION("SimpleThreadPool") {
-        ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 
@@ -501,12 +557,18 @@ void ParallelTaskVectorMultiArgTest(size_t numThreads) {
 
 TEST_CASE("parallel task - vector - multi arg") {
     SECTION("SimpleThreadPool") {
-        ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
-        ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
-        ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
