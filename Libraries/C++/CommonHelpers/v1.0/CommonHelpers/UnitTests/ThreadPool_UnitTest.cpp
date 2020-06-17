@@ -70,7 +70,6 @@ TEST_CASE("Simple Work Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
     BENCHMARK("5000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
     BENCHMARK("10000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-    BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 
 TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
@@ -78,7 +77,6 @@ TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
     BENCHMARK("5000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
     BENCHMARK("10000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
-    BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 #endif
 
@@ -131,7 +129,6 @@ TEST_CASE("Simple Task Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 
 TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
@@ -139,7 +136,6 @@ TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 #endif
 
