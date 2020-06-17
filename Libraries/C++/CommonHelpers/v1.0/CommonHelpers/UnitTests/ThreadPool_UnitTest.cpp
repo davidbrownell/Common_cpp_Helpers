@@ -412,6 +412,8 @@ void ParallelWorkVectorSingleArgTest(size_t numThreads) {
 
     v.resize(3);
 
+    std::vector<int> const                  expected{10, 20, 30};
+
     pool.parallel(
         std::vector<int>{10, 20, 30},
         [&v](int value) {
@@ -431,7 +433,7 @@ void ParallelWorkVectorSingleArgTest(size_t numThreads) {
             v[index] = value;
         }
     );
-    CHECK(v == std::vector<int>{10, 20, 30});
+    CHECK(v == expected);
 }
 
 TEST_CASE("parallel work - vector - single arg") {
@@ -459,6 +461,8 @@ void ParallelWorkVectorMultiArgTest(size_t numThreads) {
 
     v.resize(3);
 
+    std::vector<int> const                  expected{10, 20, 30};
+
     pool.parallel(
         std::vector<int>{10, 20, 30},
         [&v](bool, int value) {
@@ -478,7 +482,7 @@ void ParallelWorkVectorMultiArgTest(size_t numThreads) {
             v[index] = value;
         }
     );
-    CHECK(v == std::vector<int>{10, 20, 30});
+    CHECK(v == expected);
 }
 
 TEST_CASE("parallel work - vector - multi arg") {
