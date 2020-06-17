@@ -137,6 +137,12 @@ def GetDependencies():
             "42DE100A1DAE4FFC9697F75566C63DEB",
             "-ex",
         ),
+        (
+            "Clang-8",
+            "Common_cpp_Clang_8",
+            "3DE9F3430E494A6C8429B26A1503C895",
+            "-ex",
+        ),
     ]
 
     for short_name, repo_name, repo_id, config_suffix in repo_depedencies:
