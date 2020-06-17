@@ -27,7 +27,7 @@
 
 #include <optional>
 
-static unsigned long const                  ITERATIONS = 50000; // BugBug
+static unsigned long const                  ITERATIONS = 1;
 
 template <typename ThreadPoolT>
 void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nullopt) {

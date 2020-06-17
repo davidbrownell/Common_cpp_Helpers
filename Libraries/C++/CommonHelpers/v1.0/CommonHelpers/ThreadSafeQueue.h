@@ -152,6 +152,10 @@ private:
     std::function<void (void)> const        _decrementActivePopsFunc;
 
     mutable std::mutex                      _infoMutex;
+
+    // Note that in all cases, _infoCV is notified within a lock. It should be possible to notify outside
+    // of the lock, but doing so causes an access violation (AV) on Linux and Windows about 1 out of 200000
+    // executions. Moving the notification inside the lock prevented these periodic AVs.
     std::condition_variable                 _infoCV;
     Info                                    _info;
 
@@ -204,6 +208,8 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 
         _info.stopped = true;
 
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
         _infoCV.notify_all();
     }
 
@@ -243,6 +249,8 @@ void ThreadSafeQueue<T1, T2>::Push(ArgTs &&... args) {
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
 
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
         _infoCV.notify_one();
     }
 }
@@ -261,6 +269,8 @@ bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
 
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
         _infoCV.notify_one();
     }
 
