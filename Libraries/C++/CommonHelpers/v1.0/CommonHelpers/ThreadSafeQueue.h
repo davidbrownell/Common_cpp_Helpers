@@ -203,9 +203,9 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
             return;
 
         _info.stopped = true;
-    }
 
-    _infoCV.notify_all();
+        _infoCV.notify_all();
+    }
 
     _activePops.wait_value(0);
 
@@ -242,9 +242,9 @@ void ThreadSafeQueue<T1, T2>::Push(ArgTs &&... args) {
             throw ThreadSafeQueueStoppedException();
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
-    }
 
-    _infoCV.notify_one();
+        _infoCV.notify_one();
+    }
 }
 
 template <typename T1, typename T2>
@@ -260,9 +260,9 @@ bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
             throw ThreadSafeQueueStoppedException();
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
-    }
 
-    _infoCV.notify_one();
+        _infoCV.notify_one();
+    }
 
     return true;
 }

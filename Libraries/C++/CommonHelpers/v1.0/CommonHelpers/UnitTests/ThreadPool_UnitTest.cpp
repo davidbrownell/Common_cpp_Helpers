@@ -27,7 +27,7 @@
 
 #include <optional>
 
-static unsigned long const                  ITERATIONS = 1;
+static unsigned long const                  ITERATIONS = 50000; // BugBug
 
 template <typename ThreadPoolT>
 void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nullopt) {
@@ -57,13 +57,11 @@ void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nu
 }
 
 TEST_CASE("Simple Work") {
-    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-        WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
+    WorkTestImpl<CommonHelpers::SimpleThreadPool>(100, 4950);
 }
 
 TEST_CASE("Complex Work") {
-    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-        WorkTestImpl<CommonHelpers::ComplexThreadPool>(100, 4950);
+    WorkTestImpl<CommonHelpers::ComplexThreadPool>(100, 4950);
 }
 
 #if (!defined DEBUG)
@@ -120,13 +118,11 @@ void TaskTestImpl(size_t numItems) {
 }
 
 TEST_CASE("Simple Task") {
-    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-        TaskTestImpl<CommonHelpers::SimpleThreadPool>(100);
+    TaskTestImpl<CommonHelpers::SimpleThreadPool>(100);
 }
 
 TEST_CASE("Complex Task") {
-    for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-        TaskTestImpl<CommonHelpers::ComplexThreadPool>(100);
+    TaskTestImpl<CommonHelpers::ComplexThreadPool>(100);
 }
 
 #if (!defined DEBUG)
@@ -299,19 +295,13 @@ void ReentrantTasksTest(size_t numThreads) {
 
 TEST_CASE("Reentrant Tasks") {
     SECTION("SimpleThreadPool") {
-        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-            ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(1);
-
-        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-            ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(5);
+        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(1);
+        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(5);
     }
 
     SECTION("ComplexThreadPool") {
-        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-            ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(1);
-
-        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
-            ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(5);
+        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(1);
+        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(5);
     }
 }
 

@@ -117,9 +117,10 @@ inline ThreadSafeCounter & ThreadSafeCounter::Increment(void) {
         std::scoped_lock<decltype(_ctrMutex)>           lock(_ctrMutex); UNUSED(lock);
 
         ++_ctr;
+
+        _ctrCV.notify_all();
     }
 
-    _ctrCV.notify_all();
 #endif
 
     return *this;
@@ -136,9 +137,10 @@ inline ThreadSafeCounter & ThreadSafeCounter::Decrement(void) {
 
         assert(_ctr >= 1);
         --_ctr;
+
+        _ctrCV.notify_all();
     }
 
-    _ctrCV.notify_all();
 #endif
 
     return *this;
