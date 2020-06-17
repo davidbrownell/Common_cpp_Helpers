@@ -132,9 +132,9 @@ def GetDependencies():
 
     repo_depedencies += [
         (
-            "Clang-8",
-            "Common_cpp_Clang_8",
-            "3DE9F3430E494A6C8429B26A1503C895",
+            "Clang-10",
+            "Common_cpp_Clang_10",
+            "42DE100A1DAE4FFC9697F75566C63DEB",
             "-ex",
         ),
     ]

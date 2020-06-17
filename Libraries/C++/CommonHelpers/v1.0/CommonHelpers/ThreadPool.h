@@ -111,8 +111,6 @@ private:
 
 namespace Details {
 
-static constexpr std::chrono::steady_clock::duration const                  sg_zeroDuration(std::chrono::milliseconds(0));
-
 /////////////////////////////////////////////////////////////////////////
 ///  \class         ThreadPoolImpl
 ///  \brief         Implements functionality common to all thread pool types.
@@ -218,9 +216,10 @@ private:
     using Threads                           = std::vector<std::thread>;
 
     enum class State {
-        Initializing,
+        Idle,
+        Starting,
         Started,
-        ShuttingDown,
+        Stopping,
         Stopped
     };
 
@@ -229,11 +228,10 @@ private:
     // |  Private Data
     // |
     // ----------------------------------------------------------------------
+    std::function<void (void)> const        _decrementWorkFunc;
     OnExceptionCallback const               _onExceptionCallback;
     std::atomic<State>                      _state;
     Threads                                 _threads;
-
-    static thread_local size_t              _threadIndex;
 
     ThreadSafeCounter                       _activeWork;
 
@@ -256,7 +254,7 @@ private:
     template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::true_type /*is_single_arg*/);
     template <typename InputIteratorT, typename CallableT> std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> ParallelMultiple(InputIteratorT begin, InputIteratorT end, CallableT && callable, std::false_type /*is_void_result*/, std::false_type /*is_single_arg*/);
 
-    inline bool DoWork(std::chrono::steady_clock::duration const &timeout);
+    inline bool DoWork(bool isBlocking, size_t threadIndex);
 };
 
 } // namespace Details
@@ -306,7 +304,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     void AddWork(std::function<void (void)> functor);
-    std::function<void (void)> GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration);
+    std::function<void (void)> GetWork(size_t threadIndex, bool isBlocking);
 
     void StopQueues(void);
 };
@@ -375,7 +373,7 @@ private:
     // |
     // ----------------------------------------------------------------------
     void AddWork(std::function<void (void)> functor);
-    std::function<void (void)> GetWork(size_t threadIndex, std::chrono::steady_clock::duration duration);
+    std::function<void (void)> GetWork(size_t threadIndex, bool isBlocking);
 
     void StopQueues(void);
 };
@@ -424,8 +422,10 @@ std::future_status ThreadPoolFuture<T>::wait_until(std::chrono::time_point<Clock
     using Clock                             = typename std::chrono::time_point<ClockT, DurationT>::clock;
     // ----------------------------------------------------------------------
 
+    static constexpr std::chrono::steady_clock::duration const              s_zeroDuration(std::chrono::milliseconds(0));
+
     for(;;) {
-        if(_future.wait_for(Details::sg_zeroDuration) == std::future_status::ready)
+        if(_future.wait_for(s_zeroDuration) == std::future_status::ready)
             break;
 
         if(Clock::now() >= timeout)
@@ -467,6 +467,7 @@ ThreadPoolFuture<T>::ThreadPoolFuture(YieldFunction function, std::future<T> fut
 // ----------------------------------------------------------------------
 template <typename SuperT>
 Details::ThreadPoolImpl<SuperT>::ThreadPoolImpl(std::optional<OnExceptionCallback> onException/*=std::nullopt*/) :
+    _decrementWorkFunc([this](void) { _activeWork.Decrement(); }),
     _onExceptionCallback(
         [&onException](void) {
             if(onException)
@@ -492,7 +493,7 @@ Details::ThreadPoolImpl<SuperT>::ThreadPoolImpl(std::optional<OnExceptionCallbac
             );
         }()
     ),
-    _state(State::Initializing),
+    _state(State::Idle),
     _activeWork(0)
 {}
 
@@ -529,7 +530,11 @@ ThreadPoolFuture<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::r
 
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::yield(void) {
-    DoWork(sg_zeroDuration);
+    // A thread index of 0 actually works here...
+    //      For SimpleThreadPool, there is only 1 thread so 0 is always the correct index.
+    //      For ComplexThreadPool, the algorithm will attempt to pull work from all threads.
+    //
+    DoWork(false, 0);
 }
 
 template <typename SuperT>
@@ -598,26 +603,28 @@ std::vector<typename TypeTraits::FunctionTraits<std::decay_t<CallableT>>::return
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
     assert(numThreads);
-    assert(_state == State::Initializing);
+    assert(_state == State::Idle);
 
-    ThreadSafeCounter                       initRemaining(static_cast<ThreadSafeCounter::value_type>(numThreads));
+    _state = State::Starting;
+
+    // `initializing` is a stack object because this function will not continue
+    // until its value reaches 0. `pInitialized` is a heap object because threads
+    // may use that value after the function exits.
+    ThreadSafeCounter                       initializing(static_cast<ThreadSafeCounter::value_type>(numThreads));
+    std::shared_ptr<ThreadSafeCounter>      pInitialized(std::make_shared<ThreadSafeCounter>(1));
 
     auto const                              worker(
-        [this, &initRemaining](size_t threadIndex) {
+        [this, &initializing, pInitialized](size_t threadIndex) mutable {
             // Indicate that the thread has started
-            initRemaining.Decrement();
+            initializing.Decrement();
 
-            // This value is used in other methods and must be set here
-            _threadIndex = threadIndex;
+            // Wait for the pool to initialize
+            pInitialized->wait_value(0);
+            pInitialized.reset();
 
-            // We can't use std::chrono::steady_clock::duration::max() here, as
-            // the implementation of wait_for will internally call wait_until with
-            // the current time plus this duration; this will cause an overflow
-            // when using duration::max. Use a really big value instead of duration::max.
-            std::chrono::steady_clock::duration const   maxDuration(std::chrono::hours(24 * 365));
-
+            // Process work
             for(;;) {
-                if(DoWork(maxDuration) == false)
+                if(DoWork(true, threadIndex) == false)
                     break;
             }
         }
@@ -629,18 +636,22 @@ void Details::ThreadPoolImpl<SuperT>::Start(size_t numThreads) {
         threads.emplace_back(worker, threads.size());
 
     // Wait for the threads to initialize
-    initRemaining.wait_value(0);
+    initializing.wait_value(0);
 
     _threads = std::move(threads);
     _state = State::Started;
+
+    // Allow the threads to continue
+    pInitialized->Decrement();
 }
 
 template <typename SuperT>
 void Details::ThreadPoolImpl<SuperT>::Stop(void) {
     assert(_state == State::Started);
-    _state = State::ShuttingDown;
+    _state = State::Stopping;
 
     _activeWork.wait_value(0);
+
     static_cast<SuperT &>(*this).StopQueues();
 
     for(auto & thread : _threads)
@@ -653,13 +664,10 @@ void Details::ThreadPoolImpl<SuperT>::Stop(void) {
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 template <typename SuperT>
-// static
-thread_local size_t Details::ThreadPoolImpl<SuperT>::_threadIndex = 0;
-
-template <typename SuperT>
 template <typename CallableT>
 void Details::ThreadPoolImpl<SuperT>::EnqueueWork(CallableT && callable, std::true_type /*is_empty_arg*/) {
-    assert(_state != State::Initializing && _state != State::Stopped);
+    if(_state != State::Started && _state != State::Stopping)
+        throw std::runtime_error("The ThreadPool is not in a started state");
 
     _activeWork.Increment();
 
@@ -690,8 +698,6 @@ ThreadPoolFuture<typename TypeTraits::FunctionTraits<CallableT>::return_type> De
     using Promise                           = std::promise<ReturnType>;
     using Future                            = std::future<ReturnType>;
     // ----------------------------------------------------------------------
-
-    assert(_state != State::Initializing && _state != State::Stopped);
 
     // Note that the promise needs to be a shared_ptr to work around copy-related
     // issues when using the promise within the lambda below.
@@ -765,11 +771,12 @@ void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, Inp
         return;
 
     ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+    std::function<void (void)> const        decrementFunc([&ctr](void) { ctr.Decrement(); });
 
     while(begin != end) {
         enqueue(
-            [&callable, &ctr, begin](void) {
-                FINALLY([&ctr](void) { ctr.Decrement(); });
+            [&callable, &decrementFunc, begin](void) {
+                FINALLY(decrementFunc);
                 callable(*begin);
             }
         );
@@ -789,11 +796,12 @@ void Details::ThreadPoolImpl<SuperT>::ParallelMultiple(InputIteratorT begin, Inp
         return;
 
     ThreadSafeCounter                       ctr(static_cast<ThreadSafeCounter::value_type>(numElements));
+    std::function<void (void)> const        decrementFunc([&ctr](void) { ctr.Decrement(); });
 
     while(begin != end) {
         enqueue(
-            [&callable, &ctr, begin](bool isStarted) {
-                FINALLY([&ctr](void) { ctr.Decrement(); });
+            [&callable, &decrementFunc, begin](bool isStarted) {
+                FINALLY(decrementFunc);
                 callable(isStarted, *begin);
             }
         );
@@ -883,12 +891,12 @@ std::vector<typename TypeTraits::FunctionTraits<CallableT>::return_type> Details
 }
 
 template <typename SuperT>
-inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::duration const &timeout) {
+inline bool Details::ThreadPoolImpl<SuperT>::DoWork(bool isBlocking, size_t threadIndex) {
     try {
-        std::function<void (void)>          func(static_cast<SuperT &>(*this).GetWork(_threadIndex, timeout));
+        std::function<void (void)>          func(static_cast<SuperT &>(*this).GetWork(threadIndex, isBlocking));
 
         if(func) {
-            FINALLY([this](void) { _activeWork.Decrement(); });
+            FINALLY(_decrementWorkFunc);
             func();
         }
     }
@@ -896,7 +904,7 @@ inline bool Details::ThreadPoolImpl<SuperT>::DoWork(std::chrono::steady_clock::d
         return false;
     }
     catch(...) {
-        _onExceptionCallback(_threadIndex);
+        _onExceptionCallback(threadIndex);
     }
 
     return true;
