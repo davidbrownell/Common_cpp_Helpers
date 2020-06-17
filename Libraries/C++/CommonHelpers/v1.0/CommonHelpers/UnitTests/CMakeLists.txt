@@ -28,11 +28,15 @@ function(Impl)
             ${_this_path}/SharedObject_UnitTest.cpp
             ${_this_path}/Stl_UnitTest.cpp
             ${_this_path}/TestHelpers_UnitTest.cpp
-            # TODO ${_this_path}/ThreadPool_UnitTest.cpp
+            ${_this_path}/ThreadPool_UnitTest.cpp
+            ${_this_path}/ThreadSafeCounter_UnitTest.cpp
             ${_this_path}/TypeTraits_UnitTest.cpp
 
         LINK_LIBRARIES
             CommonHelpers
+
+        # CXX_STANDARD
+        #     20
     )
 endfunction()
 

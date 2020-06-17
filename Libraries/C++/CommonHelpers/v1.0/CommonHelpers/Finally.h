@@ -66,7 +66,7 @@ public:
 
     FinalAction(FinalAction && other) noexcept :
         _f(std::move(other._f)),
-        _invoke(true)
+        _invoke(other._invoke)
     {
         other._invoke = false;
     }
@@ -78,6 +78,10 @@ public:
     ~FinalAction(void) noexcept {
         if(_invoke)
             _f();
+    }
+
+    void Dismiss(void) {
+        _invoke = false;
     }
 
 private:
