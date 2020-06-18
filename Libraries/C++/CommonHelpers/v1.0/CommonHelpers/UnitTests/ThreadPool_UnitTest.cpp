@@ -27,24 +27,23 @@
 
 #include <optional>
 
+static unsigned long const                  ITERATIONS = 1;
+
 template <typename ThreadPoolT>
 void WorkTestImpl(size_t numItems, std::optional<std::uint64_t> expected=std::nullopt) {
     std::atomic_uint64_t                    total(0);
-    std::vector<std::future<size_t>>        futures;
-
-    futures.reserve(numItems);
 
     {
-        ThreadPoolT                         pool;
-
         auto const                          work(
             [&total](size_t ctr) {
                 total += ctr;
             }
         );
 
+        ThreadPoolT                         pool;
+
         for(size_t ctr = 0; ctr < numItems; ++ctr) {
-            pool.enqueue_work(
+            pool.enqueue(
                 [&work, ctr](void) {
                     work(ctr);
                 }
@@ -71,7 +70,6 @@ TEST_CASE("Simple Work Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
     BENCHMARK("5000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
     BENCHMARK("10000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-    BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 
 TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
@@ -79,7 +77,6 @@ TEST_CASE("Complex Work Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
     BENCHMARK("5000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
     BENCHMARK("10000") { WorkTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
-    BENCHMARK("20000") { WorkTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 #endif
 
@@ -90,17 +87,17 @@ void TaskTestImpl(size_t numItems) {
     futures.reserve(numItems);
 
     {
-        ThreadPoolT                         pool;
-
         auto const                          task(
             [](size_t ctr) {
                 return ctr;
             }
         );
 
+        ThreadPoolT                         pool;
+
         while(futures.size() < numItems) {
             futures.emplace_back(
-                pool.enqueue_task(
+                pool.enqueue(
                     [&task, ctr=futures.size()](void) -> size_t {
                         return task(ctr);
                     }
@@ -132,7 +129,6 @@ TEST_CASE("Simple Task Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(1000); };
     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(5000); };
     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 
 TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
@@ -140,50 +136,75 @@ TEST_CASE("Complex Task Benchmark", "[Benchmark]") {
     BENCHMARK("1000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(1000); };
     BENCHMARK("5000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(5000); };
     BENCHMARK("10000") { TaskTestImpl<CommonHelpers::ComplexThreadPool>(10000); };
-    BENCHMARK("20000") { TaskTestImpl<CommonHelpers::SimpleThreadPool>(20000); };
 }
 #endif
 
 TEST_CASE("Shutdown flag") {
-    SECTION("Not set") {
+    SECTION("Is Active") {
+        std::optional<bool>                 isActive;
+
+        {
+            CommonHelpers::SimpleThreadPool             pool(1);
+            std::mutex                                  m;
+            std::condition_variable                     cv;
+
+            pool.enqueue(
+                [&m, &cv, &isActive](bool isActiveParam) {
+                    {
+                        std::unique_lock<std::decay_t<decltype(m)>>         lock(m); UNUSED(lock);
+
+                        isActive = isActiveParam;
+                    }
+
+                    cv.notify_one();
+                }
+            );
+
+            std::unique_lock<decltype(m)>   lock(m);
+
+            cv.wait(
+                lock,
+                [&isActive](void) { return static_cast<bool>(isActive); }
+            );
+        }
+
+        CHECK((isActive && *isActive));
+    }
+
+    // I'm not quite sure how to test this; I know that the following code
+    // does not work.
+#if 0
+    SECTION("Is Not Active") {
         std::condition_variable             cv;
+        std::optional<bool>                 isActive;
 
-        auto const                          work(
-            [&cv](bool isActive) {
-                CHECK(isActive);
+        {
+            CommonHelpers::SimpleThreadPool             pool(1);
 
-                cv.notify_one();
-            }
-        );
+            pool.enqueue(
+                [](void) {
+                    using namespace std::chrono_literals;
+                    std::this_thread::sleep_for(0.5s);
+                }
+            );
 
-        CommonHelpers::SimpleThreadPool     pool(1);
-
-        pool.enqueue_work(std::move(work));
+            // The pool should be stopping by the time this is executed
+            // due to the sleep above.
+            pool.enqueue(
+                [&cv, &isActive](bool isActiveParam) {
+                    isActive = isActiveParam;
+                    cv.notify_one();
+                }
+            );
+        }
 
         std::mutex                          m;
-        std::unique_lock                    lock(m);
+        std::unique_lock<decltype(m)>       lock(m);
 
         cv.wait(lock);
+        CHECK((isActive && isActive == false));
     }
-
-    SECTION("Set") {
-        CommonHelpers::SimpleThreadPool     pool(1);
-
-        pool.enqueue_work(
-            [](void) {
-                using namespace std::chrono_literals;
-                std::this_thread::sleep_for(0.5s);
-            }
-        );
-
-        // The pool should be stopping by the time this is executed
-        // due to the sleep above.
-        pool.enqueue_work(
-            [](bool isActive) {
-                CHECK(isActive == false);
-            }
-        );
-    }
+    #endif
 }
 
 TEST_CASE("Default Exception") {
@@ -194,13 +215,13 @@ TEST_CASE("Default Exception") {
     {
         CommonHelpers::SimpleThreadPool     pool(1);
 
-        pool.enqueue_work(
+        pool.enqueue(
             [](void) {
                 throw std::runtime_error("This is an exception handled by the default processor; it will not kill the thread");
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value](void) {
                 value = true;
             }
@@ -214,51 +235,51 @@ TEST_CASE("Default Exception") {
 
 TEST_CASE("Custom Exception Handler") {
     bool                                    value(false);
-    bool                                    sawException(false);
+    std::optional<size_t>                   exceptionThreadIndex;
+    std::optional<std::string>              exceptionDesc;
 
     {
         CommonHelpers::SimpleThreadPool     pool(
             1,
-            [&sawException](size_t threadIndex) {
-                CHECK(threadIndex == 0);
+            [&exceptionThreadIndex, &exceptionDesc](size_t threadIndex) {
+                exceptionThreadIndex = threadIndex;
 
                 try {
                     throw;
                 }
                 catch(std::exception const &ex) {
-                    CHECK(std::string(ex.what()) == "My custom exception");
+                    exceptionDesc = ex.what();
                 }
-
-                sawException = true;
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [](void) {
                 throw std::logic_error("My custom exception");
             }
         );
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value](void) {
                 value = true;
             }
         );
     }
 
-    CHECK(sawException);
-    CHECK(value);
+    CHECK((exceptionThreadIndex && *exceptionThreadIndex == 0));
+    CHECK((exceptionDesc && *exceptionDesc == "My custom exception"));
 }
 
-TEST_CASE("Reentrant Tasks") {
+template <typename PoolT>
+void ReentrantTasksTest(size_t numThreads) {
     int                                     value(0);
 
     {
-        CommonHelpers::SimpleThreadPool     pool(1);
+        PoolT                               pool(numThreads);
 
-        pool.enqueue_work(
+        pool.enqueue(
             [&value, &pool](void) {
-                value = pool.enqueue_task(
+                value = pool.enqueue(
                     [](void) { return 10; }
                 ).get();
             }
@@ -266,4 +287,278 @@ TEST_CASE("Reentrant Tasks") {
     }
 
     CHECK(value == 10);
+}
+
+TEST_CASE("Reentrant Tasks") {
+    SECTION("SimpleThreadPool") {
+        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(1);
+        ReentrantTasksTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(1);
+        ReentrantTasksTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelWorkSingleItemSingleArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+    int                                     value(0);
+
+    pool.parallel(10, [&value](int v) { value = v; });
+    CHECK(value == 10);
+}
+
+TEST_CASE("parallel work - single item - single arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelWorkSingleItemMultiArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+    int                                     value(0);
+
+    pool.parallel(10, [&value](bool, int v) { value = v; });
+    CHECK(value == 10);
+}
+
+TEST_CASE("parallel work - single item - multi arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelTaskSingleItemSingleArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+
+    CHECK(pool.parallel(10, [](int v) { return v; }) == 10);
+}
+
+TEST_CASE("parallel task - single item - single arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelTaskSingleItemMultiArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+
+    CHECK(pool.parallel(10, [](bool, int v) { return v; }) == 10);
+}
+
+TEST_CASE("parallel task - single item - multi arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskSingleItemMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelWorkVectorSingleArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+    std::vector<int>                        v;
+
+    v.resize(3);
+
+    std::vector<int> const                  expected{10, 20, 30};
+
+    pool.parallel(
+        std::vector<int>{10, 20, 30},
+        [&v](int value) {
+            size_t                          index(
+                [&value](void) -> size_t {
+                    if(value == 10)
+                        return 0;
+                    if(value == 20)
+                        return 1;
+                    if(value == 30)
+                        return 2;
+
+                    return 3;
+                }()
+            );
+
+            v[index] = value;
+        }
+    );
+    CHECK(v == expected);
+}
+
+TEST_CASE("parallel work - vector - single arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelWorkVectorMultiArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+    std::vector<int>                        v;
+
+    v.resize(3);
+
+    std::vector<int> const                  expected{10, 20, 30};
+
+    pool.parallel(
+        std::vector<int>{10, 20, 30},
+        [&v](bool, int value) {
+            size_t                          index(
+                [&value](void) -> size_t {
+                    if(value == 10)
+                        return 0;
+                    if(value == 20)
+                        return 1;
+                    if(value == 30)
+                        return 2;
+
+                    return 3;
+                }()
+            );
+
+            v[index] = value;
+        }
+    );
+    CHECK(v == expected);
+}
+
+TEST_CASE("parallel work - vector - multi arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelWorkVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelTaskVectorSingleArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+
+    CHECK(
+        pool.parallel(
+            std::vector<int>{10, 20, 30},
+            [](int value) { return value; }
+        ) == std::vector<int>{10, 20, 30}
+    );
+}
+
+TEST_CASE("parallel task - vector - single arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorSingleArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
+}
+
+template <typename PoolT>
+void ParallelTaskVectorMultiArgTest(size_t numThreads) {
+    PoolT                                   pool(numThreads);
+
+    CHECK(
+        pool.parallel(
+            std::vector<int>{10, 20, 30},
+            [](bool, int value) { return value; }
+        ) == std::vector<int>{10, 20, 30}
+    );
+}
+
+TEST_CASE("parallel task - vector - multi arg") {
+    SECTION("SimpleThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::SimpleThreadPool>(5);
+    }
+
+    SECTION("ComplexThreadPool") {
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(1);
+
+        for(unsigned long ctr = 0; ctr < ITERATIONS; ctr++)
+            ParallelTaskVectorMultiArgTest<CommonHelpers::ComplexThreadPool>(5);
+    }
 }

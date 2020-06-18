@@ -24,6 +24,7 @@
 
 #include "Details/boost_extract/preprocessor/cat.hpp"
 
+#include <functional>
 #include <utility>
 
 namespace CommonHelpers {
@@ -54,11 +55,17 @@ namespace CommonHelpers {
 ///                 The code is copied here because the current version of gsl
 ///                 has problems with clang on Windows.
 ///
-template <typename FuncT>
+template <
+    typename FuncT=std::function<void (void)>
+>
 class FinalAction {
 public:
     // ----------------------------------------------------------------------
     // |  Public Methods
+    FinalAction(void) noexcept :
+        _invoke(false)
+    {}
+
     explicit FinalAction(FuncT f) noexcept :
         _f(std::move(f)),
         _invoke(true)
@@ -82,6 +89,16 @@ public:
 
     void Dismiss(void) {
         _invoke = false;
+    }
+
+    FinalAction & operator=(FuncT func) {
+        if(_f && _invoke)
+            _f();
+
+        _f = std::move(func);
+        _invoke = true;
+
+        return *this;
     }
 
 private:
