@@ -102,7 +102,7 @@ inline ThreadSafeCounter::value_type ThreadSafeCounter::GetValue(void) const {
 #if (defined __cpp_lib_atomic_wait)
     return _ctr;
 #else
-    std::scoped_lock                        lock(_ctrMutex); UNUSED(lock);
+    std::scoped_lock<decltype(_ctrMutex)>   lock(_ctrMutex); UNUSED(lock);
 
     return _ctr;
 #endif
@@ -114,12 +114,13 @@ inline ThreadSafeCounter & ThreadSafeCounter::Increment(void) {
     _ctr.notify_all();
 #else
     {
-        std::scoped_lock                    lock(_ctrMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_ctrMutex)>           lock(_ctrMutex); UNUSED(lock);
 
         ++_ctr;
+
+        _ctrCV.notify_all();
     }
 
-    _ctrCV.notify_all();
 #endif
 
     return *this;
@@ -132,13 +133,14 @@ inline ThreadSafeCounter & ThreadSafeCounter::Decrement(void) {
     _ctr.notify_all();
 #else
     {
-        std::scoped_lock                    lock(_ctrMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_ctrMutex)>           lock(_ctrMutex); UNUSED(lock);
 
         assert(_ctr >= 1);
         --_ctr;
+
+        _ctrCV.notify_all();
     }
 
-    _ctrCV.notify_all();
 #endif
 
     return *this;
@@ -156,7 +158,7 @@ inline ThreadSafeCounter & ThreadSafeCounter::wait_value(value_type value) {
     }
 #else
     {
-        std::unique_lock                    lock(_ctrMutex);
+        std::unique_lock<decltype(_ctrMutex)>           lock(_ctrMutex);
 
         _ctrCV.wait(
             lock,

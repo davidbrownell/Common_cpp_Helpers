@@ -150,9 +150,12 @@ private:
     // |
     // ----------------------------------------------------------------------
     std::function<void (void)> const        _decrementActivePopsFunc;
-    std::function<void (void)> const        _notifyOneFunc;
 
     mutable std::mutex                      _infoMutex;
+
+    // Note that in all cases, _infoCV is notified within a lock. It should be possible to notify outside
+    // of the lock, but doing so causes an access violation (AV) on Linux and Windows about 1 out of 200000
+    // executions. Moving the notification inside the lock prevented these periodic AVs.
     std::condition_variable                 _infoCV;
     Info                                    _info;
 
@@ -187,11 +190,6 @@ ThreadSafeQueue<T1, T2>::ThreadSafeQueue(void) :
             _activePops.Decrement();
         }
     ),
-    _notifyOneFunc(
-        [this](void) {
-            _infoCV.notify_one();
-        }
-    ),
     _activePops(0)
 {}
 
@@ -203,21 +201,23 @@ ThreadSafeQueue<T1, T2>::~ThreadSafeQueue(void) {
 template <typename T1, typename T2>
 void ThreadSafeQueue<T1, T2>::Stop(void) {
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         if(_info.stopped)
             return;
 
         _info.stopped = true;
-    }
 
-    _infoCV.notify_all();
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
+        _infoCV.notify_all();
+    }
 
     _activePops.wait_value(0);
 
 #if (defined DEBUG)
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         assert(_info.queue.empty());
     }
@@ -226,14 +226,14 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 
 template <typename T1, typename T2>
 bool ThreadSafeQueue<T1, T2>::empty(void) const {
-    std::scoped_lock                        lock(_infoMutex); UNUSED(lock);
+    std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.empty();
 }
 
 template <typename T1, typename T2>
 size_t ThreadSafeQueue<T1, T2>::size(void) const {
-    std::scoped_lock                        lock(_infoMutex); UNUSED(lock);
+    std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.size();
 }
@@ -242,22 +242,24 @@ template <typename T1, typename T2>
 template <typename... ArgTs>
 void ThreadSafeQueue<T1, T2>::Push(ArgTs &&... args) {
     {
-        std::scoped_lock                    lock(_infoMutex); UNUSED(lock);
+        std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         if(_info.stopped)
             throw ThreadSafeQueueStoppedException();
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
-    }
 
-    _infoCV.notify_one();
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
+        _infoCV.notify_one();
+    }
 }
 
 template <typename T1, typename T2>
 template <typename... ArgTs>
 bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
     {
-        std::unique_lock                    lock(_infoMutex, std::try_to_lock);
+        std::unique_lock<decltype(_infoMutex)>          lock(_infoMutex, std::try_to_lock);
 
         if(!lock)
             return false;
@@ -266,12 +268,28 @@ bool ThreadSafeQueue<T1, T2>::TryPush(ArgTs &&... args) {
             throw ThreadSafeQueueStoppedException();
 
         _info.queue.emplace(std::forward<ArgTs>(args)...);
-    }
 
-    _infoCV.notify_one();
+        // See declaration of _infoCV as to why this notification happens within the lock rather
+        // than outside of it
+        _infoCV.notify_one();
+    }
 
     return true;
 }
+
+namespace Details {
+
+template <typename ResultT, typename OptionalResultT>
+inline ResultT PopMove(OptionalResultT &optional, std::enable_if_t<std::is_same_v<ResultT, OptionalResultT>>* =nullptr) {
+    return std::move(optional);
+}
+
+template <typename ResultT, typename OptionalResultT>
+inline ResultT PopMove(OptionalResultT &optional, std::enable_if_t<std::is_same_v<ResultT, OptionalResultT> == false>* =nullptr) {
+    return *optional;
+}
+
+} // namespace Details
 
 template <typename T1, typename T2>
 typename ThreadSafeQueue<T1, T2>::value_type ThreadSafeQueue<T1, T2>::Pop(QueuePopType type) {
@@ -282,7 +300,7 @@ typename ThreadSafeQueue<T1, T2>::value_type ThreadSafeQueue<T1, T2>::Pop(QueueP
     if(!result)
         throw ThreadSafeQueueEmptyException();
 
-    return std::move(*result);
+    return Details::PopMove<value_type>(result);
 }
 
 
@@ -304,52 +322,35 @@ typename ThreadSafeQueue<T1, T2>::optional_value_type ThreadSafeQueue<T1, T2>::P
     _activePops.Increment();
     FINALLY(_decrementActivePopsFunc);
 
-    // See the comment below as to why this object is scoped as it is.
-    FinalAction                             notifyAction;
+    std::unique_lock<decltype(_infoMutex)>              lock(_infoMutex);
 
-    {
-        std::unique_lock                    lock(_infoMutex);
+    if(_info.queue.empty()) {
+        if(shouldWait == false)
+            return optional_value_type();
+
+        _infoCV.wait_for(
+            lock,
+            waitFor,
+            [this](void) {
+                return _info.queue.empty() == false || _info.stopped;
+            }
+        );
 
         if(_info.queue.empty()) {
-            if(shouldWait == false)
-                return optional_value_type();
+            if(_info.stopped)
+                throw ThreadSafeQueueStoppedException();
 
-            _infoCV.wait_for(
-                lock,
-                waitFor,
-                [this](void) {
-                    return _info.queue.empty() == false || _info.stopped;
-                }
-            );
-
-            if(_info.queue.empty()) {
-                if(_info.stopped)
-                    throw ThreadSafeQueueStoppedException();
-
-                return optional_value_type();
-            }
+            return optional_value_type();
         }
-
-        assert(_info.queue.empty() == false);
-
-        value_type                          result(std::move(_info.queue.front()));
-
-        _info.queue.pop();
-
-        if(_info.queue.empty() == false) {
-            // The notify has to happen after the lock is released, so
-            // we could move the notify outside of this loop. However, that
-            // means that we need to also move result outside the current scope (as
-            // that is the function's return value). Moving result outside of
-            // the current scope means that the result type must be default
-            // constructible. Rather than requiring default construction, we
-            // place the FinalAction outside of the scope which means it will
-            // fire after the lock is released.
-            notifyAction = _notifyOneFunc;
-        }
-
-        return std::move(result);
     }
+
+    assert(_info.queue.empty() == false);
+
+    value_type                              result(std::move(_info.queue.front()));
+
+    _info.queue.pop();
+
+    return std::move(result);
 }
 
 } // namespace CommonHelpers
