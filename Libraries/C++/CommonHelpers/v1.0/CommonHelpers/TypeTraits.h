@@ -371,7 +371,13 @@ private:
 ///                 (functions, methods, std::function, lambda, etc).
 ///
 template <typename T>
-struct FunctionTraits : public Details::FunctionTraitsImpl<T, Details::FunctionTraitsHasCallOperator<T>>
+struct FunctionTraits :
+    public Details::FunctionTraitsImpl<
+        std::remove_cv_t<std::remove_reference_t<T>>,
+        Details::FunctionTraitsHasCallOperator<
+            std::remove_cv_t<std::remove_reference_t<T>>
+        >
+    >
 {
     // Defines the following types:
     //      return_type
