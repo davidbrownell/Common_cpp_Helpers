@@ -113,13 +113,13 @@ def GetDependencies():
     if CurrentShell.CategoryName == "Windows":
         repo_depedencies += [
             (
-                "MSVC-2019",
+                "MSVC_2019",
                 "Common_cpp_MSVC_2019",
                 "AB7D87C49C2449F79D9F42E5195030FD",
                 None,
             ),
             (
-                "MSVC-2017",
+                "MSVC_2017",
                 "Common_cpp_MSVC_2017",
                 "8FC8ACE80A594D2EA996CAC5DBFFEBBC",
                 None,
@@ -132,22 +132,22 @@ def GetDependencies():
 
     repo_depedencies += [
         (
-            "Clang-10",
+            "Clang_10",
             "Common_cpp_Clang_10",
             "42DE100A1DAE4FFC9697F75566C63DEB",
-            "-ex",
+            "_ex",
         ),
         (
-            "Clang-8",
+            "Clang_8",
             "Common_cpp_Clang_8",
             "3DE9F3430E494A6C8429B26A1503C895",
-            "-ex",
+            "_ex",
         ),
     ]
 
     for short_name, repo_name, repo_id, config_suffix in repo_depedencies:
         for architecture in architectures:
-            d["{}-{}".format(short_name, architecture)] = Configuration(
+            d["{}_{}".format(short_name, architecture)] = Configuration(
                 "{} - {}".format(short_name, architecture),
                 [
                     Dependency(
