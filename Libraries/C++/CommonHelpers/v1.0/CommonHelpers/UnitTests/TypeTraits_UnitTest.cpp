@@ -103,6 +103,14 @@ struct DH : public H {};
 struct DI : public I {};
 struct DJ : public J {};
 
+// ----------------------------------------------------------------------
+// |  Anonymous Object
+namespace {
+
+struct AnonymousObj : public G {};
+
+} // anonymous method
+
 // Standard
 CREATE_HAS_METHOD_CHECKER(Method1, (int(int, char)));
 CREATE_HAS_METHOD_CHECKER(Method1, (void(int, char)), HAS_METHOD_CHECKER_NAME(has_Method1VoidReturn));
@@ -219,6 +227,7 @@ static_assert(has_Method1<G> == false, "");
 static_assert(has_Method1<H> == false, "");
 static_assert(has_Method1<I> == false, "");
 static_assert(has_Method1<J> == false, "");
+static_assert(has_Method1<AnonymousObj> == false, "");
 
 static_assert(has_Method1<DA> == false, "");
 static_assert(has_Method1<DB> == false, "");
@@ -241,6 +250,7 @@ static_assert(has_Method1VoidReturn<G>, "");
 static_assert(has_Method1VoidReturn<H> == false, "");
 static_assert(has_Method1VoidReturn<I> == false, "");
 static_assert(has_Method1VoidReturn<J> == false, "");
+static_assert(has_Method1VoidReturn<AnonymousObj>, "");
 
 static_assert(has_Method1VoidReturn<DA> == false, "");
 static_assert(has_Method1VoidReturn<DB> == false, "");
@@ -263,6 +273,7 @@ static_assert(has_Method1VoidArgs<G> == false, "");
 static_assert(has_Method1VoidArgs<H> == false, "");
 static_assert(has_Method1VoidArgs<I> == false, "");
 static_assert(has_Method1VoidArgs<J> == false, "");
+static_assert(has_Method1VoidArgs<AnonymousObj> == false, "");
 
 static_assert(has_Method1VoidArgs<DA>, "");
 static_assert(has_Method1VoidArgs<DB> == false, "");
@@ -287,6 +298,7 @@ static_assert(has_Method1Const<G> == false, "");
 static_assert(has_Method1Const<H> == false, "");
 static_assert(has_Method1Const<I> == false, "");
 static_assert(has_Method1Const<J> == false, "");
+static_assert(has_Method1Const<AnonymousObj> == false, "");
 
 static_assert(has_Method1Const<DA> == false, "");
 static_assert(has_Method1Const<DB> == false, "");
@@ -309,6 +321,7 @@ static_assert(has_Method1ConstVoidReturn<G> == false, "");
 static_assert(has_Method1ConstVoidReturn<H>, "");
 static_assert(has_Method1ConstVoidReturn<I> == false, "");
 static_assert(has_Method1ConstVoidReturn<J> == false, "");
+static_assert(has_Method1ConstVoidReturn<AnonymousObj> == false, "");
 
 static_assert(has_Method1ConstVoidReturn<DA> == false, "");
 static_assert(has_Method1ConstVoidReturn<DB> == false, "");
@@ -331,6 +344,7 @@ static_assert(has_Method1ConstVoidArgs<G> == false, "");
 static_assert(has_Method1ConstVoidArgs<H> == false, "");
 static_assert(has_Method1ConstVoidArgs<I> == false, "");
 static_assert(has_Method1ConstVoidArgs<J> == false, "");
+static_assert(has_Method1ConstVoidArgs<AnonymousObj> == false, "");
 
 static_assert(has_Method1ConstVoidArgs<DA> == false, "");
 static_assert(has_Method1ConstVoidArgs<DB>, "");
@@ -355,6 +369,7 @@ static_assert(has_Method1Static<G> == false, "");
 static_assert(has_Method1Static<H> == false, "");
 static_assert(has_Method1Static<I> == false, "");
 static_assert(has_Method1Static<J> == false, "");
+static_assert(has_Method1Static<AnonymousObj> == false, "");
 
 static_assert(has_Method1Static<DA> == false, "");
 static_assert(has_Method1Static<DB> == false, "");
@@ -377,6 +392,7 @@ static_assert(has_Method1StaticVoidReturn<G> == false, "");
 static_assert(has_Method1StaticVoidReturn<H> == false, "");
 static_assert(has_Method1StaticVoidReturn<I>, "");
 static_assert(has_Method1StaticVoidReturn<J> == false, "");
+static_assert(has_Method1StaticVoidReturn<AnonymousObj> == false, "");
 
 static_assert(has_Method1StaticVoidReturn<DA> == false, "");
 static_assert(has_Method1StaticVoidReturn<DB> == false, "");
@@ -399,6 +415,7 @@ static_assert(has_Method1StaticVoidArgs<G> == false, "");
 static_assert(has_Method1StaticVoidArgs<H> == false, "");
 static_assert(has_Method1StaticVoidArgs<I> == false, "");
 static_assert(has_Method1StaticVoidArgs<J> == false, "");
+static_assert(has_Method1StaticVoidArgs<AnonymousObj> == false, "");
 
 static_assert(has_Method1StaticVoidArgs<DA> == false, "");
 static_assert(has_Method1StaticVoidArgs<DB> == false, "");
@@ -423,6 +440,7 @@ static_assert(has_Method1Strict<G> == false, "");
 static_assert(has_Method1Strict<H> == false, "");
 static_assert(has_Method1Strict<I> == false, "");
 static_assert(has_Method1Strict<J> == false, "");
+static_assert(has_Method1Strict<AnonymousObj> == false, "");
 
 static_assert(has_Method1Strict<DA> == false, "");
 static_assert(has_Method1Strict<DB> == false, "");
@@ -445,6 +463,7 @@ static_assert(has_Method1VoidReturnStrict<G>, "");
 static_assert(has_Method1VoidReturnStrict<H> == false, "");
 static_assert(has_Method1VoidReturnStrict<I> == false, "");
 static_assert(has_Method1VoidReturnStrict<J> == false, "");
+static_assert(has_Method1VoidReturnStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1VoidReturnStrict<DA> == false, "");
 static_assert(has_Method1VoidReturnStrict<DB> == false, "");
@@ -467,6 +486,7 @@ static_assert(has_Method1VoidArgsStrict<G> == false, "");
 static_assert(has_Method1VoidArgsStrict<H> == false, "");
 static_assert(has_Method1VoidArgsStrict<I> == false, "");
 static_assert(has_Method1VoidArgsStrict<J> == false, "");
+static_assert(has_Method1VoidArgsStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1VoidArgsStrict<DA> == false, "");
 static_assert(has_Method1VoidArgsStrict<DB> == false, "");
@@ -491,6 +511,7 @@ static_assert(has_Method1ConstStrict<G> == false, "");
 static_assert(has_Method1ConstStrict<H> == false, "");
 static_assert(has_Method1ConstStrict<I> == false, "");
 static_assert(has_Method1ConstStrict<J> == false, "");
+static_assert(has_Method1ConstStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1ConstStrict<DA> == false, "");
 static_assert(has_Method1ConstStrict<DB> == false, "");
@@ -513,6 +534,7 @@ static_assert(has_Method1ConstVoidReturnStrict<G> == false, "");
 static_assert(has_Method1ConstVoidReturnStrict<H>, "");
 static_assert(has_Method1ConstVoidReturnStrict<I> == false, "");
 static_assert(has_Method1ConstVoidReturnStrict<J> == false, "");
+static_assert(has_Method1ConstVoidReturnStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1ConstVoidReturnStrict<DA> == false, "");
 static_assert(has_Method1ConstVoidReturnStrict<DB> == false, "");
@@ -535,6 +557,7 @@ static_assert(has_Method1ConstVoidArgsStrict<G> == false, "");
 static_assert(has_Method1ConstVoidArgsStrict<H> == false, "");
 static_assert(has_Method1ConstVoidArgsStrict<I> == false, "");
 static_assert(has_Method1ConstVoidArgsStrict<J> == false, "");
+static_assert(has_Method1ConstVoidArgsStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1ConstVoidArgsStrict<DA> == false, "");
 static_assert(has_Method1ConstVoidArgsStrict<DB> == false, "");
@@ -559,6 +582,7 @@ static_assert(has_Method1StaticStrict<G> == false, "");
 static_assert(has_Method1StaticStrict<H> == false, "");
 static_assert(has_Method1StaticStrict<I> == false, "");
 static_assert(has_Method1StaticStrict<J> == false, "");
+static_assert(has_Method1StaticStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1StaticStrict<DA> == false, "");
 static_assert(has_Method1StaticStrict<DB> == false, "");
@@ -581,6 +605,7 @@ static_assert(has_Method1StaticVoidReturnStrict<G> == false, "");
 static_assert(has_Method1StaticVoidReturnStrict<H> == false, "");
 static_assert(has_Method1StaticVoidReturnStrict<I>, "");
 static_assert(has_Method1StaticVoidReturnStrict<J> == false, "");
+static_assert(has_Method1StaticVoidReturnStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1StaticVoidReturnStrict<DA> == false, "");
 static_assert(has_Method1StaticVoidReturnStrict<DB> == false, "");
@@ -603,6 +628,7 @@ static_assert(has_Method1StaticVoidArgsStrict<G> == false, "");
 static_assert(has_Method1StaticVoidArgsStrict<H> == false, "");
 static_assert(has_Method1StaticVoidArgsStrict<I> == false, "");
 static_assert(has_Method1StaticVoidArgsStrict<J> == false, "");
+static_assert(has_Method1StaticVoidArgsStrict<AnonymousObj> == false, "");
 
 static_assert(has_Method1StaticVoidArgsStrict<DA> == false, "");
 static_assert(has_Method1StaticVoidArgsStrict<DB> == false, "");
