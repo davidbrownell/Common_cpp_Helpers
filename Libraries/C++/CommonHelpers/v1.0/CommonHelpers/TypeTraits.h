@@ -266,6 +266,11 @@ using MakeTargetMutable = std::conditional_t<
     >
 >;
 
+#if (defined _MSC_VER)
+#   pragma warning(push)
+#   pragma warning(disable: 5046) // Symbol involving type with internal linkage not defined
+#endif
+
 /////////////////////////////////////////////////////////////////////////
 ///  \class         Access
 ///  \brief         Object that is used to invoke custom functionality implemented
@@ -364,6 +369,10 @@ private:
     template <typename T>
     static void MoveFinalAssignImpl(T &, std::false_type);
 };
+
+#if (defined _MSC_VER)
+#   pragma warning(pop)
+#endif
 
 /////////////////////////////////////////////////////////////////////////
 ///  \class         FunctionTraits

@@ -107,7 +107,7 @@ namespace Details {
 #   define CREATE_HAS_METHOD_CHECKER_Impl_Strict_AddressOfImpl(MethodName)  &HasMethodCheckerImplInternalArgumentT::MethodName
 #endif
 
-// This method is not, as we have to make sure that the method picked up can be found
+// This method is not straightforward, as we have to make sure that the method picked up can be found
 // within any class in the class hierarchy.
 #define CREATE_HAS_METHOD_CHECKER_Impl_Standard(MethodName, Signature, StructName, AsStaticBool, TemplateTypename, IsConst, IsStatic)                                                                                                                                                                                                                       \
     template <typename HasMethodCheckerImplArgumentT>                                                                                                                                                                                                                                                                                                       \

@@ -36,6 +36,7 @@ SimpleThreadPool::SimpleThreadPool(
     std::optional<OnExceptionCallback> onExceptionCallback
 ) :
     BaseType(std::move(onExceptionCallback)),
+    NumThreads(numThreads),
     _pQueue(std::make_unique<FunctorQueue>())
 {
     ENSURE_ARGUMENT(numThreads);
@@ -79,6 +80,7 @@ ComplexThreadPool::ComplexThreadPool(
     std::optional<OnExceptionCallback> onExceptionCallback
 ) :
     BaseType(std::move(onExceptionCallback)),
+    NumThreads(numThreads),
     _numTries(
         [&numThreads, &workerIterations](void) {
             ENSURE_ARGUMENT(numThreads);
