@@ -238,11 +238,11 @@ int ComparePtrImpl(T const *lhs, T const *rhs, int (*func)(T const *, T const *)
     if(lhs == nullptr && rhs == nullptr)
         return 0;
 
-    // Valid pointers < nullptr
-    if(rhs == nullptr)
+    // nullptr < Valid pointers
+    if(lhs == nullptr)
         return -1;
 
-    if(lhs == nullptr)
+    if(rhs == nullptr)
         return 1;
 
     return (*func)(lhs, rhs);

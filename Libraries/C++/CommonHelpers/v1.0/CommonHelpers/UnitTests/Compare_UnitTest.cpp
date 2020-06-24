@@ -129,13 +129,13 @@ struct MultiMemberMultiBaseObj : public SingleMemberObj, public MultiMemberObj {
 
 TEST_CASE("MultiMemberMultiBaseObj") {
     CHECK(MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0) == MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
-    
+
     CHECK(MultiMemberMultiBaseObj(100, true, 'c', 1.0, 2.0) != MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, false, 'c', 1.0, 2.0) != MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, true, 'm', 1.0, 2.0) != MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, true, 'c', 10.0, 2.0) != MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, true, 'c', 1.0, 20.0) != MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
-    
+
     CHECK(MultiMemberMultiBaseObj(-10, true, 'c', 1.0, 2.0) < MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, false, 'c', 1.0, 2.0) < MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
     CHECK(MultiMemberMultiBaseObj(10, true, 'a', 1.0, 2.0) < MultiMemberMultiBaseObj(10, true, 'c', 1.0, 2.0));
@@ -203,8 +203,8 @@ TEST_CASE("Tuples") {
 
 TEST_CASE("std::unique_ptr") {
     CHECK(CommonHelpers::Compare(std::unique_ptr<int>(), std::unique_ptr<int>()) == 0);
-    CHECK(CommonHelpers::Compare(std::make_unique<int>(1), std::unique_ptr<int>()) < 0);
-    CHECK(CommonHelpers::Compare(std::unique_ptr<int>(), std::make_unique<int>(1)) > 0);
+    CHECK(CommonHelpers::Compare(std::unique_ptr<int>(), std::make_unique<int>(1)) < 0);
+    CHECK(CommonHelpers::Compare(std::make_unique<int>(1), std::unique_ptr<int>()) > 0);
     CHECK(CommonHelpers::Compare(std::make_unique<int>(1), std::make_unique<int>(1)) == 0);
     CHECK(CommonHelpers::Compare(std::make_unique<int>(10), std::make_unique<int>(1)) > 0);
     CHECK(CommonHelpers::Compare(std::make_unique<int>(1), std::make_unique<int>(10)) < 0);
@@ -212,8 +212,8 @@ TEST_CASE("std::unique_ptr") {
 
 TEST_CASE("std::shared_ptr") {
     CHECK(CommonHelpers::Compare(std::shared_ptr<int>(), std::shared_ptr<int>()) == 0);
-    CHECK(CommonHelpers::Compare(std::make_shared<int>(1), std::shared_ptr<int>()) < 0);
-    CHECK(CommonHelpers::Compare(std::shared_ptr<int>(), std::make_shared<int>(1)) > 0);
+    CHECK(CommonHelpers::Compare(std::shared_ptr<int>(), std::make_shared<int>(1)) < 0);
+    CHECK(CommonHelpers::Compare(std::make_shared<int>(1), std::shared_ptr<int>()) > 0);
     CHECK(CommonHelpers::Compare(std::make_shared<int>(1), std::make_shared<int>(1)) == 0);
     CHECK(CommonHelpers::Compare(std::make_shared<int>(10), std::make_shared<int>(1)) > 0);
     CHECK(CommonHelpers::Compare(std::make_shared<int>(1), std::make_shared<int>(10)) < 0);
@@ -267,8 +267,8 @@ TEST_CASE("Raw MultiByte String") {
     CHECK(CommonHelpers::Compare("Foo__________", "foo") < 0);
     CHECK(CommonHelpers::Compare("foo", "Foo") > 0);
     CHECK(CommonHelpers::Compare("foo", "Foo___________") > 0);
-    CHECK(CommonHelpers::Compare("foo", nullptr) < 0);
-    CHECK(CommonHelpers::Compare(nullptr, "foo") > 0);
+    CHECK(CommonHelpers::Compare(nullptr, "foo") < 0);
+    CHECK(CommonHelpers::Compare("foo", nullptr) > 0);
     CHECK(CommonHelpers::Compare(nullptr, nullptr) == 0);
 }
 
@@ -279,8 +279,8 @@ TEST_CASE("Raw Wide String") {
     CHECK(CommonHelpers::Compare(L"Foo_____", L"foo") < 0);
     CHECK(CommonHelpers::Compare(L"foo", L"Foo") > 0);
     CHECK(CommonHelpers::Compare(L"foo", L"Foo____") > 0);
-    CHECK(CommonHelpers::Compare(L"foo", nullptr) < 0);
-    CHECK(CommonHelpers::Compare(nullptr, L"foo") > 0);
+    CHECK(CommonHelpers::Compare(nullptr, L"foo") < 0);
+    CHECK(CommonHelpers::Compare(L"foo", nullptr) > 0);
     CHECK(CommonHelpers::Compare(nullptr, nullptr) == 0);
 }
 
@@ -293,8 +293,8 @@ TEST_CASE("Raw ptr") {
     CHECK(CommonHelpers::Compare(&a, &b) != 0);
     CHECK(CommonHelpers::Compare(&a, &b) < 0);
     CHECK(CommonHelpers::Compare(&b, &a) > 0);
-    CHECK(CommonHelpers::Compare(&a, null) < 0);
-    CHECK(CommonHelpers::Compare(null, &a) > 0);
+    CHECK(CommonHelpers::Compare(null, &a) < 0);
+    CHECK(CommonHelpers::Compare(&a, null) > 0);
     CHECK(CommonHelpers::Compare(null, null) == 0);
 }
 
