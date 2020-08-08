@@ -106,10 +106,10 @@ void TestEnqueueFirst(size_t numValues, size_t numThreads) {
     std::vector<size_t>                     values(numValues);
 
     {
+        FunctorQueue                        queue;
         std::vector<std::thread>            threads;
 
         {
-            FunctorQueue                                queue;
             CommonHelpers::ThreadSafeCounter            activeTasks(static_cast<CommonHelpers::ThreadSafeCounter::value_type>(numValues));
 
             for(size_t value = 0; value < numValues; ++value) {
@@ -124,6 +124,10 @@ void TestEnqueueFirst(size_t numValues, size_t numThreads) {
             threads = InitThreads(numThreads, queue);
 
             activeTasks.wait_value(0);
+
+            CHECK(queue.IsStopped() == false);
+            queue.Stop();
+            CHECK(queue.IsStopped());
         }
 
         for(auto & thread : threads)
@@ -163,11 +167,10 @@ void TestThreadFirst(size_t numValues, size_t numThreads) {
     std::vector<size_t>                     values(numValues);
 
     {
+        FunctorQueue                        queue;
         std::vector<std::thread>            threads;
 
         {
-            FunctorQueue                    queue;
-
             threads = InitThreads(numThreads, queue);
 
             CommonHelpers::ThreadSafeCounter            activeTasks(static_cast<CommonHelpers::ThreadSafeCounter::value_type>(numValues));
@@ -182,6 +185,10 @@ void TestThreadFirst(size_t numValues, size_t numThreads) {
             }
 
             activeTasks.wait_value(0);
+
+            CHECK(queue.IsStopped() == false);
+            queue.Stop();
+            CHECK(queue.IsStopped());
         }
 
         for(auto & thread : threads)
