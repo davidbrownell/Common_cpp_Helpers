@@ -68,6 +68,11 @@ public:
     ThreadSafeCounter & Increment(void);
     ThreadSafeCounter & Decrement(void);
 
+
+    /////////////////////////////////////////////////////////////////////////
+    ///  \fn            wait_value
+    ///  \brief         Wait until the internal value equals the provided value.
+    ///
     ThreadSafeCounter & wait_value(value_type value);
 
 private:
