@@ -96,6 +96,7 @@ public:
     NON_MOVABLE(ThreadSafeQueue);
 
     void Stop(void);
+    bool IsStopped(void) const;
 
     bool empty(void) const;
     size_t size(void) const;
@@ -149,17 +150,15 @@ private:
     // |  Private Data
     // |
     // ----------------------------------------------------------------------
+    ThreadSafeCounter                       _activePops;
     std::function<void (void)> const        _decrementActivePopsFunc;
-
-    mutable std::mutex                      _infoMutex;
 
     // Note that in all cases, _infoCV is notified within a lock. It should be possible to notify outside
     // of the lock, but doing so causes an access violation (AV) on Linux and Windows about 1 out of 200000
     // executions. Moving the notification inside the lock prevented these periodic AVs.
+    mutable std::mutex                      _infoMutex;
     std::condition_variable                 _infoCV;
     Info                                    _info;
-
-    ThreadSafeCounter                       _activePops;
 
     // ----------------------------------------------------------------------
     // |
@@ -185,12 +184,12 @@ private:
 // ----------------------------------------------------------------------
 template <typename T1, typename T2>
 ThreadSafeQueue<T1, T2>::ThreadSafeQueue(void) :
+    _activePops(0),
     _decrementActivePopsFunc(
         [this](void) {
             _activePops.Decrement();
         }
-    ),
-    _activePops(0)
+    )
 {}
 
 template <typename T1, typename T2>
@@ -217,6 +216,8 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 
 #if (defined DEBUG)
     {
+        // TODO: Eventually change _infoMutex to a `shared_mutex` with a `shared_lock` here (all
+        //       other lock occurrences should be `unique_lock`)
         std::scoped_lock<decltype(_infoMutex)>          lock(_infoMutex); UNUSED(lock);
 
         assert(_info.queue.empty());
@@ -225,7 +226,18 @@ void ThreadSafeQueue<T1, T2>::Stop(void) {
 }
 
 template <typename T1, typename T2>
+bool ThreadSafeQueue<T1, T2>::IsStopped(void) const {
+    // TODO: Eventually change _infoMutex to a `shared_mutex` with a `shared_lock` here (all
+    //       other lock occurrences should be `unique_lock`)
+    std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex);
+
+    return _info.stopped;
+}
+
+template <typename T1, typename T2>
 bool ThreadSafeQueue<T1, T2>::empty(void) const {
+    // TODO: Eventually change _infoMutex to a `shared_mutex` with a `shared_lock` here (all
+    //       other lock occurrences should be `unique_lock`)
     std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.empty();
@@ -233,6 +245,8 @@ bool ThreadSafeQueue<T1, T2>::empty(void) const {
 
 template <typename T1, typename T2>
 size_t ThreadSafeQueue<T1, T2>::size(void) const {
+    // TODO: Eventually change _infoMutex to a `shared_mutex` with a `shared_lock` here (all
+    //       other lock occurrences should be `unique_lock`)
     std::scoped_lock<decltype(_infoMutex)>              lock(_infoMutex); UNUSED(lock);
 
     return _info.queue.size();

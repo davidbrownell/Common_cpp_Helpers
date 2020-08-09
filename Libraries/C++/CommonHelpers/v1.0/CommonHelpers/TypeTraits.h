@@ -379,6 +379,14 @@ private:
 ///  \brief         Extracts information about different callable types
 ///                 (functions, methods, std::function, lambda, etc).
 ///
+///                 Defines the following types:
+///                     return_type
+///                     args (as a tuple)
+///
+///                 Defines the following values:
+///                     static bool const is_method;
+///                     static bool const is_const;
+///
 template <typename T>
 struct FunctionTraits :
     public Details::FunctionTraitsImpl<
@@ -387,15 +395,7 @@ struct FunctionTraits :
             std::remove_cv_t<std::remove_reference_t<T>>
         >
     >
-{
-    // Defines the following types:
-    //      return_type
-    //      args (as a tuple)
-    //
-    // Defines the following values:
-    //      static bool const is_method;
-    //      static bool const is_const;
-};
+{};
 
 template <typename ReturnT, typename... ArgTs>
 struct FunctionTraits<std::function<ReturnT (ArgTs...)>> {
