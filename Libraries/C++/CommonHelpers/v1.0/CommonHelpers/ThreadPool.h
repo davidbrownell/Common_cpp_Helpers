@@ -50,10 +50,10 @@ class ThreadPoolImpl;
 /////////////////////////////////////////////////////////////////////////
 ///  \class         ThreadPoolFuture
 ///  \brief         Object with the same interface as `std::future` that is
-///                 re-etrant while waiting, ensuring that we don't run into
+///                 re-entrant while waiting, ensuring that we don't run into
 ///                 scenarios where enqueued tasks can never execute because
 ///                 threads are servicing other work waiting on enqueued tasks
-///                 of their own.
+///                 of their own (aka starvation).
 ///
 template <typename T>
 class ThreadPoolFuture {
